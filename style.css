@@ -1,0 +1,335 @@
+/* Reset default margins and paddings */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+#content {
+  overflow-x: hidden; /* hide horizontal scrollbar */
+  overflow-y: auto;   /* keep vertical scrollbar */
+  position: relative;
+  height: 100%;;
+}
+
+.page {
+  position: absolute;
+  width: 100%;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  transform: translateX(50%); /* start slightly to the right */
+  transition: transform 0.4s ease, opacity 0.4s ease;
+}
+
+/* Prevent dragging images/links */
+img, a {
+  user-drag: none;      /* Safari */
+  -webkit-user-drag: none;
+}
+
+.page.active {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+html,
+.btn,
+.simple-container,
+body {
+  width: 100%;
+  height: 100%;
+  font-family: "Source Sans Pro", sans-serif;
+  background: rgb(225, 225, 225);
+  user-select: none; /* standard */
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE/Edge *
+}
+
+/* Main content */
+.main-content {
+  margin: 0;
+  padding: 0;
+}
+
+/* Navbar container */
+.top-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(
+    rgba(36, 75, 126, 0.959) 0%,
+    rgba(0, 68, 255, 0.11) 100%
+  );
+  color: white;
+  z-index: 1000;
+  border-radius: 0;
+  padding: 5px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  backdrop-filter: blur(15px);
+  outline: rgba(255, 255, 255, 0.5) solid 1px;
+}
+
+/* Logo */
+.nav-logo {
+  height: 50px;
+  margin-bottom: 10px;
+}
+
+/* Nav list */
+.top-nav-list {
+  display: flex;
+  justify-content: center;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Each nav item */
+.top-nav-item {
+  margin: 0 10px;
+  position: relative;
+  padding: 0;
+}
+
+.top-nav-item:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  right: -10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1px;
+  height: 1em;
+  background-color: rgba(255, 255, 255, 0.3);
+  pointer-events: none;
+}
+
+/* Nav links */
+.top-nav-link {
+  display: inline-block;
+  padding: 10px 15px;
+  color: white;
+  text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.75);
+  text-decoration: none;
+  transition: color 0s ease, transform 0s ease;
+}
+
+.top-nav-link:hover {
+  transform: scale(1);
+  color: #ddd;
+}
+
+.top-nav-link.active {
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+/* Page containers */
+.page-container,
+.fullpage-container {
+  width: 100%;
+  border-radius: 0;
+  display: flex;
+  justify-content: flex-end;
+  position: relative;
+  overflow: hidden;
+  background-color: rgba(0, 0, 0, 0.05);
+  color: rgb(0, 0, 0);
+  text-shadow: none;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.75);
+}
+
+/* Normal page containers */
+.page-container {
+  height: 25vh;
+  align-items: center; /* vertically center content */
+  justify-content: flex-end; /* horizontally center content if you want */
+  margin: 0px 5px;
+  margin-bottom: 5px;
+  width: auto;
+  border-radius: 8px;
+  display: flex;
+  background-color: rgba(245, 245, 245, 1);
+}
+
+/* Fullscreen containers */
+.fullpage-container {
+  height: 100vh;
+  align-items: center; /* vertical center */
+  justify-content: flex-end; /* horizontal center */
+  margin: 0;
+  margin-bottom: 5px;
+  padding: 0;
+}
+
+/* Content inside containers */
+.page-content,
+.fullpage-content {
+  width: 50%;
+  text-align: center;
+  position: relative;
+  margin: 0%;
+  z-index: 2;
+}
+
+/* Vignette overlay for background images */
+.page-container[style*="background-image"]::after,
+.fullpage-container[style*="background-image"]::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  background: radial-gradient(
+    circle,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0.6) 100%
+  );
+  z-index: 1;
+}
+
+/* Text color & shadow for containers with background image */
+.page-container[style*="background-image"],
+.fullpage-container[style*="background-image"] {
+  color: #fff;
+  text-shadow: 0px 2px 4px rgba(0, 0, 0, 1);
+}
+
+/* Center the fullpage container */
+.fullpage-container.centered {
+  justify-content: center;
+  align-items: center;
+}
+
+/* Make the content span full width when centered */
+.fullpage-container.centered .fullpage-content {
+  width: 100%;
+  max-width: 100%;
+  text-align: center;
+}
+
+/* Optional: hide the left logo overlay for this variant */
+.fullpage-container.centered .logo-block {
+  display: none;
+}
+
+
+/* Button container */
+.btn-container {
+  display: flex; /* Align buttons */
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+  width: auto; /* Fill container width if needed */
+  margin: 5px 5; /* Vertical spacing between buttons */
+}
+
+/* Button */
+.btn {
+  padding: 10px 20px; /* Space inside the button */
+  background-color: #02b757;
+  color: white; /* Text color */
+  font-size: 16px; /* Text size */
+  border: none; /* Remove default border */
+  border-radius: 6px; /* Rounded corners */
+  cursor: pointer; /* Pointer on hover */
+  transition: all 0s ease; /* Smooth hover effect */
+  text-align: center; /* Center text */
+  text-decoration: none; /* Remove underline if link */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  margin: 5px; /* Space between buttons */
+  width: auto; /* Fixed width for consistency */
+}
+
+/* Hover effect */
+.btn:hover {
+  background-color: #3fc679;
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15); /* Bigger shadow */
+}
+
+/* Active / pressed state */
+.btn:active {
+  transform: translateY(0); /* Press down */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Normal shadow */
+  background-color: #108237;
+}
+
+/* Simple reusable container */
+.simple-container {
+  background: rgba(255, 255, 255, 0.75); /* light background */
+  border-radius: 4px;
+  padding: 20px;
+  margin: 10px auto;
+  max-width: 800px; /* keeps it readable */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  color: #111;
+  text-align: center;
+  width: 75%;
+  max-width: 500px; /* max width for larger screens */
+  backdrop-filter: blur(10px);
+
+  /* Reset text styles */
+  color: #111 !important;
+  text-shadow: none !important;
+}
+
+/* Headings inside */
+.simple-container h1,
+.simple-container h2,
+.simple-container h3 {
+  margin-top: 0;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+/* Paragraph text */
+.simple-container p {
+  margin: 10px 0;
+  line-height: 1.5;
+}
+
+/* Left half logo block */
+.logo-block {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50%;          /* take left half */
+  height: 100%;        /* full container height */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  pointer-events: none; /* so it doesn’t block clicks on right side */
+}
+
+/* Logo image auto-sizes */
+.logo-block img {
+  max-width: 100%; /* responsive */
+  width: 500px;
+  z-index: 4;       /* above subtitle */
+}
+
+/* Subtitle under the logo (stacked behind) */
+.logo-block .subtitle {
+  margin-top: -32.5px;   /* pull it slightly closer to the logo */
+  font-size: 24px;
+  color: white;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 6px 14px;
+  padding-top: 24px;
+  border-radius: 6px;
+  font-weight: 500;
+  z-index: 3;          /* behind the logo */
+}
