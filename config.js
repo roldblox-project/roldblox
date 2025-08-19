@@ -1,5 +1,5 @@
 // Increment this number every time you push changes
-const SITE_VERSION = "2";
+const SITE_VERSION = "3";
 
 (function () {
   // Update all CSS files
