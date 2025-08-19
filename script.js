@@ -1,22 +1,30 @@
 const contentDiv = document.getElementById("content");
 const links = document.querySelectorAll(".top-nav-link");
 
-// Define routes
+// Navigation cooldown for links
+let navLinkCooldown = false;
+
 const routes = {
   "/home": "pages/home.html",
   "/about": "pages/about.html",
   "/mods": "pages/mods.html",
   "/community": "pages/community.html",
-  "/contact": "pages/contact.html",
+  "/gallery": "pages/gallery.html",
+  "/faqs": "pages/faqs.html", // <-- add this
+  "/blog": "pages/blog.html", // optional
+  "/help": "pages/help.html", // optional
 };
 
-// Load a page into #content with fade + slide
+// Hover sound
+const hoverSound = new Audio("sounds/MoveSelection.wav");
+
 async function loadPage(path) {
-  const file = routes[path] || routes["/home"];
+  const file = routes[path];
   const newDiv = document.createElement("div");
   newDiv.className = "page";
 
   try {
+    if (!file) throw new Error("Page not found"); // trigger 404
     const res = await fetch(file);
     if (!res.ok) throw new Error("HTTP error " + res.status);
     newDiv.innerHTML = await res.text();
@@ -33,32 +41,33 @@ async function loadPage(path) {
     }
   }
 
-  // Add new page
   contentDiv.appendChild(newDiv);
 
-  // Animate: remove old page, fade in new page
   requestAnimationFrame(() => {
-    // Fade out old page(s)
     Array.from(contentDiv.children).forEach((child) => {
       if (child !== newDiv) {
-        child.style.transition = "opacity 0.3s ease";
         child.style.opacity = 0;
+        child.style.transform = "translateX(-20px)";
         setTimeout(() => contentDiv.removeChild(child), 300);
       }
     });
 
-    // Activate new page
+    void newDiv.offsetWidth; // force reflow
     newDiv.classList.add("active");
   });
 
-  // Attach button click sounds for new buttons
-  const buttons = newDiv.querySelectorAll("button");
+  attachButtonSounds(newDiv);
+  attachHoverSounds();
+}
+
+// Attach button click sounds
+function attachButtonSounds(container) {
+  const buttons = container.querySelectorAll("button");
   buttons.forEach((btn) => {
     btn.addEventListener("click", () => {
       const sound = new Audio("sounds/ButtonPress.wav");
       sound.play().catch((e) => console.log("Sound blocked:", e));
 
-      // If the button has data-page="mods", navigate there
       const targetPage = btn.dataset.page;
       if (targetPage && routes[targetPage]) {
         window.location.hash = targetPage;
@@ -75,11 +84,13 @@ function setActiveLink() {
   });
 }
 
-// Handle navigation changes
-function handleNavigation() {
-  const path = (window.location.hash || "#/home").slice(1);
+// Handle navigation changes for links with cooldown
+function handleNavLinkNavigation(path) {
+  if (navLinkCooldown) return;
+  navLinkCooldown = true;
 
-  // Play screen change sound
+  setTimeout(() => (navLinkCooldown = false), 100);
+
   const sound = new Audio("sounds/ScreenChange.wav");
   sound.play().catch((e) => console.log("Sound blocked:", e));
 
@@ -87,27 +98,64 @@ function handleNavigation() {
   setActiveLink();
 }
 
+// Attach hover sounds
+function attachHoverSounds() {
+  const interactiveElements = document.querySelectorAll(
+    "button, .top-nav-link"
+  );
+
+  interactiveElements.forEach((el) => {
+    el.removeEventListener("mouseenter", el._hoverListener);
+
+    el._hoverListener = () => {
+      const sound = hoverSound.cloneNode();
+      sound.play().catch((e) => console.log("Sound blocked:", e));
+    };
+
+    el.addEventListener("mouseenter", el._hoverListener);
+  });
+}
+
 // Initial load
 window.addEventListener("DOMContentLoaded", () => {
   if (!location.hash) location.hash = "#/home";
-  handleNavigation();
+  handleNavLinkNavigation((window.location.hash || "#/home").slice(1));
 });
 
 // Listen for hash changes
-window.addEventListener("hashchange", handleNavigation);
-// Hover sound
-const hoverSound = new Audio("sounds/MoveSelection.wav");
+window.addEventListener("hashchange", () => {
+  handleNavLinkNavigation((window.location.hash || "#/home").slice(1));
+});
 
-// Function to attach hover sounds
-function attachHoverSounds() {
-  const interactiveElements = document.querySelectorAll("btn, .top-nav-link");
-  interactiveElements.forEach((el) => {
-    el.addEventListener("mouseenter", () => {
-      // Play a fresh copy each time to allow rapid hover
-      const sound = hoverSound.cloneNode();
-      sound.play().catch((e) => console.log("Sound blocked:", e));
-    });
-  });
+// Tab navigation for links only
+window.addEventListener("keydown", (e) => {
+  if (e.key === "Tab") {
+    e.preventDefault();
+
+    const linksArray = Array.from(links);
+    const currentHash = window.location.hash || "#/home";
+    let currentIndex = linksArray.findIndex(
+      (link) => link.getAttribute("href") === currentHash
+    );
+
+    const nextIndex = (currentIndex + 1) % linksArray.length;
+    const nextLink = linksArray[nextIndex];
+    window.location.hash = nextLink.getAttribute("href");
+  }
+});
+const footer = document.getElementById("footer");
+
+window.addEventListener("scroll", () => {
+  if (window.scrollY === 0) {
+    footer.classList.add("fixed");
+    footer.classList.remove("hidden");
+  } else {
+    footer.classList.remove("fixed");
+    footer.classList.add("hidden");
+  }
+});
+
+// Initialize on load
+if (window.scrollY === 0) {
+  footer.classList.add("fixed");
 }
-// After newDiv is added and animation is triggered
-attachHoverSounds();
