@@ -156,7 +156,7 @@ a {
 
 /* Normal page containers */
 .page-container {
-  height: 25vh;
+  height: auto;
   align-items: center;
   justify-content: flex-end;
   margin: 0px 5px 5px 5px;
@@ -339,8 +339,10 @@ a {
 }
 
 .logo-block img {
-  max-width: 100%;
-  width: 500px;
+  max-width: 50%; /* image takes up at most 80% of the container’s width */
+  height: auto; /* keeps aspect ratio */
+  object-fit: contain; /* makes sure the image fits without distortion */
+  max-height: 80%; /* makes sure it won’t be taller than the container */
   z-index: 4;
 }
 
@@ -401,3 +403,225 @@ a {
   font-size: 14px;
   color: rgba(255, 255, 255, 0.8);
 }
+
+/* ============================= */
+/*       GALLERY SPECIFICS       */
+/* ============================= */
+/* Make the gallery page layout stable and images responsive */
+.gallery-page {
+  display: block; /* override flex-right alignment for gallery */
+  padding: 20px 30px;
+  background-color: #f3f3f3;
+}
+
+.gallery-page .page-content {
+  width: 100% !important;
+  margin: 20px auto;
+  text-align: left;
+  position: relative;
+  z-index: 2;
+  padding: 5px;
+  background: transparent;
+}
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 5px;
+  align-items: start;
+}
+
+.gallery-item {
+  background: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 5px 5px rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 150px;
+  aspect-ratio: 4 / 3; /* ensure consistent tile shape and cropping */
+}
+
+.gallery-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* crop safely to fill */
+  display: block;
+}
+
+/* Ensure fullpage header section keeps centered content without overlapping gallery */
+
+.fullpage-container.centered {
+  height: 40vh; /* keep header smaller */
+}
+
+/* Responsive tweaks */
+
+@media (max-width: 640px) {
+  .gallery-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .page-content { padding: 12px; }
+}
+
+@media (max-width: 420px) {
+  .gallery-grid { grid-template-columns: 1fr; }
+}
+
+/* ============================= */
+/*    GALLERY IMAGE FULLSCREEN   */
+/* ============================= */
+/* Backdrop behind a fullscreen image */
+.image-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.75);
+  z-index: 2000;
+  opacity: 0;
+  transition: opacity 180ms ease;
+  display: none;
+}
+.image-backdrop.active {
+  display: block;
+  opacity: 1;
+}
+
+/* Image when shown fullscreen */
+.fullscreen-image {
+  position: fixed !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  max-width: 95vw !important;
+  max-height: 95vh !important;
+  width: auto !important;
+  height: auto !important;
+  object-fit: contain !important; /* ensure fullscreen image fits without cropping */
+  z-index: 2001 !important;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.6) !important;
+  border-radius: 6px !important;
+  cursor: zoom-out !important;
+  transition: left 260ms ease, top 260ms ease, width 260ms ease, height 260ms ease, transform 260ms ease, box-shadow 180ms ease, border-radius 180ms ease;
+}
+
+/* indicate clickable images */
+.gallery-item img { cursor: zoom-in; }
+
+/* ============================= */
+/*       FAQ PAGE STYLES         */
+/* ============================= */
+.faq-header {
+  background-image: url('images/city.png');
+  height: 50vh;
+  padding-top: 5%;
+}
+
+.faq-page {
+  width: 95%;
+  max-width: 1400px;
+  margin: 20px auto;
+}
+
+.faq-intro {
+  margin-bottom: 18px;
+}
+
+.faq-list {
+  display: grid;
+  gap: 12px;
+}
+
+.faq-item {
+  background: rgba(0, 0, 0, 0.45);
+  border-radius: 8px;
+  padding: 0;
+  overflow: hidden;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.25);
+}
+
+.faq-question {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 18px;
+  cursor: pointer;
+  color: #fff;
+}
+
+.faq-question::after {
+  content: "\25BE";
+  font-size: 18px;
+  opacity: 0.9;
+  transform: rotate(0deg);
+  transition: transform 180ms ease;
+}
+
+.faq-item[open] .faq-question::after {
+  transform: rotate(180deg);
+}
+
+.answer {
+  padding: 0 18px 18px 18px;
+  color: rgba(255, 255, 255, 0.95);
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.01),
+    rgba(255, 255, 255, 0)
+  );
+}
+
+.answer p {
+  margin: 0;
+  line-height: 1.5;
+}
+
+.muted {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+@media (max-width: 640px) {
+  .faq-page {
+    padding: 8px;
+  }
+  .faq-question {
+    padding: 12px;
+  }
+}
+
+/* Header text color and center alignment for FAQ header */
+.faq-header .page-content {
+  color: #fff;
+  text-shadow: 0 2px 6px rgba(0,0,0,0.8);
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  padding-top: 6vh;
+}
++
+/* Panel that holds FAQ items and overlaps the header */
+.faq-panel {
+  width: 100%;
++  display: flex;
++  justify-content: center;
++  position: relative;
++  margin-top: -60px; /* pull panel up to overlap header */
++  z-index: 3;
++}
++
+.faq-panel .faq-page {
+  background: #f7f7f7;
++  border-radius: 10px;
++  box-shadow: 0 12px 30px rgba(0,0,0,0.2);
++  padding: 26px;
++}
++
+.faq-panel .faq-item {
+  background: rgba(0,0,0,0.12);
++  color: #222;
++}
++
+.faq-panel .faq-question { color: #fff; }
++
+.faq-panel .answer { color: rgba(0,0,0,0.85); }
++
+
+*** End Patch
