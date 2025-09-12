@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>FNAF Burger Fullscreen Embed</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <style>
+      /* ensure html/body take up the full viewport */
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        width: 100%;
+        overflow: hidden;
+      }
+
+      /* container covers entire screen */
+      .game-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: #000;
+      }
+
+      /* iframe fills its parent */
+      .game-container iframe {
+        border: none;
+        width: 100%;
+        height: 100%;
+        display: block; /* removes any inline spacing */
+      }
+    </style>
+  </head>
+  <body>
+    <div class="game-container">
+      <iframe
+        src="https://bitent.com/html5/fnaf_burger/"
+        allowfullscreen
+        scrolling="no"
+      >
+      </iframe>
+    </div>
+  </body>
+</html>

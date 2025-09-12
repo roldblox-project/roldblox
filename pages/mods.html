@@ -1,75 +1,82 @@
-<!-- Fullpage container with default Roblox Point image -->
+<!-- Modern Hero Section -->
 <div
   class="fullpage-container centered"
   style="
     background-image: url('images/city.png');
     height: 50vh;
-    padding-top: 5%;
+    margin-top: 69px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   "
 >
-  <div class="page-content">
-    <h1>Mods</h1>
-    <p>Scroll down for the mods!</p>
-    <p>Not sure what mods are, what they do, or if they’re safe?</p>
-    <p>Click the "What are mods?" button below to visit the FAQs page.</p>
-    <button class="btn" data-page="/faqs">What are mods?</button>
+  <div class="page-content text-center">
+    <h1 class="hero-title">Mods Showcase</h1>
+    <p class="hero-subtitle">Enhance your Roblox experience with our curated collection of mods</p>
+    <div class="hero-buttons">
+      <button class="btn primary-btn" data-page="/faqs">What are mods?</button>
+      <button class="btn secondary-btn">Browse All</button>
+    </div>
   </div>
 </div>
 
-<div class="page-container" style="background-image: url('images/rohtml.png')">
-  <div class="logo-block">
-    <img src="images/logos/rohtml.png" alt="Logo" />
-    <div class="subtitle">Play your games like you used to!</div>
-  </div>
-  <div class="page-content">
-    <h1>RoHTML</h1>
-    <p>
-      RoHTML, is an overlayer for Roblox, which automatically attempts to bring
-      back the old Roblox UI, using HTML! So far this is the most accurate one
-      that looks to the old Roblox UI, but may have some malfunctions. Still
-      unsure whether it's safe or not? Check FAQs!
-    </p>
-    <button class="btn">Check it out!</button>
-    <button class="btn">FAQs</button>
-  </div>
-</div>
+<!-- Modern Card Grid Layout -->
+<div class="about-section">
+  <div class="about-container">
+    <div class="mods-container">
+      <!-- Mod Card 1 -->
+      <div class="mod-card" style="background-image: url('images/rohtml.png')">
+        <div class="mod-card-content">
+          <div class="mod-logo">
+            <img src="images/logos/rohtml.png" alt="RoHTML Logo" />
+          </div>
+          <div class="mod-tagline">Play your games like you used to!</div>
+          <p class="mod-description">
+            An overlayer for Roblox that automatically brings back the old Roblox UI using HTML! 
+            The most accurate recreation of the classic Roblox interface available.
+          </p>
+          <div class="mod-actions">
+            <button class="btn primary-btn">Download</button>
+            <button class="btn secondary-btn" data-page="/faqs">Learn More</button>
+          </div>
+        </div>
+      </div>
 
-<!-- Page container with no image -->
-<div
-  class="page-container"
-  style="background-image: url('images/rovamped.png')"
->
-  <div class="logo-block">
-    <img src="images/logos/rovamped.png" alt="Logo" />
-    <div class="subtitle">All of Roblox's Old Greatness, Revamped!</div>
-  </div>
-  <div class="page-content">
-    <h1>RoVAMPED</h1>
-    <p>
-      RoVAMPED brings most of the old feels from old Roblox, to the new one! It
-      basically adds the old icons and images, back to the new Roblox, like new
-      Menu or UI, but with the old icons!
-    </p>
-    <button class="btn">Check out</button>
-  </div>
-</div>
-
-<div
-  class="page-container"
-  style="background-image: url('images/old_roldblox.png')"
->
-  <div class="logo-block">
-    <img src="images/logos/roldblox.png" alt="Logo" />
-    <div class="subtitle">Powering Imaginations, revived!</div>
-  </div>
-  <div class="page-content">
-    <h2>ROLDBLOX</h2>
-    <p>
-      This mod is unfortunately deprecated, because of Roblox's DMP
-      (DataModelPatch) expiration dates, and has expired and cannot be used
-      since the start of August. You can still download it for archival purposes
-      still!
-    </p>
-    <button class="btn">Doesn't matter, I'll check it out!</button>
+      <!-- Mod Card 2 -->
+      <div class="mod-card" style="background-image: url('images/rovamped.png')">
+        <div class="mod-card-content">
+          <div class="mod-logo">
+            <img src="images/logos/rovamped.png" alt="RoVAMPED Logo" />
+          </div>
+          <div class="mod-tagline">All of Roblox's Old Greatness, Revamped!</div>
+          <p class="mod-description">
+            Brings the nostalgic feel of old Roblox to the new platform by restoring classic icons and images.
+            Menu or UI, but with the old icons!
+          </p>
+          <div class="mod-actions">
+            <button class="btn primary-btn">Check out</button>
+            <button class="btn secondary-btn" data-page="/faqs">Learn More</button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Mod Card 3 -->
+      <div class="mod-card" style="background-image: url('images/old_roldblox.png')">
+        <div class="mod-card-content">
+          <div class="mod-logo">
+            <img src="images/logos/roldblox.png" alt="ROLDBLOX Logo" />
+          </div>
+          <div class="mod-tagline">Powering Imaginations, revived!</div>
+          <p class="mod-description">
+            This mod is unfortunately deprecated due to Roblox's DMP (DataModelPatch) expiration dates.
+            It cannot be used since the start of August, but you can still download it for archival purposes!
+          </p>
+          <div class="mod-actions">
+            <button class="btn primary-btn">Check out</button>
+            <button class="btn secondary-btn" data-page="/faqs">Learn Why</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

@@ -1,23 +1,94 @@
+// Main container and navigation links
 const contentDiv = document.getElementById("content");
 const links = document.querySelectorAll(".top-nav-link");
 
-// Navigation cooldown for links
+// Navigation cooldown
 let navLinkCooldown = false;
 
+// Route definitions
 const routes = {
   "/home": "pages/home.html",
   "/about": "pages/about.html",
   "/mods": "pages/mods.html",
   "/community": "pages/community.html",
   "/gallery": "pages/gallery.html",
-  "/faqs": "pages/faqs.html", // <-- add this
+  "/faqs": "pages/faqs.html",
   "/blog": "pages/blog.html", // optional
   "/help": "pages/help.html", // optional
   "/assets": "pages/assets.html", // optional
+  "/admin": "pages/admin.html", // optional
 };
 
-// Hover sound
-const hoverSound = new Audio("sounds/MoveSelection.wav");
+function initFaqToggles() {
+  const faqList = document.querySelector(".faq-list");
+  const faqItems = document.querySelectorAll(".faq-item");
+  const faqSearch = document.getElementById("faqSearch");
+  const original = Array.from(faqItems);
+
+  // (your existing toggle-open/close code stays here…)
+
+  if (faqSearch) {
+    faqSearch.addEventListener("input", () => {
+      const terms = faqSearch.value.toLowerCase().split(/\s+/).filter(Boolean);
+
+      // restore original when empty
+      if (terms.length === 0) {
+        faqList.innerHTML = "";
+        original.forEach((item) => {
+          item.style.display = "";
+          faqList.appendChild(item);
+        });
+        const oldMsg = faqList.querySelector(".no-results-message");
+        if (oldMsg) oldMsg.remove();
+        return;
+      }
+
+      // score each item by matches in text OR tags (substring match)
+      const scored = original.map((item) => {
+        const text = item
+          .querySelector(".faq-question span")
+          .textContent.toLowerCase();
+
+        const tags = (item.dataset.tags || "")
+          .toLowerCase()
+          .split(",")
+          .map((t) => t.trim());
+
+        const count = terms.reduce((sum, term) => {
+          const inText = text.includes(term);
+          const inTags = tags.some((tag) => tag.includes(term));
+          return sum + (inText || inTags ? 1 : 0);
+        }, 0);
+
+        return { item, count };
+      });
+
+      // sort high→low and rebuild list, hiding zero-score
+      scored.sort((a, b) => b.count - a.count);
+      faqList.innerHTML = "";
+      scored.forEach(({ item, count }) => {
+        item.style.display = count > 0 ? "" : "none";
+        if (count > 0) faqList.appendChild(item);
+      });
+
+      // no-results message
+      const anyMatch = scored.some((s) => s.count > 0);
+      if (!anyMatch) {
+        if (!faqList.querySelector(".no-results-message")) {
+          const msg = document.createElement("div");
+          msg.className = "no-results-message";
+          msg.textContent = "No matching questions found.";
+          faqList.appendChild(msg);
+        }
+      } else {
+        const old = faqList.querySelector(".no-results-message");
+        if (old) old.remove();
+      }
+    });
+  }
+}
+
+// Load a page fragment into #content
 async function loadPage(path) {
   const file = routes[path];
   const newDiv = document.createElement("div");
@@ -26,23 +97,27 @@ async function loadPage(path) {
   try {
     if (!file) throw new Error("Page not found");
     const res = await fetch(file);
-    if (!res.ok) throw new Error("HTTP error " + res.status);
+    if (!res.ok) throw new Error("HTTP " + res.status);
     newDiv.innerHTML = await res.text();
-  } catch (err) {
-    console.error("Error loading page:", err);
+  } catch {
     try {
-      const res404 = await fetch("pages/404.html");
-      newDiv.innerHTML = res404.ok
-        ? await res404.text()
+      const err404 = await fetch("pages/404.html");
+      newDiv.innerHTML = err404.ok
+        ? await err404.text()
         : "<h2>404 - Page Not Found</h2>";
-    } catch (err404) {
-      console.error("Error loading 404 page:", err404);
+    } catch {
       newDiv.innerHTML = "<h2>404 - Page Not Found</h2>";
     }
   }
 
   contentDiv.appendChild(newDiv);
 
+  // init FAQ on FAQ page
+  if (path === "/faqs") {
+    setTimeout(initFaqToggles, 100);
+  }
+
+  // page-swap animation + old removal
   requestAnimationFrame(() => {
     Array.from(contentDiv.children).forEach((child) => {
       if (child !== newDiv) {
@@ -55,102 +130,72 @@ async function loadPage(path) {
     newDiv.classList.add("active");
   });
 
-  attachButtonSounds(newDiv);
-  attachHoverSounds();
-
-  // ✅ Attach FAQ dropdowns for this page
-  newDiv.querySelectorAll(".dropdown").forEach((dropdown) => {
-    dropdown.addEventListener("click", () => {
-      dropdown.classList.toggle("active");
-    });
-  });
+  attachButtonNavigation(newDiv);
+  attachDropdowns(newDiv);
 }
 
-// Attach button click sounds
-function attachButtonSounds(container) {
+// turn buttons with data-page into hash links
+function attachButtonNavigation(container) {
   const buttons = container.querySelectorAll("button");
   buttons.forEach((btn) => {
     btn.addEventListener("click", () => {
-      const sound = new Audio("sounds/ButtonPress.wav");
-      sound.play().catch((e) => console.log("Sound blocked:", e));
-
-      const targetPage = btn.dataset.page;
-      if (targetPage && routes[targetPage]) {
-        window.location.hash = targetPage;
+      const target = btn.dataset.page;
+      if (target && routes[target]) {
+        window.location.hash = target;
       }
     });
   });
 }
 
-// Highlight active nav link
-function setActiveLink() {
-  const currentHash = window.location.hash || "#/home";
-  links.forEach((link) => {
-    link.classList.toggle("active", link.getAttribute("href") === currentHash);
+// dropdown toggles within loaded page
+function attachDropdowns(container) {
+  container.querySelectorAll(".dropdown").forEach((dd) => {
+    dd.addEventListener("click", () => dd.classList.toggle("active"));
   });
 }
 
-// Handle navigation changes for links with cooldown
+// highlight the current nav link
+function setActiveLink() {
+  const current = window.location.hash || "#/home";
+  links.forEach((link) => {
+    link.classList.toggle("active", link.getAttribute("href") === current);
+  });
+}
+
+// navigate to a new hash, with cooldown to prevent spam
 function handleNavLinkNavigation(path) {
   if (navLinkCooldown) return;
   navLinkCooldown = true;
-
   setTimeout(() => (navLinkCooldown = false), 100);
-
-  const sound = new Audio("sounds/ScreenChange.wav");
-  sound.play().catch((e) => console.log("Sound blocked:", e));
 
   loadPage(path);
   setActiveLink();
 }
 
-// Attach hover sounds
-function attachHoverSounds() {
-  const interactiveElements = document.querySelectorAll(
-    "button, .top-nav-link"
-  );
-
-  interactiveElements.forEach((el) => {
-    el.removeEventListener("mouseenter", el._hoverListener);
-
-    el._hoverListener = () => {
-      const sound = hoverSound.cloneNode();
-      sound.play().catch((e) => console.log("Sound blocked:", e));
-    };
-
-    el.addEventListener("mouseenter", el._hoverListener);
-  });
-}
-
-// Initial load
+// initial load + hash watcher
 window.addEventListener("DOMContentLoaded", () => {
   if (!location.hash) location.hash = "#/home";
-  handleNavLinkNavigation((window.location.hash || "#/home").slice(1));
+  handleNavLinkNavigation(location.hash.slice(1));
 });
 
-// Listen for hash changes
 window.addEventListener("hashchange", () => {
-  handleNavLinkNavigation((window.location.hash || "#/home").slice(1));
+  handleNavLinkNavigation(location.hash.slice(1));
 });
 
-// Tab navigation for links only
+// Tab key moves focus through top-nav-links only
 window.addEventListener("keydown", (e) => {
   if (e.key === "Tab") {
     e.preventDefault();
-
-    const linksArray = Array.from(links);
-    const currentHash = window.location.hash || "#/home";
-    let currentIndex = linksArray.findIndex(
-      (link) => link.getAttribute("href") === currentHash
-    );
-
-    const nextIndex = (currentIndex + 1) % linksArray.length;
-    const nextLink = linksArray[nextIndex];
-    window.location.hash = nextLink.getAttribute("href");
+    const arr = Array.from(links);
+    const curr = location.hash || "#/home";
+    let idx = arr.findIndex((l) => l.getAttribute("href") === curr);
+    idx = (idx + 1) % arr.length;
+    window.location.hash = arr[idx].getAttribute("href");
   }
 });
-const footer = document.getElementById("footer");
 
+// sticky footer when scrolled to top
+const footer = document.getElementById("footer");
 window.addEventListener("scroll", () => {
   if (window.scrollY === 0) {
     footer.classList.add("fixed");
@@ -160,29 +205,23 @@ window.addEventListener("scroll", () => {
     footer.classList.add("hidden");
   }
 });
-
-// Initialize on load
 if (window.scrollY === 0) {
   footer.classList.add("fixed");
 }
 
-/* ------------------------------ */
-/* Gallery image fullscreen logic */
-/* ------------------------------ */
-// Create a single backdrop element used for fullscreen previews
+/* --------------------------------- */
+/* Gallery fullscreen preview logic  */
+/* --------------------------------- */
 const imageBackdrop = document.createElement("div");
 imageBackdrop.className = "image-backdrop";
 document.body.appendChild(imageBackdrop);
 
-let currentFullImage = null; // the cloned fullscreen element
-let currentFullSource = null; // original <img> that was clicked
+let currentFullImage = null;
+let currentFullSource = null;
 
 function toggleFullscreenImage(img) {
   if (!img) return;
-
-  // If already showing this image fullscreen, close it
   if (currentFullSource === img) {
-    // Immediately remove the cloned fullscreen image and backdrop
     if (currentFullImage && currentFullImage.parentNode) {
       currentFullImage.parentNode.removeChild(currentFullImage);
     }
@@ -192,41 +231,34 @@ function toggleFullscreenImage(img) {
     document.body.style.overflow = "";
     return;
   }
+  if (currentFullSource) toggleFullscreenImage(currentFullSource);
 
-  // If another image is open, close it first
-  if (currentFullSource) {
-    toggleFullscreenImage(currentFullSource);
-  }
-
-  // Create a clone so it isn't affected by ancestor transforms/overflow
   const clone = img.cloneNode(true);
   clone.classList.add("fullscreen-image");
 
-  // Get thumbnail position/size to animate from
-  const thumbRect = img.getBoundingClientRect();
-
-  // Immediately size and position the clone at centered fullscreen (no animation)
+  const thumb = img.getBoundingClientRect();
   const maxW = Math.floor(window.innerWidth * 0.95);
   const maxH = Math.floor(window.innerHeight * 0.95);
-  const naturalW = img.naturalWidth || thumbRect.width;
-  const naturalH = img.naturalHeight || thumbRect.height;
-  const wRatio = maxW / naturalW;
-  const hRatio = maxH / naturalH;
-  const ratio = Math.min(1, wRatio, hRatio);
-  const endW = Math.round(naturalW * ratio);
-  const endH = Math.round(naturalH * ratio);
-  const endLeft = Math.round((window.innerWidth - endW) / 2);
-  const endTop = Math.round((window.innerHeight - endH) / 2);
+  const natW = img.naturalWidth || thumb.width;
+  const natH = img.naturalHeight || thumb.height;
+  const ratio = Math.min(1, maxW / natW, maxH / natH);
 
-  clone.style.position = "fixed";
-  clone.style.left = endLeft + "px";
-  clone.style.top = endTop + "px";
-  clone.style.width = endW + "px";
-  clone.style.height = endH + "px";
-  clone.style.transform = "none";
-  clone.style.transition = "none";
-  clone.style.borderRadius = "6px";
-  clone.style.boxShadow = "0 20px 40px rgba(0,0,0,0.6)";
+  const w = Math.round(natW * ratio);
+  const h = Math.round(natH * ratio);
+  const left = Math.round((window.innerWidth - w) / 2);
+  const top = Math.round((window.innerHeight - h) / 2);
+
+  Object.assign(clone.style, {
+    position: "fixed",
+    left: left + "px",
+    top: top + "px",
+    width: w + "px",
+    height: h + "px",
+    transform: "none",
+    transition: "none",
+    borderRadius: "6px",
+    boxShadow: "0 20px 40px rgba(0,0,0,0.6)",
+  });
 
   clone.addEventListener("click", () => toggleFullscreenImage(img), {
     once: true,
@@ -240,87 +272,74 @@ function toggleFullscreenImage(img) {
   currentFullSource = img;
 }
 
-// Attach fullscreen handlers to images inside a container (used after page load)
-function attachGalleryFullscreen(container) {
-  if (!container) return;
-  console.debug("attachGalleryFullscreen called for", container);
-  const imgs = container.querySelectorAll(".gallery-grid img");
+// attach fullscreen handler to gallery images
+function attachGalleryFullscreen(root) {
+  if (!root) return;
+  const imgs = root.querySelectorAll(".gallery-grid img");
   imgs.forEach((img) => {
-    // avoid attaching multiple times
     if (img._fsAttached) return;
     img._fsAttached = true;
     img.addEventListener("click", (e) => {
       e.stopPropagation();
       toggleFullscreenImage(img);
     });
-    console.debug("attached fullscreen handler to", img.src);
   });
 }
 
-// Close on backdrop click or Esc
-// Close on backdrop click or Esc — use the original source reference when closing
+// close on backdrop or Esc
 imageBackdrop.addEventListener("click", () => {
   if (currentFullSource) toggleFullscreenImage(currentFullSource);
 });
-
 window.addEventListener("keydown", (e) => {
   if (e.key === "Escape" && currentFullSource) {
     toggleFullscreenImage(currentFullSource);
   }
 });
 
-// Expose toggle for inline fallback to use the same implementation
-window.toggleFullscreenImage = toggleFullscreenImage;
-
-// Integrate with dynamic page loader: call attachGalleryFullscreen for pages loaded into #content
+// integrate with dynamic loader
 const originalLoadPage = loadPage;
 loadPage = async function (path) {
   await originalLoadPage(path);
-  // after page is inserted, attach handlers to the last appended .page element
   const latest =
     contentDiv.lastElementChild || contentDiv.querySelector(".page");
   attachGalleryFullscreen(latest);
-  // Attach FAQ behavior if this page contains FAQ elements
-  if (typeof attachFAQBehavior === "function") attachFAQBehavior(latest);
+  if (typeof attachFAQBehavior === "function") {
+    attachFAQBehavior(latest);
+  }
 };
 
-// Also attach on initial DOMContentLoaded for static open pages
+// initial static attachments
 window.addEventListener("DOMContentLoaded", () => {
   attachGalleryFullscreen(document);
-  if (typeof attachFAQBehavior === "function") attachFAQBehavior(document);
+  if (typeof attachFAQBehavior === "function") {
+    attachFAQBehavior(document);
+  }
 });
 
-/* ------------------------------ */
-/* FAQ behavior (moved from inline page) */
-/* ------------------------------ */
+// legacy <details>-based FAQ fallback
 function attachFAQBehavior(root) {
   if (!root) root = document;
-  const faqList = root.querySelector(".faq-list");
-  if (!faqList) return;
+  const list = root.querySelector(".faq-list");
+  if (!list || list._attached) return;
+  list._attached = true;
 
-  // Avoid attaching multiple times
-  if (faqList._attached) return;
-  faqList._attached = true;
-
-  faqList.addEventListener("click", (e) => {
-    const details = e.target.closest("details");
-    if (!details) return;
-    // close others
-    faqList.querySelectorAll("details").forEach((d) => {
-      if (d !== details) d.removeAttribute("open");
+  list.addEventListener("click", (e) => {
+    const d = e.target.closest("details");
+    if (!d) return;
+    list.querySelectorAll("details").forEach((other) => {
+      if (other !== d) other.removeAttribute("open");
     });
   });
-
-  faqList.querySelectorAll("summary").forEach((s) => {
+  list.querySelectorAll("summary").forEach((s) => {
     s.addEventListener("keydown", (e) => {
       if (e.key === "Enter" || e.key === " ") {
         e.preventDefault();
-        const details = s.parentElement;
-        if (details.hasAttribute("open")) details.removeAttribute("open");
-        else details.setAttribute("open", "");
-        // close others
-        faqList.querySelectorAll("details").forEach((d) => {
-          if (d !== details) d.removeAttribute("open");
+        const d = s.parentElement;
+        d.hasAttribute("open")
+          ? d.removeAttribute("open")
+          : d.setAttribute("open", "");
+        list.querySelectorAll("details").forEach((other) => {
+          if (other !== d) other.removeAttribute("open");
         });
       }
     });

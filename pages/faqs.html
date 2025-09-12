@@ -1,54 +1,402 @@
-<div
-  class="fullpage-container centered faq-header"
-  style="height: auto; min-height: 100vh"
->
-  <div class="page-content">
-    <h1>Frequently Asked Questions</h1>
-    <p>Answers to common questions about the project and community.</p>
-    <section class="faq-list">
-      <details class="faq-item" open>
-        <summary class="faq-question">What is ROLDBLOX?</summary>
-        <div class="answer">
-          <p>
-            ROLDBLOX is a community project inspired by the classic feel of the
-            platform. It is a fan-made experience and is not affiliated with the
-            original platform.
-          </p>
-        </div>
-      </details>
+<div class="faq-container">
+  <div
+    class="faq-header-section"
+    style="
+      height: 50vh;
+      margin-top: 69px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    "
+  >
+    <div class="faq-header-content">
+      <img src="images/logo.png" alt="Roldblox Logo" class="faq-logo" />
+      <h1>Frequently Asked Questions</h1>
+      <div class="search-container">
+        <input
+          type="text"
+          placeholder="Search a question..."
+          class="faq-search"
+          id="faqSearch"
+        />
+      </div>
+    </div>
+  </div>
 
-      <details class="faq-item">
-        <summary class="faq-question">Is this an official product?</summary>
-        <div class="answer">
+  <div class="faq-content">
+    <div class="faq-list">
+      <div
+        class="faq-item active"
+        data-tags="rolblox,project,nostalgic,classic,ui"
+      >
+        <div class="faq-question">
+          <span>What is ROLDBLOX?</span>
+        </div>
+        <div class="faq-answer show">
           <p>
-            No — this is a fan project created by enthusiasts who enjoy the
-            nostalgia of older platform designs.
+            ROLDBLOX is a fan-made project by NotRoblox that restores the
+            classic Roblox look and UI so players can relive the platform’s
+            older aesthetic.
           </p>
         </div>
-      </details>
+      </div>
 
-      <details class="faq-item">
-        <summary class="faq-question">
-          How can I contribute or report bugs?
-        </summary>
-        <div class="answer">
+      <div
+        class="faq-item"
+        data-tags="roldblox,official,roblox,product,affiliation"
+      >
+        <div class="faq-question">
+          <span>Is ROLDBLOX an official Roblox product?</span>
+        </div>
+        <div class="faq-answer">
           <p>
-            Check the Community or Help pages for contact options. You can also
-            join our Discord (link in the header/footer) to report issues and
-            help test features.
+            No — it’s a community project and not affiliated with or endorsed by
+            Roblox Corporation.
           </p>
         </div>
-      </details>
+      </div>
 
-      <details class="faq-item">
-        <summary class="faq-question">Where can I find assets or mods?</summary>
-        <div class="answer">
+      <div class="faq-item" data-tags="roldblox,safe,safety,security,local,use">
+        <div class="faq-question">
+          <span>Is ROLDBLOX safe to use?</span>
+        </div>
+        <div class="faq-answer">
           <p>
-            Visit the Assets or Mods pages. Remember to follow any usage
-            guidelines provided with the asset packs.
+            Yes — ROLDBLOX is distributed as local files and overlays, and it
+            only changes visuals on your machine without modifying Roblox
+            servers.
           </p>
         </div>
-      </details>
-    </section>
+      </div>
+
+      <div
+        class="faq-item"
+        data-tags="safety,download,verify,antivirus,security"
+      >
+        <div class="faq-question">
+          <span>How do you keep it safe?</span>
+        </div>
+        <div class="faq-answer">
+          <p>
+            Always download from the official project page or a trusted mirror,
+            verify file hashes if provided and scan downloads with antivirus if
+            you think it's suspicious.
+          </p>
+        </div>
+      </div>
+
+      <div
+        class="faq-item"
+        data-tags="roldblox,inject,scripts,servers,serverside,code"
+      >
+        <div class="faq-question">
+          <span
+            >Does ROLDBLOX inject scripts into Roblox or touch Roblox
+            servers?</span
+          >
+        </div>
+        <div class="faq-answer">
+          <p>
+            No — it uses local overlays and texture replacements without
+            altering Roblox’s server-side code.
+          </p>
+        </div>
+      </div>
+
+      <div
+        class="faq-item"
+        data-tags="ban,roblox,terms,violation,safe,roldblox"
+      >
+        <div class="faq-question">
+          <span>Will using ROLDBLOX get me banned?</span>
+        </div>
+        <div class="faq-answer">
+          <p>
+            ROLDBLOX does not modify Roblox’s code or inject any scripts. Using
+            it as intended is safe and will not result in a ban.
+          </p>
+        </div>
+      </div>
+
+      <div
+        class="faq-item"
+        data-tags="mods,deprecated,broken,archival,compatibility,expiration"
+      >
+        <div class="faq-question">
+          <span>Are any of these mods deprecated or broken?</span>
+        </div>
+        <div class="faq-answer">
+          <p>
+            Yes — some older versions are marked broken or deprecated (for
+            example due to DataModelPatch expiration) and are kept for archival
+            purposes.
+          </p>
+        </div>
+      </div>
+
+      <div
+        class="faq-item"
+        data-tags="datamodelpatch,dmp,expiration,platform,changes"
+      >
+        <div class="faq-question">
+          <span>What is “DataModelPatch (DMP) expiration”?</span>
+        </div>
+        <div class="faq-answer">
+          <p>
+            DataModelPatch expiration refers to platform-level changes that
+            render certain UI patches unusable until rewritten, causing some
+            mods to stop working.
+          </p>
+        </div>
+      </div>
+
+      <div
+        class="faq-item"
+        data-tags="install,mods,safety,antivirus,instructions,download"
+      >
+        <div class="faq-question">
+          <span>How do I install these mods safely?</span>
+        </div>
+        <div class="faq-answer">
+          <p>
+            Always download mods from official pages and carefully read the
+            mod’s description, which usually includes step-by-step instructions.
+            Back up any files that will be replaced, scan downloads with
+            antivirus software, and prioritize overlay-style mods like RoHTML
+            for the safest experience.
+          </p>
+        </div>
+      </div>
+
+      <div class="faq-item" data-tags="download,mods,links,community,roldblox">
+        <div class="faq-question">
+          <span>Where can I download them?</span>
+        </div>
+        <div class="faq-answer">
+          <p>
+            Download from community mod hubs such as GameBanana, using links
+            posted on the project’s official channels.
+          </p>
+        </div>
+      </div>
+
+      <div class="faq-item" data-tags="permissions,elevated,admin,rights,mods">
+        <div class="faq-question">
+          <span>Do these mods need elevated permissions?</span>
+        </div>
+        <div class="faq-answer">
+          <p>
+            Some mods, like RoHTML using AutoHotkey, may occasionally request
+            administrative privileges to function properly. This is normal for
+            local overlays and does not involve sending any data externally.
+            Always ensure you’re using official releases from trusted sources.
+          </p>
+        </div>
+      </div>
+
+      <div
+        class="faq-item"
+        data-tags="account,inventory,mods,local,effect,safety"
+      >
+        <div class="faq-question">
+          <span>Will mods affect my Roblox account or inventory?</span>
+        </div>
+        <div class="faq-answer">
+          <p>
+            No — visual overlays and texture swaps are local and do not affect
+            your Roblox account or inventories.
+          </p>
+        </div>
+      </div>
+
+      <div class="faq-item" data-tags="compatibility,os,browser,platform,mods">
+        <div class="faq-question">
+          <span>Can I use mods on any OS or browser?</span>
+        </div>
+        <div class="faq-answer">
+          <p>
+            Compatibility varies; most releases target Windows. Check each mod’s
+            page for supported platforms and installation notes.
+          </p>
+        </div>
+      </div>
+
+      <div class="faq-item" data-tags="support,bugs,report,community,discord">
+        <div class="faq-question">
+          <span>Where do I get support or report bugs?</span>
+        </div>
+        <div class="faq-answer">
+          <p>
+            Get support via the project’s community pages, mod hub comments, or
+            the official Discord server listed by the project.
+          </p>
+        </div>
+      </div>
+
+      <div
+        class="faq-item"
+        data-tags="contribute,testing,assets,translations,community"
+      >
+        <div class="faq-question">
+          <span>Can I contribute?</span>
+        </div>
+        <div class="faq-answer">
+          <p>
+            Yes — most projects welcome contributions for testing, assets, or
+            translations. See the project’s contribution guidelines or Discord.
+          </p>
+        </div>
+      </div>
+
+      <div
+        class="faq-item"
+        data-tags="privacy,data,concerns,inspect,executables"
+      >
+        <div class="faq-question">
+          <span>Are there privacy concerns?</span>
+        </div>
+        <div class="faq-answer">
+          <p>
+            Overlay and texture mods typically do not collect data. Still, only
+            run builds from trusted sources and inspect any included
+            executables.
+          </p>
+        </div>
+      </div>
+
+      <div class="faq-item" data-tags="updates,mod,maintain,version,status">
+        <div class="faq-question">
+          <span>What about updates?</span>
+        </div>
+        <div class="faq-answer">
+          <p>
+            Follow the mod’s official page or Discord for updates. Maintainers
+            post status changes when Roblox updates break a mod; some remain
+            actively maintained, others archived.
+          </p>
+        </div>
+      </div>
+
+      <div class="faq-item" data-tags="RoHTML,overlay,html,css,mods,difference">
+        <div class="faq-question">
+          <span>Is RoHTML different from other mods?</span>
+        </div>
+        <div class="faq-answer">
+          <p>
+            RoHTML uses HTML and CSS overlays to recreate UI elements, making it
+            less invasive and easier to maintain than binary patches.
+          </p>
+        </div>
+      </div>
+
+      <div
+        class="faq-item"
+        data-tags="mods,broken,archival,archival only,compatibility"
+      >
+        <div class="faq-question">
+          <span>Why do some mods say “broken” or “archival only”?</span>
+        </div>
+        <div class="faq-answer">
+          <p>
+            Mods are marked “broken” or “archival only” when platform changes or
+            compatibility issues prevent them from functioning.
+          </p>
+        </div>
+      </div>
+
+      <div
+        class="faq-item"
+        data-tags="deprecated,archive,historical,study,download"
+      >
+        <div class="faq-question">
+          <span
+            >Can I still download deprecated mods for historical reasons?</span
+          >
+        </div>
+        <div class="faq-answer">
+          <p>
+            Yes — archive downloads are often kept available so people can
+            preserve or study older versions even if they no longer work.
+          </p>
+        </div>
+      </div>
+
+      <div
+        class="faq-item"
+        data-tags="parents,supervise,safety,downloads,children"
+      >
+        <div class="faq-question">
+          <span>Should parents be concerned?</span>
+        </div>
+        <div class="faq-answer">
+          <p>
+            These mods are local and visual only, but parents should supervise
+            downloads, ensure children use the trusted sources, and keep Roblox
+            parental controls enabled.
+          </p>
+        </div>
+      </div>
+
+      <div
+        class="faq-item"
+        data-tags="verify,official,release,NotRoblox,uploader"
+      >
+        <div class="faq-question">
+          <span>How do I verify a mod is the official NotRoblox release?</span>
+        </div>
+        <div class="faq-answer">
+          <p>
+            Verify the uploader’s name on mod hubs — it may appear as NotRoblox.
+            Also, look for matching branding or official Discord links, and
+            always use downloads from the project’s verified channels.
+          </p>
+        </div>
+      </div>
+
+      <div
+        class="faq-item"
+        data-tags="login,sensitive data,credentials,malicious,data,safety"
+      >
+        <div class="faq-question">
+          <span>What if a mod asks for a login or sensitive data?</span>
+        </div>
+        <div class="faq-answer">
+          <p>
+            Never share Roblox credentials or personal data. Treat any tool
+            requesting login details as malicious and report it.
+          </p>
+        </div>
+      </div>
+
+      <div
+        class="faq-item"
+        data-tags="announcements,news,website,discord,updates"
+      >
+        <div class="faq-question">
+          <span>Where can I read more or see project announcements?</span>
+        </div>
+        <div class="faq-answer">
+          <p>
+            Read announcements on the mod hub pages and the project’s official
+            Discord or website for status updates and news.
+          </p>
+        </div>
+      </div>
+
+      <div
+        class="faq-item"
+        data-tags="assets,soundfonts,models,audio,customization"
+      >
+        <div class="faq-question">
+          <span>What else does ROLDBLOX give?</span>
+        </div>
+        <div class="faq-answer">
+          <p>
+            ROLDBLOX offers soundfonts, models, and other assets to enhance and
+            customize the game’s look, feel, and audio experience.
+          </p>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

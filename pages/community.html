@@ -1,95 +1,64 @@
-<!-- Fullpage container with default Roblox Point image -->
+<!-- Modern Community Hero Section -->
 <div
   class="fullpage-container centered"
   style="
     background-image: url('images/city.png');
     height: 50vh;
-    padding-top: 5%;
-    paddint-bottom: 10%;
+    margin-top: 69px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   "
 >
-  <div class="page-content">
-    <h1>Community</h1>
-    <p>Welcome to our community!</p>
-    <p>
-      We hang out together on our Discord Server where you can chat, share
-      ideas, and be friends with others.
-    </p>
-    <p>
-      You can also check out my Youtube Channel for videos, updates, and more
-      content.
-    </p>
-    <p>
-      Feel free to add me if you’d like, everyone’s welcome here! Our community
-      is friendly, supportive, and always open to new people.
-    </p>
+  <div class="page-content text-center">
+    <h1 class="hero-title">Join Our Community</h1>
+    <p class="hero-subtitle">Connect with fellow enthusiasts and stay updated with the latest news</p>
   </div>
 </div>
 
-<div
-  class="page-container"
-  style="background-image: url('images/backgrounds/discord.png')"
->
-  <div class="logo-block" style="max-width: 50%">
-    <img
-      src="images/icons/discord.png"
-      alt="Logo"
-      style="width: 50%; height: auto"
-    />
-  </div>
-
-  <div class="page-content">
-    <h1>Discord</h1>
-    <p>
-      Our Discord server is the main hub for everything related to ROLDBLOX and
-      our projects. It’s a place where people come together to discuss updates,
-      share feedback, and collaborate on new ideas.
+<!-- Community Introduction Section -->
+<div class="about-section">
+  <div class="about-container">
+    <h2 class="section-title">Welcome to the ROLDBLOX Community</h2>
+    <p class="section-text">
+      Our community is friendly, supportive, and always open to new people. Connect with us through various platforms to chat, share ideas, and stay updated on the latest developments.
     </p>
-    <button class="btn">Join!</button>
-  </div>
-</div>
+    <div class="community-grid">
+      <!-- Discord Card -->
+      <div class="community-card discord" style="background-image: url('images/backgrounds/discord.png')">
+        <div class="community-card-icon">
+          <img src="images/icons/discord.png" alt="Discord" />
+        </div>
+        <h3 class="community-platform-title">Discord</h3>
+        <p class="community-platform-description">
+          Join our Discord server to chat with other members, get support, and stay up-to-date with our latest projects.
+        </p>
+        <button class="btn primary-btn">Join Server</button>
+      </div>
 
-<div
-  class="page-container"
-  style="background-image: url('images/backgrounds/youtube.png')"
->
-  <div class="logo-block" style="max-width: 75%">
-    <img
-      src="images/icons/youtube.png"
-      alt="Logo"
-      style="width: 75%; height: auto"
-    />
-  </div>
-  <div class="page-content">
-    <h1>Youtube</h1>
-    <p>
-      My Youtube channel is my main account for most videos I make such as
-      Updates, Fun Videos, Tutorials, Covers, and more! Feel free to comment on
-      any video and post!
-    </p>
-    <button class="btn">Check out</button>
-  </div>
-</div>
+      <!-- YouTube Card -->
+      <div class="community-card youtube" style="background-image: url('images/backgrounds/youtube.png')">
+        <div class="community-card-icon">
+          <img src="images/icons/youtube.png" alt="YouTube" />
+        </div>
+        <h3 class="community-platform-title">YouTube</h3>
+        <p class="community-platform-description">
+          Subscribe to our YouTube channel for video updates, tutorials, and showcases of our latest mods and creations.
+        </p>
+        <button class="btn primary-btn">Subscribe</button>
+      </div>
 
-<div
-  class="page-container"
-  style="background-image: url('images/backgrounds/roblox.png')"
->
-  <div class="logo-block" style="max-width: 75%">
-    <img
-      src="images/icons/roldblox_productions.png"
-      alt="Logo"
-      style="width: 75%; height: auto"
-    />
-  </div>
-  <div class="page-content">
-    <h2>Roblox Group</h2>
-    <p>
-      Our Roblox Group offers classic old-school clothing; shirts, pants, and
-      more! With your support, we hope to add UGC items soon. Every member helps
-      us grow, whether for outfits or support.
-    </p>
-    <button class="btn">Join the Group</button>
-    <button class="btn">Support Us</button>
+      <!-- Roblox Group Card -->
+      <div class="community-card roblox" style="background-image: url('images/backgrounds/roblox.png')">
+        <div class="community-card-icon">
+          <img src="images/icons/roldblox_productions.png" alt="Roblox Group" />
+        </div>
+        <h3 class="community-platform-title">Roblox Group</h3>
+        <p class="community-platform-description">
+          Become a member of our Roblox Group to get exclusive in-game items, and show your support for our work.
+        </p>
+        <button class="btn primary-btn">Join Group</button>
+      </div>
+    </div>
   </div>
 </div>

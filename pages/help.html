@@ -1,39 +1,51 @@
-<!-- Help Page Template -->
-<div
-  class="fullpage-container centered"
-  style="
-    background-image: url('images/space.png');
-    height: 50vh;
-    padding-top: 5%;
-  "
->
-  <div class="page-content">
-    <h1>Help & Support</h1>
-    <p>
-      Find guides, troubleshooting steps, and ways to contact the team below.
-    </p>
-    <button class="btn" data-page="/faqs">See FAQs</button>
+<div class="help-container">
+  <div class="help-header-section">
+    <div class="help-header-content">
+      <img src="images/logo.png" alt="Roldblox Logo" class="help-logo">
+      <h1>Help & Support</h1>
+      <p>Find guides, troubleshooting steps, and ways to contact the team below.</p>
+    </div>
   </div>
-</div>
+  
+  <div class="help-content">
+    <div class="help-card">
+      <div class="help-card-header">
+        <h2>Frequently Asked Questions</h2>
+      </div>
+      <div class="help-card-body">
+        <p>Check our FAQ section for answers to common questions about ROLDBLOX, mods, and features.</p>
+        <button class="btn" data-page="/faqs">See FAQs</button>
+      </div>
+    </div>
 
-<div
-  class="page-container"
-  style="background-image: url('images/backgrounds/placearchive.png')"
-  ;
->
-  <div class="page-content simple-container" style="max-width: 700px">
-    <h2>Need help?</h2>
-    <p>
-      If something isn't working the way you expect, try the FAQs first. If that
-      doesn't help, reach out on Discord.
-    </p>
+    <div class="help-card">
+      <div class="help-card-header">
+        <h2>Need Help?</h2>
+      </div>
+      <div class="help-card-body">
+        <p>If something isn't working the way you expect, try the FAQs first. If that doesn't help, reach out on Discord.</p>
+        <h3>Contact Options</h3>
+        <div class="contact-option">
+          <span class="contact-icon">💬</span>
+          <div class="contact-details">
+            <h4>Discord</h4>
+            <p>Join our server for live help and community support</p>
+          </div>
+        </div>
+      </div>
+    </div>
 
-    <h3>Contact</h3>
-    <p>Discord: Join our server for live help (link on the Community page).</p>
-
-    <div style="margin-top: 12px">
-      <button class="btn" data-page="/community">Community</button>
-      <button class="btn" data-page="/home">Home</button>
+    <div class="help-card">
+      <div class="help-card-header">
+        <h2>Community Resources</h2>
+      </div>
+      <div class="help-card-body">
+        <p>Connect with other ROLDBLOX users and find additional resources.</p>
+        <div class="help-buttons">
+          <button class="btn" data-page="/community">Community</button>
+          <button class="btn" data-page="/home">Home</button>
+        </div>
+      </div>
     </div>
   </div>
 </div>
