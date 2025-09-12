@@ -1,8 +1,10 @@
+// script.js
+
 // Main container and navigation links
 const contentDiv = document.getElementById("content");
 const links = document.querySelectorAll(".top-nav-link");
 
-// Navigation cooldown
+// Navigation cooldown flag
 let navLinkCooldown = false;
 
 // Route definitions
@@ -13,25 +15,53 @@ const routes = {
   "/community": "pages/community.html",
   "/gallery": "pages/gallery.html",
   "/faqs": "pages/faqs.html",
-  "/blog": "pages/blog.html", // optional
-  "/help": "pages/help.html", // optional
-  "/assets": "pages/assets.html", // optional
-  "/admin": "pages/admin.html", // optional
+  "/blog": "pages/blog.html",
+  "/help": "pages/help.html",
+  "/assets": "pages/assets.html",
+  "/admin": "pages/admin.html",
 };
 
+/**
+ * Initialize FAQ toggling and enhanced multi-term + tag search.
+ */
 function initFaqToggles() {
   const faqList = document.querySelector(".faq-list");
-  const faqItems = document.querySelectorAll(".faq-item");
+  const faqItems = Array.from(document.querySelectorAll(".faq-item"));
   const faqSearch = document.getElementById("faqSearch");
-  const original = Array.from(faqItems);
+  const original = faqItems.slice(); // preserve original order
 
-  // (your existing toggle-open/close code stays here…)
+  // Toggle open/close behavior
+  faqItems.forEach((item) => {
+    const question = item.querySelector(".faq-question");
+    const answer = item.querySelector(".faq-answer");
+    if (!question || !answer) return;
 
+    question.addEventListener("click", () => {
+      const isActive = item.classList.contains("active");
+      // close others
+      faqItems.forEach((other) => {
+        if (other !== item && other.classList.contains("active")) {
+          other.classList.remove("active");
+          other.querySelector(".faq-answer").classList.remove("show");
+        }
+      });
+      // toggle this one
+      if (isActive) {
+        item.classList.remove("active");
+        answer.classList.remove("show");
+      } else {
+        item.classList.add("active");
+        answer.classList.add("show");
+      }
+    });
+  });
+
+  // Enhanced search: match terms against question text + data-tags, rank by match count
   if (faqSearch) {
     faqSearch.addEventListener("input", () => {
       const terms = faqSearch.value.toLowerCase().split(/\s+/).filter(Boolean);
 
-      // restore original when empty
+      // if empty search, restore original
       if (terms.length === 0) {
         faqList.innerHTML = "";
         original.forEach((item) => {
@@ -43,35 +73,38 @@ function initFaqToggles() {
         return;
       }
 
-      // score each item by matches in text OR tags (substring match)
+      // score each item
       const scored = original.map((item) => {
         const text = item
           .querySelector(".faq-question span")
           .textContent.toLowerCase();
-
         const tags = (item.dataset.tags || "")
           .toLowerCase()
           .split(",")
           .map((t) => t.trim());
-
         const count = terms.reduce((sum, term) => {
           const inText = text.includes(term);
           const inTags = tags.some((tag) => tag.includes(term));
           return sum + (inText || inTags ? 1 : 0);
         }, 0);
-
         return { item, count };
       });
 
-      // sort high→low and rebuild list, hiding zero-score
+      // sort descending by match count
       scored.sort((a, b) => b.count - a.count);
+
+      // rebuild list
       faqList.innerHTML = "";
       scored.forEach(({ item, count }) => {
-        item.style.display = count > 0 ? "" : "none";
-        if (count > 0) faqList.appendChild(item);
+        if (count > 0) {
+          item.style.display = "";
+          faqList.appendChild(item);
+        } else {
+          item.style.display = "none";
+        }
       });
 
-      // no-results message
+      // show no-results message if nothing matched
       const anyMatch = scored.some((s) => s.count > 0);
       if (!anyMatch) {
         if (!faqList.querySelector(".no-results-message")) {
@@ -81,29 +114,34 @@ function initFaqToggles() {
           faqList.appendChild(msg);
         }
       } else {
-        const old = faqList.querySelector(".no-results-message");
-        if (old) old.remove();
+        const oldMsg = faqList.querySelector(".no-results-message");
+        if (oldMsg) oldMsg.remove();
       }
     });
   }
 }
 
-// Load a page fragment into #content
+/**
+ * Fetch and inject a page fragment, animate swap, then wire up
+ * FAQ toggles (if FAQ page), buttons and dropdowns.
+ */
 async function loadPage(path) {
   const file = routes[path];
   const newDiv = document.createElement("div");
   newDiv.className = "page";
 
+  // fetch content
   try {
     if (!file) throw new Error("Page not found");
     const res = await fetch(file);
     if (!res.ok) throw new Error("HTTP " + res.status);
     newDiv.innerHTML = await res.text();
   } catch {
+    // fallback 404
     try {
-      const err404 = await fetch("pages/404.html");
-      newDiv.innerHTML = err404.ok
-        ? await err404.text()
+      const e404 = await fetch("pages/404.html");
+      newDiv.innerHTML = e404.ok
+        ? await e404.text()
         : "<h2>404 - Page Not Found</h2>";
     } catch {
       newDiv.innerHTML = "<h2>404 - Page Not Found</h2>";
@@ -112,12 +150,12 @@ async function loadPage(path) {
 
   contentDiv.appendChild(newDiv);
 
-  // init FAQ on FAQ page
+  // Initialize FAQ toggles if this is the FAQ page
   if (path === "/faqs") {
     setTimeout(initFaqToggles, 100);
   }
 
-  // page-swap animation + old removal
+  // animate out old pages
   requestAnimationFrame(() => {
     Array.from(contentDiv.children).forEach((child) => {
       if (child !== newDiv) {
@@ -126,6 +164,7 @@ async function loadPage(path) {
         setTimeout(() => contentDiv.removeChild(child), 300);
       }
     });
+    // trigger fade-in
     void newDiv.offsetWidth;
     newDiv.classList.add("active");
   });
@@ -134,10 +173,9 @@ async function loadPage(path) {
   attachDropdowns(newDiv);
 }
 
-// turn buttons with data-page into hash links
+/** Turn buttons with data-page into hash navigators */
 function attachButtonNavigation(container) {
-  const buttons = container.querySelectorAll("button");
-  buttons.forEach((btn) => {
+  container.querySelectorAll("button").forEach((btn) => {
     btn.addEventListener("click", () => {
       const target = btn.dataset.page;
       if (target && routes[target]) {
@@ -147,22 +185,22 @@ function attachButtonNavigation(container) {
   });
 }
 
-// dropdown toggles within loaded page
+/** Wire up any .dropdown elements inside the new page */
 function attachDropdowns(container) {
   container.querySelectorAll(".dropdown").forEach((dd) => {
     dd.addEventListener("click", () => dd.classList.toggle("active"));
   });
 }
 
-// highlight the current nav link
+/** Highlight the current top-nav link */
 function setActiveLink() {
-  const current = window.location.hash || "#/home";
+  const hash = window.location.hash || "#/home";
   links.forEach((link) => {
-    link.classList.toggle("active", link.getAttribute("href") === current);
+    link.classList.toggle("active", link.getAttribute("href") === hash);
   });
 }
 
-// navigate to a new hash, with cooldown to prevent spam
+/** Guarded navigation to prevent spam-clicking */
 function handleNavLinkNavigation(path) {
   if (navLinkCooldown) return;
   navLinkCooldown = true;
@@ -172,29 +210,28 @@ function handleNavLinkNavigation(path) {
   setActiveLink();
 }
 
-// initial load + hash watcher
+// initial load & hash watcher
 window.addEventListener("DOMContentLoaded", () => {
   if (!location.hash) location.hash = "#/home";
   handleNavLinkNavigation(location.hash.slice(1));
 });
-
 window.addEventListener("hashchange", () => {
   handleNavLinkNavigation(location.hash.slice(1));
 });
 
-// Tab key moves focus through top-nav-links only
+// Tab key cycles through top-nav-links
 window.addEventListener("keydown", (e) => {
   if (e.key === "Tab") {
     e.preventDefault();
     const arr = Array.from(links);
-    const curr = location.hash || "#/home";
+    const curr = window.location.hash || "#/home";
     let idx = arr.findIndex((l) => l.getAttribute("href") === curr);
     idx = (idx + 1) % arr.length;
     window.location.hash = arr[idx].getAttribute("href");
   }
 });
 
-// sticky footer when scrolled to top
+// Sticky footer when scrolled to top
 const footer = document.getElementById("footer");
 window.addEventListener("scroll", () => {
   if (window.scrollY === 0) {
@@ -209,9 +246,11 @@ if (window.scrollY === 0) {
   footer.classList.add("fixed");
 }
 
-/* --------------------------------- */
-/* Gallery fullscreen preview logic  */
-/* --------------------------------- */
+/* --------------------------------
+   Gallery image fullscreen logic
+   -------------------------------- */
+
+// backdrop for fullscreen previews
 const imageBackdrop = document.createElement("div");
 imageBackdrop.className = "image-backdrop";
 document.body.appendChild(imageBackdrop);
@@ -219,8 +258,11 @@ document.body.appendChild(imageBackdrop);
 let currentFullImage = null;
 let currentFullSource = null;
 
+/** Toggle fullscreen preview for a given <img> */
 function toggleFullscreenImage(img) {
   if (!img) return;
+
+  // if already open, close it
   if (currentFullSource === img) {
     if (currentFullImage && currentFullImage.parentNode) {
       currentFullImage.parentNode.removeChild(currentFullImage);
@@ -231,8 +273,13 @@ function toggleFullscreenImage(img) {
     document.body.style.overflow = "";
     return;
   }
-  if (currentFullSource) toggleFullscreenImage(currentFullSource);
 
+  // close existing
+  if (currentFullSource) {
+    toggleFullscreenImage(currentFullSource);
+  }
+
+  // clone and center
   const clone = img.cloneNode(true);
   clone.classList.add("fullscreen-image");
 
@@ -272,11 +319,10 @@ function toggleFullscreenImage(img) {
   currentFullSource = img;
 }
 
-// attach fullscreen handler to gallery images
+/** Attach fullscreen click handlers to any .gallery-grid img */
 function attachGalleryFullscreen(root) {
   if (!root) return;
-  const imgs = root.querySelectorAll(".gallery-grid img");
-  imgs.forEach((img) => {
+  root.querySelectorAll(".gallery-grid img").forEach((img) => {
     if (img._fsAttached) return;
     img._fsAttached = true;
     img.addEventListener("click", (e) => {
@@ -286,7 +332,7 @@ function attachGalleryFullscreen(root) {
   });
 }
 
-// close on backdrop or Esc
+// close on backdrop click or Esc
 imageBackdrop.addEventListener("click", () => {
   if (currentFullSource) toggleFullscreenImage(currentFullSource);
 });
@@ -316,7 +362,7 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 });
 
-// legacy <details>-based FAQ fallback
+/** Fallback <details>-based FAQ behavior (for inline pages) */
 function attachFAQBehavior(root) {
   if (!root) root = document;
   const list = root.querySelector(".faq-list");
@@ -330,6 +376,7 @@ function attachFAQBehavior(root) {
       if (other !== d) other.removeAttribute("open");
     });
   });
+
   list.querySelectorAll("summary").forEach((s) => {
     s.addEventListener("keydown", (e) => {
       if (e.key === "Enter" || e.key === " ") {
