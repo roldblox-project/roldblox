@@ -3,35 +3,43 @@
   class="fullpage-container centered"
   style="
     background-image: url('images/city.png');
-    height: 40vh;
-    padding-top: 5%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   "
 >
-  <h1>Gallery</h1>
-  <p>Snapshots, logos, and artwork from the project.</p>
+  <div class="page-content text-center" style="margin-top: 69px">
+    <h1 class="hero-title">Gallery</h1>
+    <p class="hero-subtitle">Snapshots, logos, and artwork from the project</p>
+    <div class="hero-buttons">
+      <button class="btn primary-btn" data-page="/faqs">What are mods?</button>
+      <button class="btn secondary-btn">Browse All</button>
+    </div>
+  </div>
 </div>
 
 <div class="gallery-page">
-    <div class="gallery-grid">
-      <div class="gallery-item">
-        <img src="images/bridge.png" alt="Bridge" />
-      </div>
-      <div class="gallery-item"><img src="images/city.png" alt="City" /></div>
-      <div class="gallery-item"><img src="images/space.png" alt="Space" /></div>
-      <div class="gallery-item">
-        <img src="images/volcano.png" alt="Volcano" />
-      </div>
-      <div class="gallery-item">
-        <img src="images/rohtml.png" alt="RoHTML" />
-      </div>
-      <div class="gallery-item">
-        <img src="images/old_roldblox.png" alt="Old Roldblox" />
-      </div>
+  <div class="gallery-grid">
+    <div class="gallery-item">
+      <img src="images/bridge.png" alt="Bridge" />
     </div>
+    <div class="gallery-item"><img src="images/city.png" alt="City" /></div>
+    <div class="gallery-item"><img src="images/space.png" alt="Space" /></div>
+    <div class="gallery-item">
+      <img src="images/volcano.png" alt="Volcano" />
+    </div>
+    <div class="gallery-item">
+      <img src="images/rohtml.png" alt="RoHTML" />
+    </div>
+    <div class="gallery-item">
+      <img src="images/old_roldblox.png" alt="Old Roldblox" />
+    </div>
+  </div>
 
-    <div style="text-align: center; margin-top: 12px">
-      <button class="btn" data-page="/home">Back to Home</button>
-    </div>
+  <div style="text-align: center; margin-top: 12px">
+    <button class="btn" data-page="/home">Back to Home</button>
+  </div>
 </div>
 
 <!-- Fallback script: attach fullscreen behavior when this fragment is opened directly or main script didn't attach handlers -->
