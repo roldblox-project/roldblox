@@ -19,6 +19,7 @@ const routes = {
   "/help": "pages/help.html",
   "/assets": "pages/assets.html",
   "/admin": "pages/admin.html",
+  "/archive": "pages/archive.html",
 };
 
 /**
