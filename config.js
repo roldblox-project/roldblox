@@ -1,12 +1,18 @@
 // Increment this number every time you push changes
-const SITE_VERSION = "7.5";
+const SITE_VERSION = "7.6";
 const SITE_UPDATE_DESCRIPTION = `
+  <h3>What's New in 7.6</h3>
+  <ul>
+    <li>Can't believe I forgot this but changed the button from the mods page that says "What are mods" to actually give the faqs correct question</li>
+    <li>Added a button to the homepage page that leads to the community/support us page</li>
+    <li>Added a button to the mods page that leads to the assets page</li>
+  </ul>
+
   <h3>What's New in 7.5</h3>
   <ul>
     <li>Changed FAQ to have working links that redirect you to the needed question</li>
     <li>Made the Discord card on the Community page have actual sense instead of having a button that leads to nowhere</li>
     <li>Made this update thingy look nicer</li>
-
   </ul>
 
   <h3>What's New in 7.4</h3>
