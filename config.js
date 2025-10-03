@@ -1,5 +1,5 @@
 // Increment this number every time you push changes
-const SITE_VERSION = "7.61";
+const SITE_VERSION = "7.6";
 const SITE_UPDATE_DESCRIPTION = `
   <h3>What's New in 7.6</h3>
   <ul>
