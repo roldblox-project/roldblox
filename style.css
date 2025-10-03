@@ -1,6 +1,3 @@
-/* ============================= */
-/*      RESET & GLOBAL STYLES    */
-/* ============================= */
 *,
 *::before,
 *::after {
@@ -20,27 +17,23 @@ body,
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
-  overflow-x: hidden; /* prevent horizontal scroll */
+  overflow-x: hidden;
   flex-direction: column;
 }
 
 body {
-  background: rgb(29, 31, 41);
+  background: rgb(30, 30, 40);
 }
 
 img,
 a {
-  user-drag: none; /* Safari */
   -webkit-user-drag: none;
 }
 
-/* ============================= */
-/*         PAGE & CONTENT        */
-/* ============================= */
 #content {
   overflow-y: auto;
   height: 100%;
-  padding-top: 0; /* Removed padding-top that was causing white layer */
+  padding-top: 0;
 }
 
 .page {
@@ -63,20 +56,12 @@ a {
   padding: 0;
 }
 
-/* ============================= */
-/*         NAVBAR / TOP NAV       */
-/* ============================= */
 .top-nav {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  background: rgba(
-    29,
-    31,
-    41,
-    0.75
-  ); /* Increased opacity to reduce bright layer */
+  background: rgba(29, 31, 41, 0.75);
   color: white;
   z-index: 1001;
   border-radius: 0;
@@ -92,10 +77,20 @@ a {
 }
 
 .nav-logo {
-  height: 45px;
   margin: 0;
   transition: transform 0.3s ease;
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+  display: inline-block;
+}
+
+.nav-logo img {
+  height: 45px;
+  display: block;
+}
+
+.nav-logo:hover {
+  transform: scale(1.05);
+  cursor: pointer;
 }
 
 .nav-logo:hover {
@@ -167,9 +162,6 @@ a {
   opacity: 1;
 }
 
-/* ============================= */
-/*      PAGE CONTAINERS           */
-/* ============================= */
 .page-container,
 .fullpage-container {
   width: 100%;
@@ -178,7 +170,7 @@ a {
   justify-content: flex-end;
   position: relative;
   overflow: hidden;
-  background-color: rgba(29, 31, 41, 0.7);
+  background-color: rgba(30, 30, 40, 0.7);
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   background-size: cover;
   background-position: center;
@@ -187,33 +179,31 @@ a {
   backdrop-filter: blur(8px);
 }
 
-/* Normal page containers */
 .page-container {
   position: relative;
   height: auto;
   min-height: 400px;
   align-items: center;
   justify-content: flex-end;
-  margin: 80px auto 40px auto; /* Increased top margin to account for nav */
+  margin: 80px auto 40px auto;
   width: auto;
   max-width: 1200px;
   border-radius: 12px;
   display: flex;
   box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  padding: 20px; /* Added padding to all page containers */
+  padding: 20px;
 }
 
-/* Fullscreen containers */
 .fullpage-container {
   height: 100vh;
   align-items: center;
   justify-content: flex-end;
   margin: 0;
-  padding: 70px 20px 70px 20px; /* Added top and side padding */
+  padding: 70px 20px 70px 20px;
   position: relative;
 }
-/* Remove margin-bottom if it's the last fullpage container */
+
 .fullpage-container:last-child {
   margin-bottom: 0;
 }
@@ -224,8 +214,8 @@ a {
   text-align: center;
   position: relative;
   margin: 8%;
-  padding: 10px 0 20px 0; /* Balanced top and bottom padding */
-  z-index: 3; /* Increased z-index to appear above vignette */
+  padding: 10px 0 20px 0;
+  z-index: 3;
   animation: fadeIn 0.8s ease-in-out;
 }
 
@@ -238,7 +228,7 @@ a {
   font-size: 3.5rem;
   margin-bottom: 20px;
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-  padding-top: 20px; /* Reduced space at the top to balance with bottom */
+  padding-top: 20px;
 }
 
 .hero-subtitle {
@@ -248,6 +238,7 @@ a {
   max-width: 600px;
   margin-left: auto;
   margin-right: auto;
+  font-family: "Source Sans Pro Light", sans-serif;
 }
 
 .hero-buttons {
@@ -255,7 +246,7 @@ a {
   gap: 15px;
   justify-content: center;
   margin-top: 30px;
-  padding-top: 10px; /* Added top padding for buttons */
+  padding-top: 10px;
 }
 
 .primary-btn {
@@ -272,17 +263,6 @@ a {
   font-size: 1.1rem;
 }
 
-/* Mods Page Styles */
-.mods-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  gap: 30px;
-  max-width: 1500px;
-  margin: 40px auto;
-  padding: 0 20px;
-}
-
-/* About Page Styles */
 .hero-logo {
   width: 120px;
   height: auto;
@@ -291,12 +271,11 @@ a {
 }
 
 .about-section {
-  background-color: rgb(29, 31, 41);
+  background-color: rgb(30, 30, 40);
   padding: 60px 0;
 }
 
 .about-container {
-  max-width: 1200px;
   margin: 0 auto;
   padding: 0 0px;
 }
@@ -306,13 +285,14 @@ a {
   margin-bottom: 30px;
   text-align: center;
   color: white;
-  padding-top: 40px; /* Add more space at the top */
+  padding-top: 40px;
   margin-top: 20px;
 }
 
 .section-text {
   font-size: 1.2rem;
   line-height: 1.8;
+  font-family: "Source Sans Pro Light", sans-serif;
   margin-bottom: 40px;
   text-align: center;
   color: rgba(255, 255, 255, 0.9);
@@ -360,19 +340,19 @@ a {
   flex-wrap: wrap;
 }
 
-/* Community Page Styles */
 .community-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  display: flex;
+  flex-wrap: wrap;
   gap: 30px;
-  max-width: 1200px;
   margin: 0 auto 60px;
   padding: 0 20px;
+  justify-content: center;
+  align-items: flex-start;
 }
 
 .community-card {
   background: rgba(255, 255, 255, 0.05);
-  border-radius: 16px;
+  border-radius: 8px;
   padding: 20px 30px 40px;
   text-align: center;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -383,26 +363,11 @@ a {
   background-size: cover;
   background-position: center;
   position: relative;
-  height: 450px; /* Fixed height for consistency */
+  height: 500px;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-}
-
-.community-card::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(
-    to top,
-    rgba(0, 0, 0, 0.8) 0%,
-    rgba(0, 0, 0, 0.5) 50%,
-    rgba(0, 0, 0, 0.2) 100%
-  );
-  z-index: 1;
-  border-radius: 16px;
-  pointer-events: none;
+  width: 100%;
+  max-width: 400px;
+  flex: 0 1 400px;
 }
 
 .community-card:hover {
@@ -413,34 +378,34 @@ a {
 .community-card.discord {
   background: linear-gradient(
     to bottom,
-    rgba(114, 137, 218, 0.2),
-    rgba(29, 31, 41, 0.7)
+    rgba(120, 140, 200, 0.75),
+    rgba(25, 25, 50, 0.75)
   );
 }
 
 .community-card.youtube {
   background: linear-gradient(
     to bottom,
-    rgba(255, 0, 0, 0.2),
-    rgba(29, 31, 41, 0.7)
+    rgba(255, 0, 25, 0.75),
+    rgba(75, 10, 25, 0.75)
   );
 }
 
 .community-card.roblox {
   background: linear-gradient(
     to bottom,
-    rgba(29, 161, 242, 0.2),
-    rgba(29, 31, 41, 0.7)
+    rgba(50, 50, 225, 0.75),
+    rgba(25, 25, 75, 0.75)
   );
 }
 
 .community-card-icon {
-  width: 80px;
-  height: 80px;
+  width: 120px;
+  height: 120px;
   margin-bottom: 20px;
   position: relative;
   z-index: 2;
-  margin-top: 30px; /* Add space at the top */
+  margin-top: 16px;
 }
 
 .community-card-icon img {
@@ -455,7 +420,7 @@ a {
   margin-bottom: 15px;
   color: white;
   position: relative;
-  z-index: 2; /* Ensure title appears above overlay */
+  z-index: 2;
 }
 
 .community-platform-description {
@@ -464,15 +429,28 @@ a {
   margin-bottom: 25px;
   flex-grow: 1;
   position: relative;
-  z-index: 2; /* Ensure description appears above overlay */
+  z-index: 2;
+}
+
+.mods-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin: 40px auto;
+  padding: 0 20px;
+  justify-content: center;
+  align-items: flex-start;
 }
 
 .mod-card {
   position: relative;
-  border-radius: 12px;
+  border-radius: 8px;
   overflow: hidden;
   background-size: cover;
   background-position: center;
+  max-width: 400px;
+  width: 100%;
+  flex: 0 1 400px;
   height: 500px;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
@@ -562,7 +540,7 @@ a {
 .mod-actions {
   display: flex;
   gap: 15px;
-  height: 45px; /* Fixed height for buttons container */
+  height: 45px;
   width: 100%;
   justify-content: center;
   margin-top: auto;
@@ -579,7 +557,6 @@ a {
   }
 }
 
-/* Ensure all animations appear above the vignette */
 .animated-element {
   z-index: 3;
   position: relative;
@@ -587,6 +564,8 @@ a {
 
 .page-content p,
 .fullpage-content p,
+.page-content li,
+.fullpage-content li,
 .page-content h1,
 .fullpage-content h1,
 .page-content h2,
@@ -607,7 +586,6 @@ a {
   margin-top: 15px;
 }
 
-/* Fullpage center variant */
 .fullpage-container.centered {
   justify-content: center;
   align-items: center;
@@ -623,9 +601,6 @@ a {
   display: none;
 }
 
-/* ============================= */
-/*    BACKGROUND IMAGE OVERLAY    */
-/* ============================= */
 .page-container[style*="background-image"]::after,
 .fullpage-container[style*="background-image"]::after {
   content: "";
@@ -637,8 +612,8 @@ a {
   pointer-events: none;
   background: linear-gradient(
     135deg,
-    rgba(29, 31, 41, 1) 0%,
-    rgba(29, 31, 41, 0.5) 100%
+    rgba(30, 30, 40, 0) 0%,
+    rgba(30, 30, 40, 0) 100%
   );
   z-index: -10;
 }
@@ -649,9 +624,6 @@ a {
   text-shadow: 0px 2px 4px rgba(0, 0, 0, 1);
 }
 
-/* ============================= */
-/*           BUTTONS             */
-/* ============================= */
 .btn-container {
   display: flex;
   justify-content: center;
@@ -677,12 +649,12 @@ a {
     inset 0 1px 1px rgba(255, 255, 255, 0.1);
   margin: 8px 4px;
   width: auto;
-  letter-spacing: normal; /* Fixed letter spacing */
+  letter-spacing: normal;
   position: relative;
   overflow: hidden;
-  z-index: 5; /* Ensure buttons appear above overlay */
-  height: 45px; /* Fixed height for all buttons */
-  line-height: 45px; /* Center text vertically */
+  z-index: 5;
+  height: 45px;
+  line-height: 45px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -723,11 +695,8 @@ a {
     inset 0 1px 1px rgba(255, 255, 255, 0.05);
 }
 
-/* ============================= */
-/*      SIMPLE CONTAINER          */
-/* ============================= */
 .simple-container {
-  background: rgba(204, 206, 218, 0.5);
+  background: rgba(200, 200, 225, 0.5);
   border-radius: 8px;
   padding: 28px;
   margin: 20px auto;
@@ -747,20 +716,17 @@ a {
   margin-top: 0;
   margin-bottom: 16px;
   font-weight: 700;
-  color: #1d1f29;
+  color: rgb(25, 25, 35);
   letter-spacing: 0.5px;
 }
 
 .simple-container p {
   margin: 14px 0;
   line-height: 1.6;
-  color: #444444;
+  color: rgb(30, 30, 40);
   font-size: 1.05rem;
 }
 
-/* ============================= */
-/*          LOGO BLOCK            */
-/* ============================= */
 .logo-block {
   position: absolute;
   top: 0;
@@ -774,7 +740,7 @@ a {
   text-align: center;
   pointer-events: none;
   animation: slideIn 1s ease-out;
-  z-index: 4; /* Ensure logo block appears above vignette */
+  z-index: 4;
 }
 
 @keyframes slideIn {
@@ -789,7 +755,7 @@ a {
 }
 
 .logo-block img {
-  max-width: 55%;
+  max-width: 500px;
   height: auto;
   object-fit: contain;
   max-height: 85%;
@@ -806,27 +772,17 @@ a {
 
 .logo-block .subtitle {
   margin-top: -35px;
-  font-size: 26px;
-  color: white;
-  background: linear-gradient(
-    180deg,
-    rgba(42, 54, 59, 0.9) 0%,
-    rgba(42, 54, 59, 0.7) 100%
-  );
-  padding: 26px 24px 14px;
-  border-radius: 12px;
+  font-size: 24px;
+  font-family: "Source Sans Pro Light", sans-serif;
+  background-color: rgba(25, 25, 35, 0);
+  padding: 26px 16px 10px;
+  border-radius: 8px;
   font-weight: 500;
   z-index: 3;
   letter-spacing: 0.8px;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.25);
-  backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
   transition: all 0.4s ease;
-}
-
-.logo-block:hover .subtitle {
-  transform: translateY(-3px);
-  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.3);
+  z-index: 4;
+  text-shadow: 0 0px 4px rgba(0, 0, 0, 1);
 }
 
 #footer {
@@ -841,13 +797,14 @@ a {
   backdrop-filter: blur(12px);
   background: linear-gradient(
     180deg,
-    rgba(29, 31, 41, 0.5) 0%,
-    rgba(10, 10, 14, 0.75) 100%
+    rgba(10, 10, 20, 0.5) 0%,
+    rgba(0, 0, 0, 0.75) 100%
   );
   padding: 20px 0;
   z-index: 1001;
   box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.15);
   max-height: 128px;
+  font-family: "Source Sans Pro Light", sans-serif;
 }
 
 #footer.hidden {
@@ -856,6 +813,7 @@ a {
 }
 
 #footer .footer-links {
+  font-family: "Source Sans Pro", sans-serif;
   display: flex;
   justify-content: center;
   gap: 24px;
@@ -883,14 +841,10 @@ a {
   color: rgba(255, 255, 255, 0.8);
 }
 
-/* ============================= */
-/*       GALLERY SPECIFICS       */
-/* ============================= */
-/* Make the gallery page layout stable and images responsive */
 .gallery-page {
   display: block;
   padding: 30px 40px;
-  background: rgb(29, 31, 41);
+  background: rgb(30, 30, 40);
   min-height: 60vh;
   margin: 80px auto 40px auto;
   max-width: 1200px;
@@ -928,20 +882,18 @@ a {
 .gallery-item img {
   width: 100%;
   height: 100%;
-  object-fit: cover; /* crop safely to fill */
+  object-fit: cover;
   display: block;
 }
 
-/* Ensure fullpage header section keeps centered content without overlapping gallery */
-
 .fullpage-container.centered {
-  height: 50vh; /* keep header smaller */
+  height: 50vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   text-align: center;
-  background-color: rgba(29, 31, 41, 1);
+  background-color: rgba(30, 30, 40, 1);
 }
 
 .fullpage-container.centered h1 {
@@ -959,8 +911,6 @@ a {
   position: relative;
   z-index: 5;
 }
-
-/* Responsive tweaks */
 
 @media (max-width: 768px) {
   .gallery-grid {
@@ -996,20 +946,17 @@ a {
   }
 }
 
-/* ============================= */
-/*    FAQ PAGE STYLES            */
-/* ============================= */
 .faq-container {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: rgb(29, 31, 41);
+  background-color: rgb(30, 30, 40);
   color: white;
 }
 
 .faq-header-section {
-  background-color: rgba(29, 31, 41, 0.98);
-  background-image: url("images/space.png");
+  background-color: rgba(30, 30, 40, 0.98);
+  background-image: url("images/backgrounds/space.png");
   background-size: cover;
   background-position: center;
   padding: 40px 20px;
@@ -1026,7 +973,7 @@ a {
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(rgba(29, 31, 41, 0.7), rgba(29, 31, 41, 0.9));
+  background: linear-gradient(rgba(30, 30, 40, 0.7), rgba(30, 30, 40, 0.9));
   z-index: 1;
 }
 
@@ -1049,6 +996,13 @@ a {
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
 }
 
+.faq-header-content p {
+  margin: 14px 0;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.8);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
 .search-container {
   position: relative;
   max-width: 500px;
@@ -1059,7 +1013,7 @@ a {
 .faq-search {
   width: 100%;
   padding: 12px 20px;
-  border-radius: 30px;
+  border-radius: 8px;
   border: 1px solid rgba(255, 255, 255, 0.1);
   background-color: rgba(0, 0, 0, 0.2);
   color: white;
@@ -1076,7 +1030,7 @@ a {
 .faq-search:focus {
   background-color: rgba(0, 0, 0, 0.3);
   outline: none;
-  box-shadow: 0 0 0 2px rgba(46, 204, 113, 0.4), 0 4px 12px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0 0 2px rgba(46, 204, 113, 0.4), 0 2px 12px rgba(0, 0, 0, 0.3);
   border-color: rgba(46, 204, 113, 0.5);
 }
 
@@ -1087,15 +1041,18 @@ a {
 }
 
 .faq-list {
-  background-color: rgba(42, 54, 59, 0);
   border-radius: 8px;
   backdrop-filter: blur(8px);
   margin-bottom: 100px;
 }
 
 .faq-item {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+  background-color: rgba(40, 40, 50, 0.5);
   transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin: 16px 0;
+  border-radius: 4px;
+  overflow: hidden;
 }
 
 .faq-item:last-child {
@@ -1113,9 +1070,11 @@ a {
   padding: 20px;
   cursor: pointer;
   font-weight: 500;
+  font-size: 18px;
   transition: all 0.3s ease;
-  color: white;
+  background-color: rgba(33, 35, 48, 0);
   position: relative;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
 }
 
 .faq-question:hover {
@@ -1138,7 +1097,7 @@ a {
   transition: max-height 0.3s ease, padding 0.3s ease,
     background-color 0.3s ease;
   padding: 0 20px;
-  background-color: rgba(0, 0, 0, 0);
+  background-color: rgba(0, 0, 0, 0.25);
 }
 
 .faq-answer.show {
@@ -1148,7 +1107,7 @@ a {
 }
 
 .faq-answer p {
-  margin: 0;
+  margin: 14px 0;
   line-height: 1.6;
   color: rgba(255, 255, 255, 0.8);
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
@@ -1164,20 +1123,17 @@ a {
   margin-top: 20px;
 }
 
-/* ============================= */
-/*    HELP PAGE STYLES          */
-/* ============================= */
 .help-container {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: rgb(29, 31, 41);
+  background-color: rgb(30, 30, 40);
   color: #ffffff;
 }
 
 .help-header-section {
   background-color: #2a363b;
-  background-image: url("images/space.png");
+  background-image: url("images/backgrounds/space.png");
   background-size: cover;
   background-position: center;
   padding: 60px 20px;
@@ -1258,7 +1214,7 @@ a {
   align-items: center;
   margin-top: 20px;
   padding: 15px;
-  background-color: rgb(29, 31, 41);
+  background-color: rgb(30, 30, 40);
   border-radius: 8px;
 }
 
@@ -1282,7 +1238,6 @@ a {
   margin-top: 20px;
 }
 
-/* Responsive styles for FAQ and Help pages */
 @media (max-width: 768px) {
   .faq-header-content h1,
   .help-header-content h1 {
@@ -1294,10 +1249,6 @@ a {
   }
 }
 
-/* ============================= */
-/*    GALLERY IMAGE FULLSCREEN   */
-/* ============================= */
-/* Backdrop behind a fullscreen image */
 .image-backdrop {
   position: fixed;
   inset: 0;
@@ -1314,7 +1265,6 @@ a {
   opacity: 1;
 }
 
-/* Image when shown fullscreen */
 .fullscreen-image {
   position: fixed !important;
   top: 50% !important;
@@ -1324,7 +1274,7 @@ a {
   max-height: 95vh !important;
   width: auto !important;
   height: auto !important;
-  object-fit: contain !important; /* ensure fullscreen image fits without cropping */
+  object-fit: contain !important;
   z-index: 2001 !important;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6) !important;
   border-radius: 6px !important;
@@ -1334,14 +1284,10 @@ a {
     border-radius 180ms ease;
 }
 
-/* indicate clickable images */
 .gallery-item img {
   cursor: zoom-in;
 }
 
-/* ============================= */
-/*       ARCHIVE PAGE STYLES     */
-/* ============================= */
 .archive-page {
   display: block;
   padding: 30px 40px;
@@ -1351,6 +1297,8 @@ a {
   border-radius: 12px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
   border: 1px solid rgba(255, 255, 255, 0.1);
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 .archive-toolbar {
@@ -1388,18 +1336,22 @@ a {
   font-size: 0.95rem;
 }
 
-/* Grid */
 .archive-grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 16px;
+  width: 100%;
 }
 
 @media (max-width: 1024px) {
-  .archive-grid { grid-template-columns: repeat(3, 1fr); }
+  .archive-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 @media (max-width: 600px) {
-  .archive-grid { grid-template-columns: 1fr; }
+  .archive-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .archive-tile {
@@ -1408,8 +1360,10 @@ a {
   border-radius: 10px;
   padding: 12px;
   display: flex;
-  gap: 12px;
+  flex-direction: column;
+  gap: 10px;
   align-items: center;
+  text-align: center;
   transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
   width: 100%;
 }
@@ -1421,8 +1375,8 @@ a {
 }
 
 .tile-thumb {
-  width: 52px;
-  height: 52px;
+  width: 72px;
+  height: 72px;
   border-radius: 8px;
   flex-shrink: 0;
   overflow: hidden;
@@ -1444,6 +1398,7 @@ a {
   flex-direction: column;
   gap: 2px;
   min-width: 0;
+  align-items: center;
 }
 
 .tile-name {
@@ -1460,16 +1415,20 @@ a {
 }
 
 .tile-actions {
-  margin-left: auto;
+  margin-left: 0;
+  margin-top: 8px;
   display: flex;
   gap: 6px;
+  justify-content: center;
+  width: 100%;
+  flex-wrap: wrap;
 }
 
 .icon-btn {
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
   color: #fff;
-  padding: 8px 10px;
+  padding: 6px 10px;
   border-radius: 8px;
   display: inline-flex;
   align-items: center;
@@ -1481,22 +1440,71 @@ a {
   background: rgba(255, 255, 255, 0.2);
 }
 
-.has-tooltip { position: relative; }
+.has-tooltip {
+  position: relative;
+}
 .has-tooltip::after {
   content: attr(data-tooltip);
   position: absolute;
   top: -28px;
   white-space: nowrap;
-  background: rgba(0,0,0,0.7);
+  background: rgba(0, 0, 0, 0.5);
   color: #fff;
   font-size: 12px;
-  padding: 4px 8px;
-  border-radius: 6px;
+  border-radius: 2px;
   opacity: 0;
   transform: translateY(6px);
   transition: all 0.2s ease;
   pointer-events: none;
 }
-.has-tooltip:hover::after { opacity: 1; transform: translateY(0); }
+.has-tooltip:hover::after {
+  opacity: 1;
+  transform: translateY(0);
+}
 
-.archive-pager { margin-top: 16px; text-align: center; color: rgba(255,255,255,0.75);}
+.archive-pager {
+  margin-top: 16px;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.site-version {
+  position: fixed;
+  bottom: 0px;
+  right: 0px;
+  padding: 6px 12px;
+  font-size: 16px;
+  z-index: 1002;
+  font-family: "Source Sans Pro Light", sans-serif;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.update-description {
+  position: fixed;
+  bottom: 32px;
+  right: 8px;
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  max-width: 300px;
+  display: none;
+  z-index: 1002;
+  backdrop-filter: blur(6px);
+  transition: opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.site-version:hover .update-description {
+  transform: translateY(0);
+  opacity: 1;
+  display: block;
+}
+
+.update-description ul {
+  margin: 0;
+  padding-left: 2px;
+  list-style: disc inside;
+}

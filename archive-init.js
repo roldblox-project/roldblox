@@ -33,9 +33,16 @@
     const sortSelect = root.querySelector('#sortSelect');
     if (!fileListEl || !breadcrumbEl) return;
 
+    // Optional: enable commit dates via global flag
+    const SHOW_COMMIT_DATES = Boolean(window.ARCHIVE_ENABLE_COMMIT_DATES);
+    function getAuthHeaders(){
+      const t = window.GITHUB_TOKEN;
+      return t ? { Authorization: `Bearer ${t}` } : {};
+    }
+    
     // set toolbar icons
-    if (backBtn) backBtn.innerHTML = '<img src="/images/miscicons/leftarrow.png" alt="Back" width="32" height="32" />';
-    if (forwardBtn) forwardBtn.innerHTML = '<img src="/images/miscicons/rightarrow.png" alt="Forward" width="32" height="32" />';
+    if (backBtn) backBtn.innerHTML = '<img src="images/miscicons/leftarrow.png" alt="Back" width="32" height="32" />';
+    if (forwardBtn) forwardBtn.innerHTML = '<img src="images/miscicons/rightarrow.png" alt="Forward" width="32" height="32" />';
 
     root._archiveAttached = true;
     let currentPath = '';
@@ -51,7 +58,7 @@
     async function fetchContents(path=''){
       const url = API_CONTENTS + (path? '/'+path: '');
       try {
-        const res = await fetch(url, { headers: { 'Accept':'application/vnd.github.v3+json' }});
+        const res = await fetch(url, { headers: Object.assign({ 'Accept':'application/vnd.github.v3+json' }, getAuthHeaders()) });
         if (!res.ok) throw new Error('GitHub API error '+res.status);
         return await res.json();
       } catch (e){ return { error: String(e && e.message || e) }; }
@@ -60,7 +67,7 @@
       if (commitCache[path] !== undefined) return commitCache[path];
       try {
         const url = `${API_COMMITS}?path=${encodeURIComponent(path)}&per_page=1`;
-        const res = await fetch(url, { headers: { 'Accept':'application/vnd.github.v3+json' }});
+        const res = await fetch(url, { headers: Object.assign({ 'Accept':'application/vnd.github.v3+json' }, getAuthHeaders()) });
         if (!res.ok) throw new Error('Commit fetch '+res.status);
         const data = await res.json();
         const iso = data && data[0] && data[0].commit && data[0].commit.author && data[0].commit.author.date;
@@ -80,29 +87,51 @@
       });
     }
 
-    // Recursively add a folder to the zip from GitHub contents
-    async function addFolderToZip(zip, path, prefix){
+    // Recursively add a folder to the zip from GitHub contents (with progress callback)
+    async function addFolderToZip(zip, path, prefix, onFileAdded){
       const items = await fetchContents(path);
       if (!Array.isArray(items)) return;
       for (const item of items){
         if (item.type === 'dir'){
-          await addFolderToZip(zip, item.path, `${prefix}${item.name}/`);
+          await addFolderToZip(zip, item.path, `${prefix}${item.name}/`, onFileAdded);
         } else if (item.download_url){
           const resp = await fetch(item.download_url);
           if (!resp.ok) throw new Error(`Fetch failed for ${item.path}: ${resp.status}`);
           const blob = await resp.blob();
           zip.file(`${prefix}${item.name}`, blob);
+          if (typeof onFileAdded === 'function') onFileAdded();
         }
       }
     }
 
-    // Zip a folder and trigger download
-    async function downloadFolderAsZip(path, name){
+    // Count total files in a folder (recursively) to drive progress percentage
+    async function countFilesInFolder(path){
+      const items = await fetchContents(path);
+      if (!Array.isArray(items)) return 0;
+      let total = 0;
+      for (const item of items){
+        if (item.type === 'dir') total += await countFilesInFolder(item.path);
+        else if (item.download_url) total += 1;
+      }
+      return total;
+    }
+
+    // Zip a folder and trigger download, reporting progress via callback
+    async function downloadFolderAsZip(path, name, onProgress){
       try {
         const JSZipCtor = await ensureJSZip();
         if (!JSZipCtor) throw new Error('ZIP library unavailable');
         const zip = new JSZipCtor();
-        await addFolderToZip(zip, path, '');
+        const total = await countFilesInFolder(path);
+        let processed = 0;
+        if (total === 0 && typeof onProgress === 'function') onProgress(100, 0, 0);
+        await addFolderToZip(zip, path, '', ()=>{
+          processed += 1;
+          if (typeof onProgress === 'function'){
+            const pct = Math.max(0, Math.min(100, Math.floor((processed / total) * 100)));
+            onProgress(pct, processed, total);
+          }
+        });
         const blob = await zip.generateAsync({ type: 'blob' });
         const a = document.createElement('a');
         const url = URL.createObjectURL(blob);
@@ -121,10 +150,11 @@
       fileListEl.innerHTML = '';
       const q = (filterInput && filterInput.value || '').trim().toLowerCase();
       const sortMode = (sortSelect && sortSelect.value) || 'name-asc';
+      const effectiveSortMode = (!SHOW_COMMIT_DATES && sortMode.startsWith('date')) ? 'name-asc' : sortMode;
       let list = items.filter(i=> i.name.toLowerCase().includes(q));
       list.sort((a,b)=>{
-        if (sortMode.startsWith('name')){
-          const cmp = a.name.localeCompare(b.name); return sortMode.endsWith('asc')? cmp: -cmp;
+        if (effectiveSortMode.startsWith('name')){
+          const cmp = a.name.localeCompare(b.name); return effectiveSortMode.endsWith('asc')? cmp: -cmp;
         }
         if (a.type===b.type) return a.name.localeCompare(b.name);
         return a.type==='dir'? -1: 1;
@@ -149,25 +179,40 @@
         meta.appendChild(nameEl); meta.appendChild(info1); meta.appendChild(info2);
 
         const openBtn = document.createElement('button'); openBtn.className='icon-btn has-tooltip'; openBtn.title='Open on GitHub'; openBtn.setAttribute('data-tooltip','open on GitHub');
-        openBtn.innerHTML = '<img src="/images/miscicons/openexternal.png" alt="Open on GitHub" width="32" height="32" />';
+        openBtn.innerHTML = '<img src="images/miscicons/openexternal.png" alt="Open on GitHub" width="32" height="32" />';
         openBtn.addEventListener('click', ev=>{ ev.stopPropagation(); const url = item.html_url || (item.type==='dir'? `https://github.com/${OWNER}/${REPO}/tree/main/${item.path}`: `https://github.com/${OWNER}/${REPO}/blob/main/${item.path}`); window.open(url, '_blank'); });
         actions.appendChild(openBtn);
 
         if (item.type!=='dir' && item.download_url){
           const dlBtn = document.createElement('button'); dlBtn.className='icon-btn has-tooltip'; dlBtn.title='Download'; dlBtn.setAttribute('data-tooltip','download');
-          dlBtn.innerHTML = '<img src="/images/miscicons/download.png" alt="Download" width="32" height="32" />';
+          dlBtn.innerHTML = '<img src="images/miscicons/download.png" alt="Download" width="32" height="32" />';
           dlBtn.addEventListener('click', ev=>{ ev.stopPropagation(); const a=document.createElement('a'); a.href=item.download_url; a.download=item.name; document.body.appendChild(a); a.click(); a.remove(); });
           actions.appendChild(dlBtn);
         } else if (item.type==='dir'){
           const dlFolderBtn = document.createElement('button'); dlFolderBtn.className='icon-btn has-tooltip'; dlFolderBtn.title='Download Folder'; dlFolderBtn.setAttribute('data-tooltip','download folder');
-          dlFolderBtn.innerHTML = '<img src="/images/miscicons/download.png" alt="Download Folder" width="32" height="32" />';
+          dlFolderBtn.innerHTML = '<img src="images/miscicons/download.png" alt="Download Folder" width="32" height="32" />';
+          const progressSpan = document.createElement('span');
+          progressSpan.className = 'tiny-progress';
+          progressSpan.style.fontSize = '11px';
+          progressSpan.style.marginLeft = '6px';
+          progressSpan.style.opacity = '0.8';
+          progressSpan.textContent = '';
           dlFolderBtn.addEventListener('click', async ev=>{
             ev.stopPropagation();
             dlFolderBtn.disabled = true; dlFolderBtn.title = 'Zipping...';
-            try { await downloadFolderAsZip(item.path, item.name); }
-            finally { dlFolderBtn.disabled = false; dlFolderBtn.title = 'Download Folder'; }
+            progressSpan.textContent = '0%';
+            try {
+              await downloadFolderAsZip(item.path, item.name, (pct, processed, total)=>{
+                progressSpan.textContent = (total ? `${pct}%` : 'Zipping...');
+              });
+              progressSpan.textContent = 'Done';
+              setTimeout(()=>{ progressSpan.textContent = ''; }, 1500);
+            } finally {
+              dlFolderBtn.disabled = false; dlFolderBtn.title = 'Download Folder';
+            }
           });
           actions.appendChild(dlFolderBtn);
+          actions.appendChild(progressSpan);
         }
 
         el.appendChild(thumb); el.appendChild(meta); el.appendChild(actions); fileListEl.appendChild(el);
@@ -179,12 +224,16 @@
           else if (item.download_url) window.open(item.download_url,'_blank');
         });
 
-        fetchLatestCommitDate(item.path).then(dt=>{ if (!dt) return; info2.textContent = `Last updated: ${dt.toLocaleDateString()} ${dt.toLocaleTimeString()}`; });
+        // Only fetch commit date if enabled
+        if (SHOW_COMMIT_DATES){
+          fetchLatestCommitDate(item.path).then(dt=>{ if (!dt) return; info2.textContent = `Last updated: ${dt.toLocaleDateString()} ${dt.toLocaleTimeString()}`; });
+        }
       });
 
       attachArchivePreview(root);
 
-      if (sortMode.startsWith('date')){
+      // Date sort only if commit dates are enabled
+      if (SHOW_COMMIT_DATES && sortMode.startsWith('date')){
         const children = Array.from(fileListEl.children);
         children.sort((a,b)=>{
           const nA = a.querySelector('.tile-name').textContent;
@@ -200,12 +249,17 @@
     }
 
     async function openPath(path='', opts={}){
-      if (!opts.fromHistory){ if (currentPath!=='') histBack.push(currentPath); histFwd.length = 0; }
+      if (!opts.fromHistory){ histBack.push(currentPath); histFwd.length = 0; }
       currentPath = path||''; setBreadcrumb(currentPath); setNavState();
       if (entriesCache[currentPath]){ render(entriesCache[currentPath]); return; }
       fileListEl.innerHTML = '<div class="empty">Loading...</div>';
       const data = await fetchContents(currentPath);
-      if (data && data.error){ fileListEl.innerHTML = `<div class="empty">${data.error}</div>`; return; }
+      if (data && data.error){
+      const is403 = /403/.test(data.error);
+      const ghUrl = `https://github.com/${OWNER}/${REPO}${currentPath? '/tree/main/'+currentPath: ''}`;
+      fileListEl.innerHTML = `<div class="empty">${data.error}${is403? `<div style="margin-top:10px"><a class="btn" href="${ghUrl}" target="_blank" rel="noopener">Open on GitHub</a></div>`: ''}</div>`;
+      return;
+      }
       const items = Array.isArray(data)? data: [data];
       items.sort((a,b)=>{ if (a.type===b.type) return a.name.localeCompare(b.name); return a.type==='dir'? -1: 1; });
       entriesCache[currentPath] = items; render(items);

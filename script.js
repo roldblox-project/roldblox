@@ -20,6 +20,7 @@ const routes = {
   "/assets": "pages/assets.html",
   "/admin": "pages/admin.html",
   "/archive": "pages/archive.html",
+  "/products": "pages/products.html",
 };
 
 /**
@@ -392,4 +393,27 @@ function attachFAQBehavior(root) {
       }
     });
   });
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+  document.getElementById("version-number").innerText =
+    "Version " + SITE_VERSION;
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+  document.getElementById("version-number").innerText = "v" + SITE_VERSION;
+  document.getElementById("update-description").innerHTML =
+    SITE_UPDATE_DESCRIPTION;
+});
+
+function toggleUpdateDescription() {
+  var updateDescription = document.getElementById("update-description");
+  if (
+    updateDescription.style.display === "none" ||
+    updateDescription.style.display === ""
+  ) {
+    updateDescription.style.display = "block";
+  } else {
+    updateDescription.style.display = "none";
+  }
 }

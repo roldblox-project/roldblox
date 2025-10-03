@@ -1,9 +1,12 @@
+<style>
+.premium-banner { background-image: url('images/premium.png'); }
+</style>
 <!-- Archive Page -->
 <div
   class="fullpage-container centered"
   style="
-    background-image: url('/images/premium.png');
-    height: 100%;
+    background-image: url('images/backgrounds/premium.png');
+    height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -11,7 +14,7 @@
 >
 
 
-  <div class="page-content text-center" style="margin-top: 69px">
+  <div class="page-content text-center">
     <h1 class="hero-title">Archive</h1>
     <p class="hero-subtitle">
       Browse the community-maintained ROLDBLOX archive from GitHub
@@ -19,31 +22,6 @@
     <div class="hero-buttons">
       <a class="btn" href="https://github.com/roldblox-project/roarchive" target="_blank" rel="noopener">Open on GitHub</a>
     </div>
-  </div>
-
-  <div class="archive-page">
-  <div class="archive-toolbar">
-    <div class="toolbar-left">
-      <button class="btn icon-btn" id="backBtn" title="Back"></button>
-      <button class="btn icon-btn" id="forwardBtn" title="Forward"></button>
-      <button class="btn" id="refreshBtn" title="Refresh">Refresh</button>
-      <span class="archive-breadcrumb" id="breadcrumb">/</span>
-    </div>
-    <div class="toolbar-right">
-      <!-- Removed standalone search icon image -->
-      <input type="text" id="filter" class="archive-input" placeholder="Search" style="padding-left: 48px; background: url('/images/miscicons/search.png') no-repeat 8px center; background-size: 32px 32px;" />
-      <select id="sortSelect" class="archive-select" title="Sort">
-        <option value="name-asc">Name A–Z</option>
-        <option value="name-desc">Name Z–A</option>
-        <option value="date-desc">Newest</option>
-        <option value="date-asc">Oldest</option>
-      </select>
-    </div>
-  </div>
-
-  <div id="archiveExplorer">
-    <div class="archive-grid" id="fileList"></div>
-    <div class="archive-pager" id="pager"></div>
   </div>
 </div>
 </div>

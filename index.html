@@ -20,7 +20,9 @@
   </head>
   <body>
     <nav class="top-nav">
-      <img src="images/logo.png" alt="Logo" class="nav-logo" />
+      <a href="#/home" class="nav-logo">
+        <img src="images/logo.png" alt="Logo" />
+      </a>
       <ul class="top-nav-list">
         <li class="top-nav-item">
           <a href="#/home" class="top-nav-link">Home</a>
@@ -34,20 +36,23 @@
         <li class="top-nav-item">
           <a href="#/community" class="top-nav-link">Community</a>
         </li>
-        <li class="top-nav-item">
-          <a href="#/archive" class="top-nav-link">Archive</a>
       </ul>
     </nav>
 
+    <div class="site-version" onclick="toggleUpdateDescription()">
+      <span id="version-number">Site Version: </span>
+      <div class="update-description" id="update-description"></div>
+    </div>
+
     <div id="content" class="main-content"></div>
-    <!-- OUTSIDE #content -->
     <footer id="footer">
       <div class="footer-links">
-        <a href="#/blog">Blog</a>
+        <!-- <a href="#/blog">Blog</a> -->
         <!-- <a href="#/help">Contact & Support</a> -->
         <a href="#/faqs">FAQ</a>
-        <a href="#/gallery">Gallery</a>
+        <!-- <a href="#/gallery">Gallery</a> -->
         <a href="#/assets">Assets</a>
+        <a href="#/archive">Archive</a>
       </div>
       <div class="footer-info">
         <p>
