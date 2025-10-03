@@ -1,13 +1,8 @@
-// script.js
-
-// Main container and navigation links
 const contentDiv = document.getElementById("content");
 const links = document.querySelectorAll(".top-nav-link");
 
-// Navigation cooldown flag
 let navLinkCooldown = false;
 
-// Route definitions
 const routes = {
   "/home": "pages/home.html",
   "/about": "pages/about.html",
@@ -23,47 +18,96 @@ const routes = {
   "/products": "pages/products.html",
 };
 
-/**
- * Initialize FAQ toggling and enhanced multi-term + tag search.
- */
-function initFaqToggles() {
-  const faqList = document.querySelector(".faq-list");
-  const faqItems = Array.from(document.querySelectorAll(".faq-item"));
-  const faqSearch = document.getElementById("faqSearch");
-  const original = faqItems.slice(); // preserve original order
+function initFaqToggles(root = document) {
+  const faqList = root.querySelector(".faq-list");
+  if (!faqList) return;
 
-  // Toggle open/close behavior
+  if (faqList._inited) return;
+  faqList._inited = true;
+
+  const faqItems = Array.from(faqList.querySelectorAll(".faq-item"));
+  const original = faqList._original || faqItems.slice();
+  faqList._original = original;
+
+  const faqSearch = root.querySelector("#faqSearch");
+
+  faqItems.forEach((item) => {
+    if (!item.dataset.id) {
+      const text = (
+        item.querySelector(".faq-question span")?.textContent || "item"
+      )
+        .trim()
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/(^-|-$)/g, "");
+      item.dataset.id = text || "faq-item";
+    }
+  });
+
   faqItems.forEach((item) => {
     const question = item.querySelector(".faq-question");
     const answer = item.querySelector(".faq-answer");
     if (!question || !answer) return;
 
+    if (question._clickAttached) return;
+    question._clickAttached = true;
+
     question.addEventListener("click", () => {
       const isActive = item.classList.contains("active");
-      // close others
+
       faqItems.forEach((other) => {
         if (other !== item && other.classList.contains("active")) {
           other.classList.remove("active");
-          other.querySelector(".faq-answer").classList.remove("show");
+          other.querySelector(".faq-answer")?.classList.remove("show");
         }
       });
-      // toggle this one
+
       if (isActive) {
         item.classList.remove("active");
         answer.classList.remove("show");
+
+        const [base, qs] = location.hash.split("?");
+        const params = new URLSearchParams(qs || "");
+        params.delete("open");
+        history.replaceState(
+          null,
+          "",
+          base + (params.toString() ? "?" + params.toString() : "")
+        );
       } else {
         item.classList.add("active");
         answer.classList.add("show");
+
+        const id = item.dataset.id;
+        const [base, qs] = location.hash.split("?");
+        const params = new URLSearchParams(qs || "");
+        params.set("open", id);
+        history.replaceState(
+          null,
+          "",
+          base + (params.toString() ? "?" + params.toString() : "")
+        );
       }
     });
   });
 
-  // Enhanced search: match terms against question text + data-tags, rank by match count
   if (faqSearch) {
+    if (faqSearch._inputAttached) return;
+    faqSearch._inputAttached = true;
+
     faqSearch.addEventListener("input", () => {
       const terms = faqSearch.value.toLowerCase().split(/\s+/).filter(Boolean);
 
-      // if empty search, restore original
+      const [base, qs] = location.hash.split("?");
+      const params = new URLSearchParams(qs || "");
+      if (faqSearch.value) params.set("q", faqSearch.value);
+      else params.delete("q");
+      history.replaceState(
+        null,
+        "",
+        base + (params.toString() ? "?" + params.toString() : "")
+      );
+
       if (terms.length === 0) {
         faqList.innerHTML = "";
         original.forEach((item) => {
@@ -75,11 +119,11 @@ function initFaqToggles() {
         return;
       }
 
-      // score each item
       const scored = original.map((item) => {
-        const text = item
-          .querySelector(".faq-question span")
-          .textContent.toLowerCase();
+        const text =
+          item
+            .querySelector(".faq-question span")
+            ?.textContent?.toLowerCase() || "";
         const tags = (item.dataset.tags || "")
           .toLowerCase()
           .split(",")
@@ -92,10 +136,8 @@ function initFaqToggles() {
         return { item, count };
       });
 
-      // sort descending by match count
       scored.sort((a, b) => b.count - a.count);
 
-      // rebuild list
       faqList.innerHTML = "";
       scored.forEach(({ item, count }) => {
         if (count > 0) {
@@ -106,7 +148,6 @@ function initFaqToggles() {
         }
       });
 
-      // show no-results message if nothing matched
       const anyMatch = scored.some((s) => s.count > 0);
       if (!anyMatch) {
         if (!faqList.querySelector(".no-results-message")) {
@@ -123,23 +164,17 @@ function initFaqToggles() {
   }
 }
 
-/**
- * Fetch and inject a page fragment, animate swap, then wire up
- * FAQ toggles (if FAQ page), buttons and dropdowns.
- */
 async function loadPage(path) {
   const file = routes[path];
   const newDiv = document.createElement("div");
   newDiv.className = "page";
 
-  // fetch content
   try {
     if (!file) throw new Error("Page not found");
     const res = await fetch(file);
     if (!res.ok) throw new Error("HTTP " + res.status);
     newDiv.innerHTML = await res.text();
   } catch {
-    // fallback 404
     try {
       const e404 = await fetch("pages/404.html");
       newDiv.innerHTML = e404.ok
@@ -152,12 +187,10 @@ async function loadPage(path) {
 
   contentDiv.appendChild(newDiv);
 
-  // Initialize FAQ toggles if this is the FAQ page
   if (path === "/faqs") {
-    setTimeout(initFaqToggles, 100);
+    initFaqToggles(newDiv);
   }
 
-  // animate out old pages
   requestAnimationFrame(() => {
     Array.from(contentDiv.children).forEach((child) => {
       if (child !== newDiv) {
@@ -166,7 +199,7 @@ async function loadPage(path) {
         setTimeout(() => contentDiv.removeChild(child), 300);
       }
     });
-    // trigger fade-in
+
     void newDiv.offsetWidth;
     newDiv.classList.add("active");
   });
@@ -175,7 +208,6 @@ async function loadPage(path) {
   attachDropdowns(newDiv);
 }
 
-/** Turn buttons with data-page into hash navigators */
 function attachButtonNavigation(container) {
   container.querySelectorAll("button").forEach((btn) => {
     btn.addEventListener("click", () => {
@@ -187,14 +219,12 @@ function attachButtonNavigation(container) {
   });
 }
 
-/** Wire up any .dropdown elements inside the new page */
 function attachDropdowns(container) {
   container.querySelectorAll(".dropdown").forEach((dd) => {
     dd.addEventListener("click", () => dd.classList.toggle("active"));
   });
 }
 
-/** Highlight the current top-nav link */
 function setActiveLink() {
   const hash = window.location.hash || "#/home";
   links.forEach((link) => {
@@ -202,17 +232,70 @@ function setActiveLink() {
   });
 }
 
-/** Guarded navigation to prevent spam-clicking */
-function handleNavLinkNavigation(path) {
+async function handleNavLinkNavigation(rawPath) {
   if (navLinkCooldown) return;
   navLinkCooldown = true;
   setTimeout(() => (navLinkCooldown = false), 100);
 
-  loadPage(path);
+  const [basePath, qs] = rawPath.split("?");
+  const params = new URLSearchParams(qs || "");
+
+  await loadPage(basePath);
   setActiveLink();
+
+  if (basePath === "/faqs") {
+    await Promise.resolve();
+
+    const latest = contentDiv.lastElementChild;
+    const faqSearch =
+      (latest && latest.querySelector && latest.querySelector("#faqSearch")) ||
+      document.getElementById("faqSearch");
+
+    if (faqSearch) {
+      if (params.has("q")) {
+        faqSearch.value = params.get("q");
+      } else {
+        faqSearch.value = "";
+      }
+      faqSearch.dispatchEvent(new Event("input", { bubbles: true }));
+    }
+
+    if (params.has("open")) {
+      const id = params.get("open");
+      const item =
+        (latest &&
+          latest.querySelector &&
+          latest.querySelector(`.faq-item[data-id="${CSS.escape(id)}"]`)) ||
+        document.querySelector(`.faq-item[data-id="${CSS.escape(id)}"]`);
+      if (item) {
+        const question = item.querySelector(".faq-question");
+        if (question) question.click();
+        setTimeout(
+          () => item.scrollIntoView({ behavior: "smooth", block: "center" }),
+          50
+        );
+      }
+    } else {
+      const active =
+        (latest &&
+          latest.querySelector &&
+          latest.querySelector(".faq-item.active")) ||
+        document.querySelector(".faq-item.active");
+      if (active) {
+        active.classList.remove("active");
+        const ans = active.querySelector(".faq-answer");
+        if (ans) ans.classList.remove("show");
+      }
+
+      (latest || document)
+        .querySelectorAll(".faq-list details[open]")
+        .forEach((d) => {
+          d.removeAttribute("open");
+        });
+    }
+  }
 }
 
-// initial load & hash watcher
 window.addEventListener("DOMContentLoaded", () => {
   if (!location.hash) location.hash = "#/home";
   handleNavLinkNavigation(location.hash.slice(1));
@@ -221,7 +304,6 @@ window.addEventListener("hashchange", () => {
   handleNavLinkNavigation(location.hash.slice(1));
 });
 
-// Tab key cycles through top-nav-links
 window.addEventListener("keydown", (e) => {
   if (e.key === "Tab") {
     e.preventDefault();
@@ -233,7 +315,6 @@ window.addEventListener("keydown", (e) => {
   }
 });
 
-// Sticky footer when scrolled to top
 const footer = document.getElementById("footer");
 window.addEventListener("scroll", () => {
   if (window.scrollY === 0) {
@@ -248,11 +329,6 @@ if (window.scrollY === 0) {
   footer.classList.add("fixed");
 }
 
-/* --------------------------------
-   Gallery image fullscreen logic
-   -------------------------------- */
-
-// backdrop for fullscreen previews
 const imageBackdrop = document.createElement("div");
 imageBackdrop.className = "image-backdrop";
 document.body.appendChild(imageBackdrop);
@@ -260,11 +336,9 @@ document.body.appendChild(imageBackdrop);
 let currentFullImage = null;
 let currentFullSource = null;
 
-/** Toggle fullscreen preview for a given <img> */
 function toggleFullscreenImage(img) {
   if (!img) return;
 
-  // if already open, close it
   if (currentFullSource === img) {
     if (currentFullImage && currentFullImage.parentNode) {
       currentFullImage.parentNode.removeChild(currentFullImage);
@@ -276,12 +350,10 @@ function toggleFullscreenImage(img) {
     return;
   }
 
-  // close existing
   if (currentFullSource) {
     toggleFullscreenImage(currentFullSource);
   }
 
-  // clone and center
   const clone = img.cloneNode(true);
   clone.classList.add("fullscreen-image");
 
@@ -321,7 +393,6 @@ function toggleFullscreenImage(img) {
   currentFullSource = img;
 }
 
-/** Attach fullscreen click handlers to any .gallery-grid img */
 function attachGalleryFullscreen(root) {
   if (!root) return;
   root.querySelectorAll(".gallery-grid img").forEach((img) => {
@@ -334,7 +405,6 @@ function attachGalleryFullscreen(root) {
   });
 }
 
-// close on backdrop click or Esc
 imageBackdrop.addEventListener("click", () => {
   if (currentFullSource) toggleFullscreenImage(currentFullSource);
 });
@@ -344,7 +414,6 @@ window.addEventListener("keydown", (e) => {
   }
 });
 
-// integrate with dynamic loader
 const originalLoadPage = loadPage;
 loadPage = async function (path) {
   await originalLoadPage(path);
@@ -356,7 +425,6 @@ loadPage = async function (path) {
   }
 };
 
-// initial static attachments
 window.addEventListener("DOMContentLoaded", () => {
   attachGalleryFullscreen(document);
   if (typeof attachFAQBehavior === "function") {
@@ -364,7 +432,6 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 });
 
-/** Fallback <details>-based FAQ behavior (for inline pages) */
 function attachFAQBehavior(root) {
   if (!root) root = document;
   const list = root.querySelector(".faq-list");
@@ -417,3 +484,23 @@ function toggleUpdateDescription() {
     updateDescription.style.display = "none";
   }
 }
+
+document.addEventListener("click", (e) => {
+  const btn = e.target.closest && e.target.closest("[data-page]");
+  if (!btn) return;
+  e.preventDefault();
+
+  const path = btn.getAttribute("data-page");
+  if (!path) return;
+
+  const normalized = path.startsWith("/") ? path : "/" + path;
+
+  const newHash = "#" + normalized;
+  if (location.hash !== newHash) {
+    history.pushState(null, "", newHash);
+  }
+
+  if (typeof handleNavLinkNavigation === "function") {
+    handleNavLinkNavigation(normalized);
+  }
+});

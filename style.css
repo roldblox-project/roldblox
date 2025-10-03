@@ -1505,6 +1505,14 @@ a {
 
 .update-description ul {
   margin: 0;
+  margin-bottom: 8px;
+  padding-left: 2px;
+  list-style: disc inside;
+}
+
+.update-description h3 {
+  font-family: "Source Sans Pro", sans-serif;
+  margin: 8px 0;
   padding-left: 2px;
   list-style: disc inside;
 }

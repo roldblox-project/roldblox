@@ -1,7 +1,15 @@
 // Increment this number every time you push changes
-const SITE_VERSION = "7.4";
+const SITE_VERSION = "7.5";
 const SITE_UPDATE_DESCRIPTION = `
-  <strong>What's New in 7.4</strong>
+  <h3>What's New in 7.5</h3>
+  <ul>
+    <li>Changed FAQ to have working links that redirect you to the needed question</li>
+    <li>Made the Discord card on the Community page have actual sense instead of having a button that leads to nowhere</li>
+    <li>Made this update thingy look nicer</li>
+
+  </ul>
+
+  <h3>What's New in 7.4</h3>
   <ul>
     <li>Added Update Description</li>
     <li>Changed some website elements to look more consistent and better</li>
