@@ -17,7 +17,6 @@ body,
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
-  overflow-x: hidden;
   flex-direction: column;
 }
 
@@ -31,7 +30,6 @@ a {
 }
 
 #content {
-  overflow-y: auto;
   height: 100%;
   padding-top: 0;
 }
@@ -42,13 +40,13 @@ a {
   top: 0;
   left: 0;
   opacity: 0;
-  transform: translateX(50%);
-  transition: transform 0.25s ease, opacity 0.25s ease;
+  transform: scale(0.95);
+  transition: transform 0.3s ease-out, opacity 0.3s ease-out;
 }
 
 .page.active {
   opacity: 1;
-  transform: translateX(0);
+  transform: scale(1);
 }
 
 .main-content {
@@ -61,7 +59,7 @@ a {
   top: 0;
   left: 0;
   right: 0;
-  background: rgba(29, 31, 41, 0.75);
+  background: rgba(20, 20, 30, 0.75);
   color: white;
   z-index: 1001;
   border-radius: 0;
@@ -84,7 +82,7 @@ a {
 }
 
 .nav-logo img {
-  height: 45px;
+  height: 32px;
   display: block;
 }
 
@@ -126,7 +124,8 @@ a {
   font-size: 1rem;
   letter-spacing: 0.6px;
   position: relative;
-  font-weight: 500;
+  font-family: "Source Sans Pro", sans-serif;
+  font-weight: 200;
 }
 
 .top-nav-link::after {
@@ -144,7 +143,7 @@ a {
 
 .top-nav-link:hover {
   color: #ffffff;
-  transform: translateY(-2px);
+  transform: translateY(-4px);
 }
 
 .top-nav-link:hover::after {
@@ -154,7 +153,7 @@ a {
 
 .top-nav-link.active {
   color: #ffffff;
-  font-weight: 600;
+  font-weight: 800;
 }
 
 .top-nav-link.active::after {
@@ -229,6 +228,7 @@ a {
   margin-bottom: 20px;
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
   padding-top: 20px;
+  font-weight: 800;
 }
 
 .hero-subtitle {
@@ -238,7 +238,8 @@ a {
   max-width: 600px;
   margin-left: auto;
   margin-right: auto;
-  font-family: "Source Sans Pro Light", sans-serif;
+  font-family: "Source Sans Pro", sans-serif;
+  font-weight: 300;
 }
 
 .hero-buttons {
@@ -292,7 +293,8 @@ a {
 .section-text {
   font-size: 1.2rem;
   line-height: 1.8;
-  font-family: "Source Sans Pro Light", sans-serif;
+  font-family: "Source Sans Pro", sans-serif;
+  font-weight: 300;
   margin-bottom: 40px;
   text-align: center;
   color: rgba(255, 255, 255, 0.9);
@@ -318,6 +320,7 @@ a {
 }
 
 .feature-card:hover {
+  transform: translateY(-8px);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
   background: rgba(255, 255, 255, 0.1);
 }
@@ -376,27 +379,21 @@ a {
 }
 
 .community-card.discord {
-  background: linear-gradient(
-    to bottom,
-    rgba(120, 140, 200, 0.75),
-    rgba(25, 25, 50, 0.75)
-  );
+  background: linear-gradient(to bottom,
+      rgba(120, 140, 200, 0.75),
+      rgba(25, 25, 50, 0.75));
 }
 
 .community-card.youtube {
-  background: linear-gradient(
-    to bottom,
-    rgba(255, 0, 25, 0.75),
-    rgba(75, 10, 25, 0.75)
-  );
+  background: linear-gradient(to bottom,
+      rgba(255, 0, 25, 0.75),
+      rgba(75, 10, 25, 0.75));
 }
 
 .community-card.roblox {
-  background: linear-gradient(
-    to bottom,
-    rgba(50, 50, 225, 0.75),
-    rgba(25, 25, 75, 0.75)
-  );
+  background: linear-gradient(to bottom,
+      rgba(50, 50, 225, 0.75),
+      rgba(25, 25, 75, 0.75));
 }
 
 .community-card-icon {
@@ -470,12 +467,10 @@ a {
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(
-    to top,
-    rgba(0, 0, 0, 0.7) 0%,
-    rgba(0, 0, 0, 0.4) 50%,
-    rgba(0, 0, 0, 0.2) 100%
-  );
+  background: linear-gradient(to top,
+      rgba(0, 0, 0, 0.7) 0%,
+      rgba(0, 0, 0, 0.4) 50%,
+      rgba(0, 0, 0, 0.2) 100%);
   z-index: 1;
   pointer-events: none;
 }
@@ -551,6 +546,7 @@ a {
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -610,11 +606,9 @@ a {
   width: 100%;
   height: 100%;
   pointer-events: none;
-  background: linear-gradient(
-    135deg,
-    rgba(30, 30, 40, 0) 0%,
-    rgba(30, 30, 40, 0) 100%
-  );
+  background: linear-gradient(135deg,
+      rgba(30, 30, 40, 0) 0%,
+      rgba(30, 30, 40, 0) 100%);
   z-index: -10;
 }
 
@@ -635,10 +629,10 @@ a {
 .btn {
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
   padding: 0 28px;
-  background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+  background: linear-gradient(0deg, rgb(16, 130, 55) 0%, rgb(2, 183, 87) 100%);
   color: white;
   font-size: 16px;
-  font-weight: 500;
+  font-weight: 200;
   border: none;
   border-radius: 4px;
   cursor: pointer;
@@ -661,36 +655,17 @@ a {
   white-space: nowrap;
 }
 
-.btn::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.2),
-    transparent
-  );
-  transition: all 0.4s ease;
-}
-
 .btn:hover {
-  background: linear-gradient(135deg, #3ee884 0%, #2ecc71 100%);
+  background: linear-gradient(0deg, rgb(2, 183, 87) 0%, rgb(63, 198, 121) 100%);
   transform: translateY(-2px);
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2),
     inset 0 1px 1px rgba(255, 255, 255, 0.15);
 }
 
-.btn:hover::before {
-  left: 100%;
-}
 
 .btn:active {
   transform: translateY(1px);
-  background: linear-gradient(135deg, #1a4122 0%, #1d3a20 100%);
+  background: linear-gradient(180deg, rgb(19, 65, 35) 0%, rgb(15, 82, 46) 100%);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2),
     inset 0 1px 1px rgba(255, 255, 255, 0.05);
 }
@@ -745,11 +720,12 @@ a {
 
 @keyframes slideIn {
   from {
-    transform: translateX(-50px);
+    transform: translateY(20px);
     opacity: 0;
   }
+
   to {
-    transform: translateX(0);
+    transform: translateY(0);
     opacity: 1;
   }
 }
@@ -773,11 +749,11 @@ a {
 .logo-block .subtitle {
   margin-top: -35px;
   font-size: 24px;
-  font-family: "Source Sans Pro Light", sans-serif;
+  font-family: "Source Sans Pro", sans-serif;
   background-color: rgba(25, 25, 35, 0);
   padding: 26px 16px 10px;
   border-radius: 8px;
-  font-weight: 500;
+  font-weight: 300;
   z-index: 3;
   letter-spacing: 0.8px;
   transition: all 0.4s ease;
@@ -795,16 +771,14 @@ a {
   transform: translateY(0);
   transition: all 0.3s ease;
   backdrop-filter: blur(12px);
-  background: linear-gradient(
-    180deg,
-    rgba(10, 10, 20, 0.5) 0%,
-    rgba(0, 0, 0, 0.75) 100%
-  );
+  background: linear-gradient(180deg,
+      rgba(10, 10, 20, 0.5) 0%,
+      rgba(0, 0, 0, 0.75) 100%);
   padding: 20px 0;
   z-index: 1001;
   box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.15);
   max-height: 128px;
-  font-family: "Source Sans Pro Light", sans-serif;
+  font-family: "Source Sans Pro", sans-serif;
 }
 
 #footer.hidden {
@@ -833,7 +807,7 @@ a {
 #footer .footer-links a:hover {
   color: white;
   background: rgba(46, 109, 204, 0.2);
-  transform: translateY(-2px);
+  transform: translateY(-4px);
 }
 
 #footer .footer-info {
@@ -875,7 +849,7 @@ a {
 }
 
 .gallery-item:hover {
-  transform: translateY(-4px);
+  transform: translateY(-8px);
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
 }
 
@@ -917,9 +891,11 @@ a {
     grid-template-columns: repeat(2, 1fr);
     gap: 16px;
   }
+
   .page-content {
     padding: 16px;
   }
+
   .fullpage-content,
   .page-content {
     width: 80%;
@@ -932,14 +908,17 @@ a {
     grid-template-columns: 1fr;
     gap: 20px;
   }
+
   .fullpage-content,
   .page-content {
     width: 90%;
     margin: 5%;
   }
+
   .top-nav {
     padding: 8px;
   }
+
   .top-nav-link {
     padding: 6px 12px;
     font-size: 0.9rem;
@@ -1011,6 +990,8 @@ a {
 }
 
 .faq-search {
+  font-family: "Source Sans Pro", sans-serif;
+  font-weight: 100;
   width: 100%;
   padding: 12px 20px;
   border-radius: 8px;
@@ -1020,18 +1001,22 @@ a {
   font-size: 1rem;
   backdrop-filter: blur(5px);
   transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 .faq-search::placeholder {
   color: rgba(255, 255, 255, 0.5);
+  font-weight: 100;
+
 }
 
 .faq-search:focus {
   background-color: rgba(0, 0, 0, 0.3);
   outline: none;
-  box-shadow: 0 0 0 2px rgba(46, 204, 113, 0.4), 0 2px 12px rgba(0, 0, 0, 0.3);
-  border-color: rgba(46, 204, 113, 0.5);
+  box-shadow: 0 0 0 1px rgb(0, 162, 255), 0 2px 12px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-color: rgb(0, 162, 255);
+  font-weight: 600;
+
 }
 
 .faq-content {
@@ -1239,6 +1224,7 @@ a {
 }
 
 @media (max-width: 768px) {
+
   .faq-header-content h1,
   .help-header-content h1 {
     font-size: 2rem;
@@ -1348,6 +1334,7 @@ a {
     grid-template-columns: repeat(3, 1fr);
   }
 }
+
 @media (max-width: 600px) {
   .archive-grid {
     grid-template-columns: 1fr;
@@ -1412,6 +1399,7 @@ a {
 .tile-info {
   font-size: 0.85rem;
   color: rgba(255, 255, 255, 0.75);
+  font-family: "Source Sans Pro", sans-serif;
 }
 
 .tile-actions {
@@ -1443,6 +1431,7 @@ a {
 .has-tooltip {
   position: relative;
 }
+
 .has-tooltip::after {
   content: attr(data-tooltip);
   position: absolute;
@@ -1457,6 +1446,7 @@ a {
   transition: all 0.2s ease;
   pointer-events: none;
 }
+
 .has-tooltip:hover::after {
   opacity: 1;
   transform: translateY(0);
@@ -1475,7 +1465,8 @@ a {
   padding: 6px 12px;
   font-size: 16px;
   z-index: 1002;
-  font-family: "Source Sans Pro Light", sans-serif;
+  font-family: "Source Sans Pro", sans-serif;
+  font-weight: 300;
   color: rgba(255, 255, 255, 0.5);
 }
 
@@ -1515,4 +1506,338 @@ a {
   margin: 8px 0;
   padding-left: 2px;
   list-style: disc inside;
+}
+
+/* Base weight rules: use 300 for light text, 400 for normal, 600-700 for headings */
+html,
+body {
+  font-weight: 400;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Source Sans Pro", sans-serif;
+  font-weight: 600;
+}
+
+/* --- Pattern Generator Styles --- */
+.pattern-generator-page {
+  font-family: "Source Sans Pro", sans-serif;
+  background: rgb(20, 20, 30);
+
+  color: #333;
+}
+
+.pattern-generator-page .app {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+
+.pattern-generator-page .sidebar {
+  width: 480px;
+  box-sizing: border-box;
+  padding: 0px 20px;
+  padding-top: 72px;
+  padding-bottom: 128px;
+  border-right: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  overflow: auto;
+}
+
+.pattern-generator-page .main {
+  flex: 1 1 auto;
+  position: relative;
+  min-width: 0;
+  display: flex;
+  align-items: stretch;
+  justify-content: stretch;
+}
+
+.pattern-generator-page canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: #222;
+}
+
+.pattern-generator-page .controls-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.pattern-generator-page .controls-row .fill {
+  flex: 1;
+}
+
+.pattern-generator-page .controls-row .end {
+  margin-left: auto;
+}
+
+.pattern-generator-page label {
+  font-size: 13px;
+  color: #555;
+  margin-right: 6px;
+}
+
+.pattern-generator-page #palette {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.pattern-generator-page #palette .pg-palette-btn {
+  width: 28px;
+  height: 28px;
+  border: 1px solid #ccc;
+  padding: 0;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: transform 0.2s ease;
+}
+
+.pattern-generator-page #palette .pg-palette-btn:hover {
+  transform: scale(1.1);
+}
+
+.pattern-generator-page button {
+  /* Consistent with main .btn style, but with adjusted padding for a tool-like feel */
+  padding: 0 14px;
+  height: 36px;
+  line-height: 36px;
+  background: linear-gradient(0deg, rgb(16, 130, 55) 0%, rgb(2, 183, 87) 100%);
+  color: white;
+  font-size: 14px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+  font-family: "Source Sans Pro", sans-serif;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pattern-generator-page button:hover {
+  background: linear-gradient(0deg, rgb(2, 183, 87) 0%, rgb(63, 198, 121) 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.15);
+}
+
+.pattern-generator-page button:active {
+  transform: translateY(1px);
+  background: linear-gradient(180deg, rgb(19, 65, 35) 0%, rgb(15, 82, 46) 100%);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2), inset 0 1px 1px rgba(0, 0, 0, 0.1);
+}
+
+.pattern-generator-page button.ghost {
+  background: transparent;
+  color: #fff;
+  border: 1px solid #fff;
+  box-shadow: none;
+  text-shadow: none;
+}
+
+.pattern-generator-page .preset-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.pattern-generator-page button.ghost:hover {
+  background: #f0f0f0;
+  color: #333;
+  border-color: #bbb;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+.pattern-generator-page button.ghost:active {
+  background: #e5e5e5;
+  transform: translateY(0);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.pattern-generator-page input[type="color"] {
+  height: 32px;
+  width: 48px;
+  padding: 0;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.pattern-generator-page input[type="number"],
+.pattern-generator-page input[type="text"] {
+  padding: 0 8px;
+  height: 36px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.5);
+  color: #ffffff;
+  font-family: "Source Sans Pro", sans-serif;
+  font-size: 14px;
+}
+
+/* Custom Number Input Styles */
+.pattern-generator-page .number-input {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  overflow: hidden;
+  flex: 1;
+}
+
+.pattern-generator-page .number-input input[type="number"] {
+  width: 100%;
+  text-align: center;
+  border: none;
+  height: 34px;
+}
+
+.pattern-generator-page .number-input input[type="number"]::-webkit-outer-spin-button,
+.pattern-generator-page .number-input input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.pattern-generator-page .number-input button {
+  background: rgba(0, 165, 255, 1);
+  border: none;
+  color: rgb(255, 255, 255);
+  cursor: pointer;
+  width: 34px;
+  height: 34px;
+  font-size: 24px;
+  line-height: 34px;
+  padding: 0;
+  box-shadow: none;
+  text-shadow: none;
+  border-radius: 0;
+  flex-shrink: 0;
+  transition: 0.2s ease-in-out;
+  transform: none;
+
+}
+
+.pattern-generator-page .number-input button:active {
+  background: rgba(0, 100, 255, 1);
+  border: none;
+  color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  width: 34px;
+  height: 34px;
+  font-size: 16px;
+  line-height: 34px;
+  padding: 0;
+  box-shadow: none;
+  text-shadow: none;
+  border-radius: 0;
+  flex-shrink: 0;
+  transition: 0.2s ease-in-out;
+  transform: none;
+}
+
+.pattern-generator-page .title {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.pattern-generator-page .title h1 {
+  color: rgb(255, 255, 255);
+  font-size: 24px;
+  font-family: "Source Sans Pro", sans-serif;
+  font-weight: 800;
+  margin: 0;
+}
+
+.pattern-generator-page .muted {
+  color: rgba(255, 255, 255, 0.25);
+  font-size: 16px;
+  font-family: "Source Sans Pro", sans-serif;
+  font-weight: 200;
+}
+
+.pattern-generator-page .panel {
+  margin-bottom: 24px;
+  padding: 16px;
+  border-radius: 8px;
+  background: rgba(10, 10, 20, 0.75);
+  outline: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.5);
+}
+
+.pattern-generator-page .panel h2 {
+  font-size: 1.1rem;
+  margin-top: 0;
+  margin-bottom: 18px;
+  color: rgb(255, 255, 255);
+  border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 8px;
+}
+
+.pattern-generator-page .note {
+  font-size: 12px;
+  color: #888;
+  display: block;
+  width: 100%;
+  margin-top: 4px;
+}
+
+@media (max-width: 640px) {
+  .pattern-generator-page .sidebar {
+    width: 280px;
+    padding: 20px 10px;
+  }
+}
+
+/* --- Custom Scrollbar for Pattern Generator Sidebar --- */
+.pattern-generator-page .sidebar {
+  /* For Firefox */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 165, 255, 1) rgba(10, 10, 20, 0.75);
+}
+
+/* For Webkit browsers (Chrome, Safari, Edge) */
+.pattern-generator-page .sidebar::-webkit-scrollbar {
+  width: 14px;
+  /* Width of the scrollbar */
+}
+
+.pattern-generator-page .sidebar::-webkit-scrollbar-track {
+  background: rgba(10, 10, 20, 0.75);
+  /* Match the panel background */
+  margin-block: 8px;
+  /* Adds vertical padding to the top and bottom */
+  border-radius: 10px;
+  /* Rounds the ends of the track */
+}
+
+.pattern-generator-page .sidebar::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 165, 255, 1);
+  /* A nice blue from the number inputs */
+  border-radius: 10px;
+  border: 4px solid transparent;
+  /* This creates the padding effect */
+  background-clip: content-box;
+}
+
+.pattern-generator-page .sidebar::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(0, 100, 255, 1);
+  /* A darker blue on hover */
 }

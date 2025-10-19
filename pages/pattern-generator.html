@@ -1,0 +1,132 @@
+<div class="pattern-generator-page">
+    <div class="app">
+        <aside class="sidebar" id="controls">
+            <div class="title">
+                <div>
+                    <h1>Pattern Generator (Beta)</h1>
+                    <div class="muted">Quick controls and palette editor</div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <h2>Quick</h2>
+                <div class="controls-row">
+                    <label for="seed" class="muted">Seed</label>
+                    <input id="seed" placeholder="random" type="text" class="fill" />
+                    <button id="regen">Regenerate</button>
+                </div>
+
+                <div class="controls-row">
+                    <label for="scale" class="muted">Scale</label>
+                    <div class="number-input" data-min="16" data-max="128" data-step="1">
+                        <button class="down">-</button>
+                        <input id="scale" type="number" value="64" />
+                        <button class="up">+</button>
+                    </div>
+                </div>
+                <div class="controls-row">
+                    <div class="end">
+                        <button id="setDefaults" class="ghost">Set Defaults</button>
+                    </div>
+                </div>
+
+                <small class="note">Tip: lower scale makes smaller tiles.</small>
+            </div>
+
+            <div class="panel">
+                <h2>Palette</h2>
+                <div id="palette" aria-label="palette"></div>
+                <div class="controls-row">
+                    <input id="newcolor" type="color" value="#2d2d2d" />
+                    <button id="addcolor">Add color</button>
+
+                </div>
+                <div class="controls-row">
+                    <label for="seed" class="muted">Color Presets</label>
+
+                    <div class="end preset-buttons">
+                        <button id="presetDark">Dark</button>
+                        <button id="presetLight">Light</button>
+                        <button id="presetBlue">Blue</button>
+                        <button id="presetRoldblue">Roldblue</button>
+                    </div>
+                </div>
+                <div class="controls-row">
+                    <div class="end">
+
+                        <button id="savePalette" class="ghost">Save</button>
+                        <input id="loadPaletteFile" type="file" accept="application/json" style="display:none" />
+                        <button id="loadPalette" class="ghost">Load</button>
+                        <button id="newPalette" class="ghost">New</button>
+                    </div>
+                </div>
+                <small class="note">Click a color swatch to remove it.</small>
+            </div>
+
+
+            <div class="panel">
+                <h2>Noise & randomness</h2>
+                <div class="controls-row">
+                    <label class="muted">Noise softness</label>
+                    <div class="number-input" data-min="0" data-max="32" data-step="1">
+                        <button class="down">-</button>
+                        <input id="noiseSoftness" type="number" value="8" />
+                        <button class="up">+</button>
+                    </div>
+                </div>
+                <div class="controls-row">
+                    <label class="muted">Randomness softness</label>
+                    <div class="number-input" data-min="4" data-max="400" data-step="1">
+                        <button class="down">-</button>
+                        <input id="randomnessSoftness" type="number" value="64" />
+                        <button class="up">+</button>
+                    </div>
+                </div>
+                <small class="note">Higher randomness softness makes it have a more smoother pattern.</small>
+            </div>
+
+
+            <div class="panel">
+                <h2>Export</h2>
+                <div class="controls-row">
+                    <label class="muted">Size</label>
+                    <div class="number-input" data-min="16" data-max="8192" data-step="64">
+                        <button class="down">-</button>
+                        <input id="exportWidth" type="number" value="512" />
+                        <button class="up">+</button>
+                    </div>
+                    <label class="muted">×</label>
+                    <div class="number-input" data-min="16" data-max="8192" data-step="64">
+                        <button class="down">-</button>
+                        <input id="exportHeight" type="number" value="512" />
+                        <button class="up">+</button>
+                    </div>
+                </div>
+                <div class="controls-row">
+                    <label class="muted">Tile</label>
+                    <div class="number-input" data-min="4" data-max="256" data-step="4">
+                        <button class="down">-</button>
+                        <input id="exportTile" type="number" value="64" />
+                        <button class="up">+</button>
+                    </div>
+
+                </div>
+                <div class="controls-row">
+                    <div class="end">
+                        <button id="downloadPNG" class="end">Download PNG</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="note" style="text-align: center; margin-top: 30px;">Made for quick exploration. Use export
+                for
+                final images.</div>
+        </aside>
+
+        <main class="main">
+            <canvas id="c"></canvas>
+        </main>
+    </div>
+</div>
+
+</html>

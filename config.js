@@ -1,6 +1,20 @@
 // Increment this number every time you push changes
-const SITE_VERSION = "7.6";
+const SITE_VERSION = "7.8";
 const SITE_UPDATE_DESCRIPTION = `
+  <h3>What's New in 7.8</h3>
+  <ul>
+    <li>Added the Pattern Generator (a really early release)</li>
+    <li>Added new pattern presets</li>
+  </ul>
+
+  <h3>What's New in 7.7</h3>
+  <ul>
+    <li>Fixed fonts not working</li>
+    <li>Made topbar more persistent</li>
+    <li>Updated Buttons to use Roblox's Palletes</li>
+    <li>Changed Page transition effect</li>
+  </ul>
+
   <h3>What's New in 7.6</h3>
   <ul>
     <li>Can't believe I forgot this but changed the button from the mods page that says "What are mods" to actually give the faqs correct question</li>

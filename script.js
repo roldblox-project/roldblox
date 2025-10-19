@@ -16,6 +16,7 @@ const routes = {
   "/admin": "pages/admin.html",
   "/archive": "pages/archive.html",
   "/products": "pages/products.html",
+  "/patterngenerator": "pages/pattern-generator.html",
 };
 
 function initFaqToggles(root = document) {

@@ -1,70 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta
-      http-equiv="Cache-Control"
-      content="no-cache, no-store, must-revalidate"
-    />
-    <meta http-equiv="Pragma" content="no-cache" />
-    <meta http-equiv="Expires" content="0" />
-    <title>ROLDBLOX</title>
-    <link rel="icon" href="favicon.png" type="image/png" />
-    <link rel="stylesheet" href="style.css" />
 
-    <link
-      href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600&display=swap"
-      rel="stylesheet"
-    />
-  </head>
-  <body>
-    <nav class="top-nav">
-      <a href="#/home" class="nav-logo">
-        <img src="images/logo.png" alt="Logo" />
-      </a>
-      <ul class="top-nav-list">
-        <li class="top-nav-item">
-          <a href="#/home" class="top-nav-link">Home</a>
-        </li>
-        <li class="top-nav-item">
-          <a href="#/about" class="top-nav-link">About</a>
-        </li>
-        <li class="top-nav-item">
-          <a href="#/mods" class="top-nav-link">Mods</a>
-        </li>
-        <li class="top-nav-item">
-          <a href="#/community" class="top-nav-link">Community</a>
-        </li>
-      </ul>
-    </nav>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <title>ROLDBLOX</title>
+  <link rel="icon" href="favicon.png" type="image/png" />
+  <link rel="stylesheet" href="style.css" />
+</head>
 
-    <div class="site-version" onclick="toggleUpdateDescription()">
-      <span id="version-number">Site Version: </span>
-      <div class="update-description" id="update-description"></div>
+<body>
+  <nav class="top-nav">
+    <a href="#/home" class="nav-logo">
+      <img src="images/logo.png" alt="Logo" />
+    </a>
+    <ul class="top-nav-list">
+      <li class="top-nav-item">
+        <a href="#/home" class="top-nav-link">Home</a>
+      </li>
+      <li class="top-nav-item">
+        <a href="#/about" class="top-nav-link">About</a>
+      </li>
+      <li class="top-nav-item">
+        <a href="#/mods" class="top-nav-link">Mods</a>
+      </li>
+      <li class="top-nav-item">
+        <a href="#/community" class="top-nav-link">Community</a>
+      </li>
+      <li class="top-nav-item">
+        <a href="#/patterngenerator" class="top-nav-link">Pattern Generator (Beta)</a>
+    </ul>
+  </nav>
+
+  <div class="site-version" onclick="toggleUpdateDescription()">
+    <span id="version-number">Site Version: </span>
+    <div class="update-description" id="update-description"></div>
+  </div>
+
+  <div id="content" class="main-content"></div>
+  <footer id="footer">
+    <div class="footer-links">
+      <!-- <a href="#/blog">Blog</a> -->
+      <!-- <a href="#/help">Contact & Support</a> -->
+      <a href="#/faqs">FAQ</a>
+      <!-- <a href="#/gallery">Gallery</a> -->
+      <a href="#/assets">Assets</a>
+      <a href="#/archive">Archive</a>
     </div>
+    <div class="footer-info">
+      <p>
+        ROLDBLOX is a fan-made project, not an official part of Roblox. It was
+        created by the community to recreate the nostalgic, old-school
+        experience of Roblox's early days. We don't claim to be Roblox and
+        aren't trying to copy them.
+      </p>
+    </div>
+  </footer>
+  <script src="script.js"></script>
+  <script src="archive-init.js"></script>
+  <script src="js/pattern-generator.js"></script>
+  <script src="js/pattern-generator-init.js"></script>
+  <script src="config.js"></script>
+</body>
 
-    <div id="content" class="main-content"></div>
-    <footer id="footer">
-      <div class="footer-links">
-        <!-- <a href="#/blog">Blog</a> -->
-        <!-- <a href="#/help">Contact & Support</a> -->
-        <a href="#/faqs">FAQ</a>
-        <!-- <a href="#/gallery">Gallery</a> -->
-        <a href="#/assets">Assets</a>
-        <a href="#/archive">Archive</a>
-      </div>
-      <div class="footer-info">
-        <p>
-          ROLDBLOX is a fan-made project, not an official part of Roblox. It was
-          created by the community to recreate the nostalgic, old-school
-          experience of Roblox’s early days. We don’t claim to be Roblox and
-          aren’t trying to copy them.
-        </p>
-      </div>
-    </footer>
-    <script src="script.js"></script>
-    <script src="archive-init.js"></script>
-    <script src="config.js"></script>
-  </body>
 </html>
