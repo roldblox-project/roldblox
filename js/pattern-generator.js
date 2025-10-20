@@ -149,6 +149,88 @@
             renderPaletteUI(); render();
         });
 
+
+        rootElement.querySelector('#presetRed').addEventListener('click', () => {
+            paletteState =
+                [
+                    [
+                        226,
+                        35,
+                        26
+                    ],
+                    [
+                        222,
+                        34,
+                        26
+                    ],
+                    [
+                        218,
+                        34,
+                        25
+                    ],
+                    [
+                        216,
+                        33,
+                        25
+                    ]
+                ];
+            renderPaletteUI(); render();
+        });
+
+        rootElement.querySelector('#presetGreen').addEventListener('click', () => {
+            paletteState =
+                [
+                    [
+                        6,
+                        171,
+                        80
+                    ],
+                    [
+                        2,
+                        183,
+                        87
+                    ],
+                    [
+                        44,
+                        191,
+                        106
+                    ],
+                    [
+                        54,
+                        194,
+                        114
+                    ]
+                ];
+            renderPaletteUI(); render();
+        });
+
+        rootElement.querySelector('#presetYellow').addEventListener('click', () => {
+            paletteState =
+                [
+                    [
+                        246,
+                        150,
+                        2
+                    ],
+                    [
+                        246,
+                        162,
+                        2
+                    ],
+                    [
+                        246,
+                        173,
+                        2
+                    ],
+                    [
+                        246,
+                        183,
+                        2
+                    ]
+                ];
+            renderPaletteUI(); render();
+        });
+
         rootElement.querySelector('#newPalette').addEventListener('click', () => {
             paletteState = [];
             renderPaletteUI(); render();
@@ -420,10 +502,16 @@
                     const c0 = paletteOrdered[idxA];
                     const c1 = paletteOrdered[idxB];
 
-                    // triangle 1 (top-left region)
-                    ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(px + scale, py); ctx.lineTo(px, py + scale); ctx.closePath(); ctx.fillStyle = c0; ctx.fill();
-                    // triangle 2 (bottom-right region)
-                    ctx.beginPath(); ctx.moveTo(px + scale, py); ctx.lineTo(px + scale, py + scale); ctx.lineTo(px, py + scale); ctx.closePath(); ctx.fillStyle = c1; ctx.fill();
+                    // To avoid seams, draw the full tile with one color, then the other triangle on top.
+                    ctx.fillStyle = c1;
+                    ctx.fillRect(px, py, scale, scale);
+                    ctx.fillStyle = c0;
+                    ctx.beginPath();
+                    ctx.moveTo(px, py);
+                    ctx.lineTo(px + scale, py);
+                    ctx.lineTo(px, py + scale);
+                    ctx.closePath();
+                    ctx.fill();
 
                     // remember luminance for neighbor bias
                     leftLum = luminanceFromRgbCss(c1);
@@ -494,8 +582,16 @@
                     const idxBLocal = getColorIndex(vBLocal);
                     const c0 = paletteOrderedLocal[idxALocal];
                     const c1 = paletteOrderedLocal[idxBLocal];
-                    ctxLocal.beginPath(); ctxLocal.moveTo(px, py); ctxLocal.lineTo(px + tileSize, py); ctxLocal.lineTo(px, py + tileSize); ctxLocal.closePath(); ctxLocal.fillStyle = c0; ctxLocal.fill();
-                    ctxLocal.beginPath(); ctxLocal.moveTo(px + tileSize, py); ctxLocal.lineTo(px + tileSize, py + tileSize); ctxLocal.lineTo(px, py + tileSize); ctxLocal.closePath(); ctxLocal.fillStyle = c1; ctxLocal.fill();
+                    // To avoid seams, draw the full tile with one color, then the other triangle on top.
+                    ctxLocal.fillStyle = c1;
+                    ctxLocal.fillRect(px, py, tileSize, tileSize);
+                    ctxLocal.fillStyle = c0;
+                    ctxLocal.beginPath();
+                    ctxLocal.moveTo(px, py);
+                    ctxLocal.lineTo(px + tileSize, py);
+                    ctxLocal.lineTo(px, py + tileSize);
+                    ctxLocal.closePath();
+                    ctxLocal.fill();
 
                     leftLumLocal = luminanceFromRgbCss(c1);
                     prevRowLumsLocal[x + 1] = leftLumLocal;

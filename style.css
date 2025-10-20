@@ -1651,7 +1651,8 @@ h6 {
 }
 
 .pattern-generator-page .preset-buttons {
-  display: flex;
+  display: contents;
+
   gap: 8px;
 }
 

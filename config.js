@@ -1,6 +1,12 @@
 // Increment this number every time you push changes
-const SITE_VERSION = "7.8";
+const SITE_VERSION = "7.9";
 const SITE_UPDATE_DESCRIPTION = `
+  <h3>What's New in 7.9</h3>
+  <ul>
+    <li>Added Red Color (from the Roblox Mobile Welcome Screen), Green Color (Custom), and Yellow Color (Custom) to the Pattern Generator</li>
+    <li>Fixed Lines appearing between triangles per tile in Pattern Generator</li>
+  </ul>
+
   <h3>What's New in 7.8</h3>
   <ul>
     <li>Added the Pattern Generator (a really early release)</li>
