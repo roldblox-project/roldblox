@@ -39,7 +39,6 @@
                 <div class="controls-row">
                     <input id="newcolor" type="color" value="#2d2d2d" />
                     <button id="addcolor">Add color</button>
-
                 </div>
                 <div class="controls-row">
                     <label for="seed" class="muted">Color Presets</label>
@@ -52,7 +51,6 @@
                         <button id="presetGreen">Green</button>
                         <button id="presetYellow">Yellow</button>
                         <button id="presetRoldblue">Roldblue</button>
-
                     </div>
                 </div>
                 <div class="controls-row">
@@ -105,6 +103,15 @@
                         <input id="exportHeight" type="number" value="512" />
                         <button class="up">+</button>
                     </div>
+
+                </div>
+                <div class="controls-row">
+                    <label class="muted">Size Multiply</label>
+
+                    <div class="end">
+                        <button id="exportSizeHalf" class="ghost">x0.5</button>
+                        <button id="exportSizeDouble" class="ghost">x2</button>
+                    </div>
                 </div>
                 <div class="controls-row">
                     <label class="muted">Tile</label>
@@ -118,6 +125,9 @@
                 <div class="controls-row">
                     <div class="end">
                         <button id="downloadPNG" class="end">Download PNG</button>
+                        <button id="downloadConfigPreset" class="end">Download Config</button>
+                        <input id="loadConfigFile" type="file" accept="application/json" style="display:none" />
+                        <button id="loadConfigPreset" class="ghost">Load Config</button>
                     </div>
                 </div>
             </div>

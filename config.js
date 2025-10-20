@@ -1,6 +1,11 @@
 // Increment this number every time you push changes
-const SITE_VERSION = "7.9";
+const SITE_VERSION = "7.9.1";
 const SITE_UPDATE_DESCRIPTION = `
+  <h3>What's New in 7.9.1</h3>
+  <ul>
+    <li>Added Config Export/Load, which means you can now share configs, seeds, palettes, and cool patterns with your friends!</li>
+  </ul>
+
   <h3>What's New in 7.9</h3>
   <ul>
     <li>Added Red Color (from the Roblox Mobile Welcome Screen), Green Color (Custom), and Yellow Color (Custom) to the Pattern Generator</li>

@@ -615,6 +615,71 @@
             } catch (e) {/*ignore for tainted canvas*/ }
         }
 
+        // save config as JSON
+        rootElement.querySelector('#downloadConfigPreset').addEventListener('click', () => {
+            const config = {
+                seed: seedInput.value,
+                palette: paletteState,
+                scale: parseInt(scaleInput.value, 10),
+                noiseSoftness: parseFloat(noiseSoftnessInput.value),
+                randomnessSoftness: parseFloat(randomnessSoftnessInput.value)
+            };
+            const data = JSON.stringify(config, null, 2);
+            const blob = new Blob([data], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'pattern-config.json';
+            a.click();
+            setTimeout(() => URL.revokeObjectURL(url), 3000);
+        });
+
+        // load config from file
+        const loadConfigFile = rootElement.querySelector('#loadConfigFile');
+        if (loadConfigFile) {
+            rootElement.querySelector('#loadConfigPreset').addEventListener('click', () => loadConfigFile.click());
+            loadConfigFile.addEventListener('change', (e) => {
+                const f = e.target.files && e.target.files[0];
+                if (!f) return;
+                const reader = new FileReader();
+                reader.onload = (ev) => {
+                    try {
+                        const config = JSON.parse(ev.target.result);
+                        if (config) {
+                            if (typeof config.seed !== 'undefined') seedInput.value = config.seed;
+                            if (config.palette) {
+                                paletteState = config.palette.map(arr => [arr[0], arr[1], arr[2]]);
+                                renderPaletteUI();
+                            }
+                            if (config.scale) scaleInput.value = config.scale;
+                            if (config.noiseSoftness) noiseSoftnessInput.value = config.noiseSoftness;
+                            if (config.randomnessSoftness) randomnessSoftnessInput.value = config.randomnessSoftness;
+                            render();
+                        }
+                    } catch (err) {
+                        alert('Invalid config file');
+                    }
+                };
+                reader.readAsText(f);
+            });
+        }
+        
+        const exportSizeHalfBtn = rootElement.querySelector('#exportSizeHalf');
+        if(exportSizeHalfBtn) {
+            exportSizeHalfBtn.addEventListener('click', () => {
+                exportWidthInput.value = Math.max(16, Math.floor(parseInt(exportWidthInput.value, 10) / 2));
+                exportHeightInput.value = Math.max(16, Math.floor(parseInt(exportHeightInput.value, 10) / 2));
+            });
+        }
+
+        const exportSizeDoubleBtn = rootElement.querySelector('#exportSizeDouble');
+        if(exportSizeDoubleBtn) {
+            exportSizeDoubleBtn.addEventListener('click', () => {
+                exportWidthInput.value = Math.min(8192, parseInt(exportWidthInput.value, 10) * 2);
+                exportHeightInput.value = Math.min(8192, parseInt(exportHeightInput.value, 10) * 2);
+            });
+        }
+
         // wire download button
         const downloadBtn = rootElement.querySelector('#downloadPNG');
         downloadBtn.addEventListener('click', () => {
