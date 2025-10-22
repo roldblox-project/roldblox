@@ -1,6 +1,13 @@
 // Increment this number every time you push changes
-const SITE_VERSION = "7.9.1";
+const SITE_VERSION = "7.10";
 const SITE_UPDATE_DESCRIPTION = `
+  <h3>What's New in 7.10</h3>
+  <ul>
+    <li>Added Sounds back to ROLDBLOX Website, just click the sidebar button in the topbar and click unmute button</li>
+    <li>Added a Sidebar menu</li>
+    <li>Improved FAQ Search accuracy and better page for it</li>
+  </ul>
+
   <h3>What's New in 7.9.1</h3>
   <ul>
     <li>Added Config Export/Load, which means you can now share configs, seeds, palettes, and cool patterns with your friends!</li>
@@ -26,28 +33,6 @@ const SITE_UPDATE_DESCRIPTION = `
     <li>Changed Page transition effect</li>
   </ul>
 
-  <h3>What's New in 7.6</h3>
-  <ul>
-    <li>Can't believe I forgot this but changed the button from the mods page that says "What are mods" to actually give the faqs correct question</li>
-    <li>Added a button to the homepage page that leads to the community/support us page</li>
-    <li>Added a button to the mods page that leads to the assets page</li>
-  </ul>
-
-  <h3>What's New in 7.5</h3>
-  <ul>
-    <li>Changed FAQ to have working links that redirect you to the needed question</li>
-    <li>Made the Discord card on the Community page have actual sense instead of having a button that leads to nowhere</li>
-    <li>Made this update thingy look nicer</li>
-  </ul>
-
-  <h3>What's New in 7.4</h3>
-  <ul>
-    <li>Added Update Description</li>
-    <li>Changed some website elements to look more consistent and better</li>
-    <li>Changed fonts to be more readable</li>
-    <li>Fixed some pages to have centered cards</li>
-    <li>Updated Logo Design</li>
-  </ul>
   `;
 (function () {
   // Update all CSS files

@@ -1,112 +1,27 @@
-<!-- Gallery Page Template -->
-<div
-  class="fullpage-container centered"
-  style="
+<!-- Gallery Hero Section -->
+<div class="fullpage-container centered" style="
     background-image: url('images/backgrounds/city.png');
     height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-  "
->
+  ">
   <div class="page-content text-center" style="margin-top: 69px">
-    <h1 class="hero-title">Gallery</h1>
+    <h1 class="hero-title">Project Gallery</h1>
     <p class="hero-subtitle">Snapshots, logos, and artwork from the project</p>
-    <div class="hero-buttons">
-      <button class="btn primary-btn" data-page="/faqs">What are mods?</button>
-      <button class="btn secondary-btn">Browse All</button>
-    </div>
   </div>
 </div>
 
-<div class="gallery-page">
-  <div class="gallery-grid">
-    <div class="gallery-item">
-      <img src="images/bridge.png" alt="Bridge" />
+<!-- Gallery Content Section -->
+<div class="about-section">
+  <div class="about-container">
+    <div class="gallery-container">
+      <div class="gallery-card" style="background-image: url('images/backgrounds/bridge.png')">
+        <div class="gallery-card-content">
+          <div class="gallery-title">Test</div>
+          <p class="gallery-description">Test Desc.</p>
+        </div>
+      </div>
     </div>
-    <div class="gallery-item"><img src="images/city.png" alt="City" /></div>
-    <div class="gallery-item"><img src="images/space.png" alt="Space" /></div>
-    <div class="gallery-item">
-      <img src="images/volcano.png" alt="Volcano" />
-    </div>
-    <div class="gallery-item">
-      <img src="images/rohtml.png" alt="RoHTML" />
-    </div>
-    <div class="gallery-item">
-      <img src="images/old_roldblox.png" alt="Old Roldblox" />
-    </div>
-  </div>
-
-  <div style="text-align: center; margin-top: 12px">
-    <button class="btn" data-page="/home">Back to Home</button>
   </div>
 </div>
-
-<!-- Fallback script: attach fullscreen behavior when this fragment is opened directly or main script didn't attach handlers -->
-<script>
-  (function () {
-    try {
-      const imgs = document.querySelectorAll(".gallery-grid img");
-      if (!imgs || imgs.length === 0) return;
-
-      imgs.forEach((img) => {
-        // if the global handler exists, prefer that
-        if (
-          window.toggleFullscreenImage &&
-          typeof window.toggleFullscreenImage === "function"
-        ) {
-          img.addEventListener("click", () =>
-            window.toggleFullscreenImage(img)
-          );
-          return;
-        }
-
-        // local fallback: clone into body and show backdrop
-        let openClone = null;
-        let backdrop = null;
-
-        function escHandler(e) {
-          if (e.key === "Escape") close();
-        }
-
-        function close() {
-          if (openClone) {
-            openClone.remove();
-            openClone = null;
-          }
-          if (backdrop) {
-            backdrop.remove();
-            backdrop = null;
-          }
-          document.body.style.overflow = "";
-          window.removeEventListener("keydown", escHandler);
-        }
-
-        function open() {
-          if (openClone) return;
-          backdrop = document.createElement("div");
-          backdrop.className = "image-backdrop active";
-          document.body.appendChild(backdrop);
-
-          const clone = img.cloneNode(true);
-          clone.className = "fullscreen-image";
-          clone.addEventListener("click", close, { once: true });
-          document.body.appendChild(clone);
-          openClone = clone;
-          document.body.style.overflow = "hidden";
-
-          backdrop.addEventListener("click", close, { once: true });
-          window.addEventListener("keydown", escHandler);
-        }
-
-        img.addEventListener("click", (e) => {
-          e.stopPropagation();
-          open();
-        });
-      });
-    } catch (err) {
-      // silent
-      console.error("Gallery fallback script error:", err);
-    }
-  })();
-</script>

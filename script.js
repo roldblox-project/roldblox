@@ -102,7 +102,7 @@ function initFaqToggles(root = document) {
       const [base, qs] = location.hash.split("?");
       const params = new URLSearchParams(qs || "");
       if (faqSearch.value) params.set("q", faqSearch.value);
-      else params.delete("q");
+      else params.delete("q")
       history.replaceState(
         null,
         "",
@@ -190,6 +190,15 @@ async function loadPage(path) {
 
   if (path === "/faqs") {
     initFaqToggles(newDiv);
+
+    // Add event listeners to sidebar buttons
+    const sidebarButtons = newDiv.querySelectorAll('.faq-sidebar-list button');
+    sidebarButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const term = button.getAttribute('data-term');
+        setSearch(term);
+      });
+    });
   }
 
   requestAnimationFrame(() => {
@@ -337,7 +346,7 @@ document.body.appendChild(imageBackdrop);
 let currentFullImage = null;
 let currentFullSource = null;
 
-function toggleFullscreenImage(img) {
+function toggleFullscreenImage(img, card = null) {
   if (!img) return;
 
   if (currentFullSource === img) {
@@ -348,6 +357,11 @@ function toggleFullscreenImage(img) {
     currentFullSource = null;
     imageBackdrop.classList.remove("active");
     document.body.style.overflow = "";
+    // Remove info overlay
+    const info = document.querySelector(".fullscreen-info");
+    if (info) {
+      info.remove();
+    }
     return;
   }
 
@@ -392,16 +406,30 @@ function toggleFullscreenImage(img) {
 
   currentFullImage = clone;
   currentFullSource = img;
+
+  // Add info overlay if card is provided
+  if (card) {
+    const info = document.createElement("div");
+    info.className = "fullscreen-info";
+    const title = card.querySelector(".gallery-title").textContent;
+    const desc = card.querySelector(".gallery-description").textContent;
+    info.innerHTML = `<h3>${title}</h3><p>${desc}</p>`;
+    document.body.appendChild(info);
+  }
 }
 
 function attachGalleryFullscreen(root) {
   if (!root) return;
-  root.querySelectorAll(".gallery-grid img").forEach((img) => {
-    if (img._fsAttached) return;
-    img._fsAttached = true;
-    img.addEventListener("click", (e) => {
+  root.querySelectorAll(".gallery-card").forEach((card) => {
+    if (card._fsAttached) return;
+    card._fsAttached = true;
+    card.addEventListener("click", (e) => {
       e.stopPropagation();
-      toggleFullscreenImage(img);
+      const bgImage = window.getComputedStyle(card).backgroundImage;
+      const url = bgImage.slice(5, -2); // Extract URL from 'url("...")'
+      const img = new Image();
+      img.src = url;
+      toggleFullscreenImage(img, card);
     });
   });
 }
@@ -463,6 +491,41 @@ function attachFAQBehavior(root) {
   });
 }
 
+function setSearch(term) {
+  const searchInput = document.getElementById('faqSearch');
+  if (searchInput) {
+    searchInput.value = term;
+    // Trigger filtering directly
+    filterFAQs(term);
+  }
+}
+
+function filterFAQs(searchTerm) {
+  const faqList = document.querySelector('.faq-list');
+  if (!faqList) return;
+
+  const faqItems = Array.from(faqList.querySelectorAll('.faq-item'));
+  const terms = searchTerm.toLowerCase().split(/\s+/).filter(Boolean);
+
+  if (terms.length === 0) {
+    faqItems.forEach(item => {
+      item.style.display = '';
+    });
+    return;
+  }
+
+  faqItems.forEach(item => {
+    const text = item.querySelector('.faq-question span')?.textContent?.toLowerCase() || '';
+    const tags = (item.dataset.tags || '').toLowerCase().split(',').map(t => t.trim());
+    const count = terms.reduce((sum, term) => {
+      const inText = text.includes(term);
+      const inTags = tags.some(tag => tag.includes(term));
+      return sum + (inText || inTags ? 1 : 0);
+    }, 0);
+    item.style.display = count > 0 ? '' : 'none';
+  });
+}
+
 document.addEventListener("DOMContentLoaded", function () {
   document.getElementById("version-number").innerText =
     "Version " + SITE_VERSION;
@@ -504,4 +567,218 @@ document.addEventListener("click", (e) => {
   if (typeof handleNavLinkNavigation === "function") {
     handleNavLinkNavigation(normalized);
   }
+});
+
+// Sidebar toggle functionality
+const sidebarToggle = document.getElementById('sidebar-toggle');
+const sidebar = document.getElementById('sidebar');
+const sidebarOverlay = document.getElementById('sidebar-overlay');
+
+function toggleSidebar() {
+  const wasActive = sidebar.classList.contains('active');
+  sidebar.classList.toggle('active');
+  sidebarOverlay.classList.toggle('active');
+  document.body.style.overflow = sidebar.classList.contains('active') ? 'hidden' : '';
+
+  // Play page change sound when opening sidebar
+  if (!wasActive && sidebar.classList.contains('active')) {
+    soundManager.play('pageChange');
+  }
+}
+
+if (sidebarToggle) {
+  sidebarToggle.addEventListener('click', toggleSidebar);
+}
+if (sidebarOverlay) {
+  sidebarOverlay.addEventListener('click', toggleSidebar);
+}
+
+window.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && sidebar && sidebar.classList.contains('active')) {
+    toggleSidebar();
+  }
+});
+
+// Sound management system
+class SoundManager {
+  constructor() {
+    this.isMuted = true;
+    this.sounds = {};
+    this.lastHoverTime = 0;
+    this.hoverCooldown = 10; // 0.1 seconds in milliseconds
+    this.activeHoverSounds = 0;
+    this.maxHoverSounds = 8;
+    this.loadSounds();
+  }
+
+  async loadSounds() {
+    const soundFiles = {
+      sidebarSlideIn: 'sounds/SidebarSlideIn.wav',
+      pageChange: 'sounds/PageChange.wav',
+      hover: 'sounds/Hover.wav',
+      buttonClick: 'sounds/ButtonClick.wav'
+    };
+
+    for (const [name, path] of Object.entries(soundFiles)) {
+      try {
+        this.sounds[name] = new Audio(path);
+        this.sounds[name].preload = 'auto';
+        this.sounds[name].volume = 0.5; // Set volume to 50%
+      } catch (error) {
+        console.warn(`Failed to load sound: ${name} from ${path}`);
+      }
+    }
+  }
+
+  play(soundName) {
+    if (this.isMuted || !this.sounds[soundName]) return;
+
+    // Check hover cooldown
+    if (soundName === 'hover') {
+      const now = Date.now();
+      if (now - this.lastHoverTime < this.hoverCooldown) {
+        return; // Skip if within cooldown period
+      }
+      this.lastHoverTime = now;
+    }
+
+    try {
+      // Create a new audio instance for overlapping sounds
+      const sound = new Audio(this.sounds[soundName].src);
+      sound.volume = this.sounds[soundName].volume || 0.5;
+      sound.play().catch(error => {
+        console.warn(`Failed to play sound: ${soundName}`, error);
+      });
+    } catch (error) {
+      console.warn(`Error playing sound: ${soundName}`, error);
+    }
+  }
+
+  setMuted(muted) {
+    this.isMuted = muted;
+  }
+}
+
+// Initialize sound manager
+const soundManager = new SoundManager();
+
+// Mute toggle functionality
+const muteToggle = document.getElementById('mute-toggle');
+let isMuted = true; // Start muted by default
+
+if (muteToggle) {
+  muteToggle.addEventListener('click', function () {
+    const muteIcon = this.querySelector('.mute-icon');
+    isMuted = !isMuted;
+
+    // Update sound manager
+    soundManager.setMuted(isMuted);
+
+    if (isMuted) {
+      muteIcon.src = 'images/misc/muted.png';
+      muteIcon.alt = 'Muted';
+    } else {
+      muteIcon.src = 'images/misc/unmuted.png';
+      muteIcon.alt = 'Unmuted';
+    }
+
+    console.log('Mute toggled:', isMuted ? 'Muted' : 'Unmuted');
+  });
+}
+
+// Function to attach sound effects to elements
+function attachSoundEffects() {
+  // Button click sounds
+  document.addEventListener('click', (e) => {
+    const target = e.target;
+
+    // Button clicks (exclude sidebar toggle and mute toggle)
+    if (target.tagName === 'BUTTON' &&
+      !target.classList.contains('mute-toggle') &&
+      target.id !== 'sidebar-toggle') {
+      soundManager.play('buttonClick');
+    }
+
+    // Link clicks (navigation)
+    if (target.tagName === 'A' && target.getAttribute('href')?.startsWith('#/')) {
+      soundManager.play('buttonClick');
+    }
+
+    // FAQ questions
+    if (target.closest('.faq-question')) {
+      soundManager.play('buttonClick');
+    }
+
+    // Gallery cards
+    if (target.closest('.gallery-card')) {
+      soundManager.play('buttonClick');
+    }
+
+    // Archive tiles
+    if (target.closest('.archive-tile')) {
+      soundManager.play('buttonClick');
+    }
+  });
+
+  // Hover sounds for interactive elements
+  const interactiveSelectors = [
+    'button',
+    'a[href^="#/"]',
+    '.top-nav-link',
+    '.sidebar-links a',
+    '.faq-question',
+    'btn',
+    'primary-btn',
+    'secondary-btn'
+  ];
+
+  interactiveSelectors.forEach(selector => {
+    document.addEventListener('mouseover', (e) => {
+      // Skip if hovering over images inside buttons (prevents double hover sounds)
+      if (e.target.tagName === 'IMG' && e.target.closest('button')) {
+        return;
+      }
+
+      // Skip if hovering over text elements or titles within cards
+      if (e.target.tagName === 'H1' || e.target.tagName === 'H2' || e.target.tagName === 'H3' ||
+        e.target.tagName === 'H4' || e.target.tagName === 'H5' || e.target.tagName === 'H6' ||
+        e.target.tagName === 'P' || e.target.tagName === 'SPAN' ||
+        e.target.classList.contains('mod-title') || e.target.classList.contains('mod-tagline') ||
+        e.target.classList.contains('mod-description') || e.target.classList.contains('community-platform-title') ||
+        e.target.classList.contains('community-platform-description') || e.target.classList.contains('gallery-title') ||
+        e.target.classList.contains('gallery-description') || e.target.classList.contains('feature-card') && e.target.tagName !== 'DIV') {
+        return;
+      }
+
+      if (e.target.closest(selector)) {
+        soundManager.play('hover');
+      }
+    });
+  });
+
+  // Page change sounds
+  window.addEventListener('hashchange', () => {
+    soundManager.play('pageChange');
+  });
+
+  // Sidebar slide in sound
+  const sidebarToggle = document.getElementById('sidebar-toggle');
+  const sidebar = document.getElementById('sidebar');
+
+  if (sidebarToggle && sidebar) {
+    sidebarToggle.addEventListener('click', () => {
+      if (!sidebar.classList.contains('active')) {
+        // Opening sidebar
+        soundManager.play('sidebarSlideIn');
+      }
+    });
+  }
+}
+
+// Initialize sound effects when DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+  // Wait a bit for sounds to load
+  setTimeout(() => {
+    attachSoundEffects();
+  }, 1000);
 });
