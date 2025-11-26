@@ -618,96 +618,6 @@ document.addEventListener("click", (e) => {
   }
 });
 
-const NAME_COLORS = [
-  'rgb(253, 41, 67)', 'rgb(1, 162, 255)', 'rgb(2, 184, 87)', 'rgb(191, 0, 255)',
-  'rgb(255, 170, 0)', 'rgb(255, 255, 0)', 'rgb(255, 105, 180)', 'rgb(222, 197, 0)'
-];
-
-function getNameValue(name) {
-  let value = 0;
-  for (let i = 0; i < name.length; i++) {
-    value += name.charCodeAt(i);
-  }
-  return value;
-}
-
-function computeNameColor(name) {
-  const index = getNameValue(name) % NAME_COLORS.length;
-  return NAME_COLORS[index];
-}
-
-async function fetchMsgs() {
-  try {
-    const scrollThreshold = 50; // pixels from bottom
-    const shouldScroll = chatMessages.scrollHeight - chatMessages.clientHeight <= chatMessages.scrollTop + scrollThreshold;
-
-    const response = await fetch(GOOGLE_SHEET_URL);
-    const csvText = await response.text();
-    const parsed = Papa.parse(csvText, { header: true });
-
-    chatMessages.innerHTML = ""; // Clear existing messages
-
-    parsed.data.forEach(row => {
-      const user = row['Username']?.trim() || row[Object.keys(row)[1]] || "Unknown";
-      let content = row['Message']?.trim() || row[Object.keys(row)[2]] || "";
-      content = filterMessage(content); // Apply filter here
-      if (!user && !content) return;
-
-      const color = computeNameColor(user);
-      const div = document.createElement("div");
-      div.className = "chat-message";
-      div.innerHTML = `<p><span class="msg-author" style="color: ${color}">${user}:</span> ${content}</p>`;
-      chatMessages.appendChild(div);
-    });
-
-    if (shouldScroll) {
-      chatMessages.scrollTop = chatMessages.scrollHeight;
-    }
-  } catch (err) {
-    console.error("error: ", err);
-  }
-}
-
-async function sendMessage() {
-  const usernameInput = root.querySelector("#username");
-  const messageInput = root.querySelector("#message");
-  const username = usernameInput.value.trim();
-  let message = messageInput.value.trim();
-
-  if (!username || !message) return;
-
-  message = filterMessage(message); // Apply filter here
-
-  const googleFormData = new FormData();
-  googleFormData.append("entry.1389186785", username);
-  googleFormData.append("entry.1991433863", message);
-
-  try {
-    await fetch(GOOGLE_FORM_URL, {
-      method: "POST",
-      body: googleFormData,
-      mode: "no-cors"
-    });
-    messageInput.value = "";
-    messageInput.focus();
-    fetchMsgs(); // Fetch immediately after sending
-  } catch (error) {
-    console.error("Error sending message:", error);
-  }
-}
-
-const sendButton = root.querySelector("#send-button");
-const messageInput = root.querySelector("#message");
-
-sendButton.addEventListener("click", sendMessage);
-messageInput.addEventListener("keydown", (e) => {
-  if (e.key === "Enter") {
-    e.preventDefault();
-    sendMessage();
-  }
-});
-
-fetchMsgs(); // Initial fetch including the welcome message
 // Centralized chat setup — only one implementation, attached per-root
 function attachChatBehavior(root = document) {
   if (!root) root = document;
@@ -832,14 +742,14 @@ function attachChatBehavior(root = document) {
       });
       messageInput.value = "";
       messageInput.focus();
-      
+
       // Remove the welcome message on first user message
       const welcomeMsg = chatMessages.querySelector('[data-welcome="true"]');
       if (welcomeMsg) {
         welcomeMsg.remove();
         userHasSentMessage = true;
       }
-      
+
       // refetch right away
       fetchMsgs();
     } catch (error) {
@@ -1081,4 +991,3 @@ document.addEventListener('DOMContentLoaded', () => {
     attachSoundEffects();
   }, 1000);
 });
-
