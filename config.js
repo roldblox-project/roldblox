@@ -1,6 +1,13 @@
 // Increment this number every time you push changes
-const SITE_VERSION = "7.10";
+const SITE_VERSION = "7.2";
 const SITE_UPDATE_DESCRIPTION = `
+  <h2>Update 7.2</h2>
+  <ul>
+    <li>Added new Chat Tab, allowing users to communicate in real-time with others (if online).</li>
+    <li>Improved Sidebar Appearance.</li>
+    <li>Improved Footer Functionality and Appearance.</li>
+  </ul>
+
   <h3>What's New in 7.10</h3>
   <ul>
     <li>Added Sounds back to ROLDBLOX Website, just click the sidebar button in the topbar and click unmute button</li>

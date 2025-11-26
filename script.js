@@ -17,7 +17,40 @@ const routes = {
   "/archive": "pages/archive.html",
   "/products": "pages/products.html",
   "/patterngenerator": "pages/pattern-generator.html",
+  "/chat": "pages/chat.html",
 };
+
+
+
+const badWords = []; // This will be populated from chatfilter.json
+
+async function loadBadWords() {
+  try {
+    const response = await fetch('chatfilter.json');
+    const data = await response.json();
+    if (data && Array.isArray(data.blacklist)) {
+      badWords.push(...data.blacklist.map(word => word.toLowerCase()));
+    }
+  } catch (error) {
+    console.error("Error loading chat filter:", error);
+  }
+}
+
+function filterMessage(message) {
+  const lowerCaseMessage = message.toLowerCase();
+  for (const word of badWords) {
+    // Using a regex for whole word matching to prevent filtering "ass" in "embarrass"
+    // \b ensures word boundary
+    const regex = new RegExp(`\\b${word}\\b`, 'i');
+    if (regex.test(lowerCaseMessage)) {
+      return "[ Content Deleted ]";
+    }
+  }
+  return message;
+}
+
+
+
 
 function initFaqToggles(root = document) {
   const faqList = root.querySelector(".faq-list");
@@ -307,6 +340,7 @@ async function handleNavLinkNavigation(rawPath) {
 }
 
 window.addEventListener("DOMContentLoaded", () => {
+  loadBadWords(); // Load bad words when DOM is ready
   if (!location.hash) location.hash = "#/home";
   handleNavLinkNavigation(location.hash.slice(1));
 });
@@ -325,18 +359,24 @@ window.addEventListener("keydown", (e) => {
   }
 });
 
-const footer = document.getElementById("footer");
-window.addEventListener("scroll", () => {
-  if (window.scrollY === 0) {
-    footer.classList.add("fixed");
-    footer.classList.remove("hidden");
-  } else {
-    footer.classList.remove("fixed");
-    footer.classList.add("hidden");
-  }
-});
-if (window.scrollY === 0) {
-  footer.classList.add("fixed");
+// Footer toggle functionality
+const footerToggle = document.getElementById('footer-toggle');
+const footer = document.getElementById('footer');
+
+if (footerToggle && footer) {
+  footerToggle.addEventListener('click', (e) => {
+    e.stopPropagation();
+    footer.classList.toggle('toggled');
+    footerToggle.classList.toggle('toggled');
+  });
+
+  document.addEventListener('click', (e) => {
+    const isClickInside = footer.contains(e.target) || footerToggle.contains(e.target);
+    if (footer.classList.contains('toggled') && !isClickInside) {
+      footer.classList.remove('toggled');
+      footerToggle.classList.remove('toggled');
+    }
+  });
 }
 
 const imageBackdrop = document.createElement("div");
@@ -443,6 +483,8 @@ window.addEventListener("keydown", (e) => {
   }
 });
 
+
+
 const originalLoadPage = loadPage;
 loadPage = async function (path) {
   await originalLoadPage(path);
@@ -452,12 +494,18 @@ loadPage = async function (path) {
   if (typeof attachFAQBehavior === "function") {
     attachFAQBehavior(latest);
   }
+  if (typeof attachChatBehavior === "function") {
+    attachChatBehavior(latest);
+  }
 };
 
 window.addEventListener("DOMContentLoaded", () => {
   attachGalleryFullscreen(document);
   if (typeof attachFAQBehavior === "function") {
     attachFAQBehavior(document);
+  }
+  if (typeof attachChatBehavior === "function") {
+    attachChatBehavior(document);
   }
 });
 
@@ -527,6 +575,7 @@ function filterFAQs(searchTerm) {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
+  loadBadWords(); // Ensure bad words are loaded even if another DOMContentLoaded handler runs
   document.getElementById("version-number").innerText =
     "Version " + SITE_VERSION;
 });
@@ -568,6 +617,256 @@ document.addEventListener("click", (e) => {
     handleNavLinkNavigation(normalized);
   }
 });
+
+const NAME_COLORS = [
+  'rgb(253, 41, 67)', 'rgb(1, 162, 255)', 'rgb(2, 184, 87)', 'rgb(191, 0, 255)',
+  'rgb(255, 170, 0)', 'rgb(255, 255, 0)', 'rgb(255, 105, 180)', 'rgb(222, 197, 0)'
+];
+
+function getNameValue(name) {
+  let value = 0;
+  for (let i = 0; i < name.length; i++) {
+    value += name.charCodeAt(i);
+  }
+  return value;
+}
+
+function computeNameColor(name) {
+  const index = getNameValue(name) % NAME_COLORS.length;
+  return NAME_COLORS[index];
+}
+
+async function fetchMsgs() {
+  try {
+    const scrollThreshold = 50; // pixels from bottom
+    const shouldScroll = chatMessages.scrollHeight - chatMessages.clientHeight <= chatMessages.scrollTop + scrollThreshold;
+
+    const response = await fetch(GOOGLE_SHEET_URL);
+    const csvText = await response.text();
+    const parsed = Papa.parse(csvText, { header: true });
+
+    chatMessages.innerHTML = ""; // Clear existing messages
+
+    parsed.data.forEach(row => {
+      const user = row['Username']?.trim() || row[Object.keys(row)[1]] || "Unknown";
+      let content = row['Message']?.trim() || row[Object.keys(row)[2]] || "";
+      content = filterMessage(content); // Apply filter here
+      if (!user && !content) return;
+
+      const color = computeNameColor(user);
+      const div = document.createElement("div");
+      div.className = "chat-message";
+      div.innerHTML = `<p><span class="msg-author" style="color: ${color}">${user}:</span> ${content}</p>`;
+      chatMessages.appendChild(div);
+    });
+
+    if (shouldScroll) {
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+  } catch (err) {
+    console.error("error: ", err);
+  }
+}
+
+async function sendMessage() {
+  const usernameInput = root.querySelector("#username");
+  const messageInput = root.querySelector("#message");
+  const username = usernameInput.value.trim();
+  let message = messageInput.value.trim();
+
+  if (!username || !message) return;
+
+  message = filterMessage(message); // Apply filter here
+
+  const googleFormData = new FormData();
+  googleFormData.append("entry.1389186785", username);
+  googleFormData.append("entry.1991433863", message);
+
+  try {
+    await fetch(GOOGLE_FORM_URL, {
+      method: "POST",
+      body: googleFormData,
+      mode: "no-cors"
+    });
+    messageInput.value = "";
+    messageInput.focus();
+    fetchMsgs(); // Fetch immediately after sending
+  } catch (error) {
+    console.error("Error sending message:", error);
+  }
+}
+
+const sendButton = root.querySelector("#send-button");
+const messageInput = root.querySelector("#message");
+
+sendButton.addEventListener("click", sendMessage);
+messageInput.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") {
+    e.preventDefault();
+    sendMessage();
+  }
+});
+
+fetchMsgs(); // Initial fetch including the welcome message
+// Centralized chat setup — only one implementation, attached per-root
+function attachChatBehavior(root = document) {
+  if (!root) root = document;
+  if (root._chatAttached) return; // don't attach twice
+  root._chatAttached = true;
+
+  const chatMessages = root.querySelector("#chat-messages");
+  if (!chatMessages) return;
+
+  const GOOGLE_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSeLN7VNDACShLUFz-LxkAMYSeiJ_OypxDEcYdGiv5kYgUbHhQ/formResponse";
+
+  // fetch url should be generated each time so cache-busting works
+  function sheetUrl() {
+    return `https://docs.google.com/spreadsheets/d/16-8CkLQakD1yioi9ZcZ_yivTHFAwGkk7bZkMyUxEKSI/export?format=csv&t=${Date.now()}`;
+  }
+
+  let intervalId = null;
+  let welcomeAdded = false;
+  let userHasSentMessage = false;
+
+  function getNameValue(name) {
+    let value = 0;
+    for (let i = 0; i < name.length; i++) {
+      value += name.charCodeAt(i);
+    }
+    return value;
+  }
+
+  function computeNameColor(name) {
+    const NAME_COLORS = [
+      'rgb(253, 41, 67)', 'rgb(1, 162, 255)', 'rgb(2, 184, 87)', 'rgb(191, 0, 255)',
+      'rgb(255, 170, 0)', 'rgb(255, 255, 0)', 'rgb(255, 105, 180)', 'rgb(222, 197, 0)'
+    ];
+    const index = getNameValue(name) % NAME_COLORS.length;
+    return NAME_COLORS[index];
+  }
+
+  async function fetchMsgs() {
+    try {
+      // If this behavior was attached to a page element that has been removed
+      // stop polling and release flags/intervals to avoid orphaned timers.
+      if (root !== document && !root.isConnected) {
+        if (intervalId) clearInterval(intervalId);
+        root._chatAttached = false;
+        root._chatInterval = null;
+        return;
+      }
+
+      const scrollThreshold = 50; // pixels from bottom
+      const shouldScroll = chatMessages.scrollHeight - chatMessages.clientHeight <= chatMessages.scrollTop + scrollThreshold;
+
+      const response = await fetch(sheetUrl());
+      const csvText = await response.text();
+      const parsed = Papa.parse(csvText, { header: true });
+
+      // Save welcome message before clearing
+      const existingWelcome = chatMessages.querySelector('[data-welcome="true"]');
+      let savedWelcome = null;
+      if (existingWelcome && !userHasSentMessage) {
+        savedWelcome = existingWelcome.cloneNode(true);
+      }
+
+      chatMessages.innerHTML = ""; // Clear existing messages
+
+      parsed.data.forEach(row => {
+        const user = (row['Username']?.trim()) || row[Object.keys(row)[1]] || "Unknown";
+        let content = (row['Message']?.trim()) || row[Object.keys(row)[2]] || "";
+        content = filterMessage(content);
+        if (!user && !content) return;
+
+        const color = computeNameColor(user);
+        const div = document.createElement("div");
+        div.className = "chat-message";
+        div.innerHTML = `<p><span class="msg-author" style="color: ${color}">${user}:</span> ${content}</p>`;
+        chatMessages.appendChild(div);
+      });
+
+      // Add welcome message only on first load (and keep it if not dismissed yet)
+      if (!welcomeAdded && !userHasSentMessage) {
+        welcomeAdded = true;
+        const welcomeMessageContent = "Welcome to ROLDMessenger! Chat with others who are online, share your thoughts, and offer feedback. Please be respectful, our chat filter is in place to keep conversations friendly and safe for everyone.";
+        const welcomeAuthor = "ROLDMessenger";
+        const welcomeColor = computeNameColor(welcomeAuthor);
+        const welcomeDiv = document.createElement("div");
+        welcomeDiv.className = "chat-message";
+        welcomeDiv.setAttribute("data-welcome", "true");
+        welcomeDiv.innerHTML = `<p><span class="msg-author" style="color: ${welcomeColor}">${welcomeAuthor}:</span> ${welcomeMessageContent}</p>`;
+        chatMessages.appendChild(welcomeDiv);
+      } else if (savedWelcome && !userHasSentMessage) {
+        // Restore saved welcome message if it wasn't dismissed
+        chatMessages.appendChild(savedWelcome);
+      }
+
+      if (shouldScroll) {
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      }
+    } catch (err) {
+      console.error("chat fetch error:", err);
+    }
+  }
+
+  async function sendMessage() {
+    const usernameInput = root.querySelector("#username");
+    const messageInput = root.querySelector("#message");
+    if (!usernameInput || !messageInput) return;
+
+    const username = usernameInput.value.trim();
+    let message = messageInput.value.trim();
+    if (!username || !message) return;
+
+    message = filterMessage(message);
+
+    const googleFormData = new FormData();
+    googleFormData.append("entry.1389186785", username);
+    googleFormData.append("entry.1991433863", message);
+
+    try {
+      await fetch(GOOGLE_FORM_URL, {
+        method: "POST",
+        body: googleFormData,
+        mode: "no-cors"
+      });
+      messageInput.value = "";
+      messageInput.focus();
+      
+      // Remove the welcome message on first user message
+      const welcomeMsg = chatMessages.querySelector('[data-welcome="true"]');
+      if (welcomeMsg) {
+        welcomeMsg.remove();
+        userHasSentMessage = true;
+      }
+      
+      // refetch right away
+      fetchMsgs();
+    } catch (error) {
+      console.error("send message error:", error);
+    }
+  }
+
+  // attach controls safely (check elements exist)
+  const sendButton = root.querySelector("#send-button");
+  const messageInput = root.querySelector("#message");
+
+  if (sendButton) sendButton.addEventListener("click", sendMessage);
+  if (messageInput) {
+    messageInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        sendMessage();
+      }
+    });
+  }
+
+  // run immediately and start interval (store interval id to avoid duplicates)
+  fetchMsgs();
+  intervalId = setInterval(fetchMsgs, 1000);
+  root._chatInterval = intervalId;
+}
+
 
 // Sidebar toggle functionality
 const sidebarToggle = document.getElementById('sidebar-toggle');
@@ -782,3 +1081,4 @@ document.addEventListener('DOMContentLoaded', () => {
     attachSoundEffects();
   }, 1000);
 });
+
