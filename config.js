@@ -1,6 +1,13 @@
 // Increment this number every time you push changes
-const SITE_VERSION = "7.2";
+const SITE_VERSION = "7.21";
 const SITE_UPDATE_DESCRIPTION = `
+  <h2>Update 7.21</h2>
+  <ul>
+    <li>Improved Chat UI.</li>
+    <li>Also improved chat filtering, and added a profanity filter.</li>
+    <li>Added a feedback checkbox toggle to send feedback directly to me.</li>
+  </ul>
+
   <h2>Update 7.2</h2>
   <ul>
     <li>Added new Chat Tab, allowing users to communicate in real-time with others (if online).</li>

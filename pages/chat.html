@@ -1,16 +1,23 @@
-<div class="fullpage-container" style="background-image: url('images/backgrounds/volcano.png'); padding: 0px;">
+<div class="fullpage-container" style="background-image: url('images/backgrounds/pattern.png'); padding: 0px;">
     <div class="chat-container">
         <div class="chat-shell">
             <div class="chat-messages" id="chat-messages">
                 <!-- Messages will be dynamically inserted here -->
             </div>
             <div class="chat-input-area">
-                <div class="chat-inputs">
-                    <input type="text" id="username" placeholder="Username" maxlength="32" required>
+                <div class="chat-controls">
+                    <input type="text" id="username" placeholder="Username (Don't put your real name!)" maxlength="32"
+                        required>
                     <input type="text" id="message" placeholder="Type a message..." maxlength="256" required>
+                    <div class="private-feedback-toggle">
+                        <input type="checkbox" id="private-feedback-checkbox">
+                        <label for="private-feedback-checkbox">Send as Private Feedback (only you and NotRoblox can see
+                            it)</label>
+                    </div>
+                    <button id="send-button" class="btn">Send</button>
                 </div>
-                <button id="send-button" class="btn">Send</button>
             </div>
         </div>
     </div>
+</div>
 </div>

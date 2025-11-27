@@ -22,14 +22,49 @@ const routes = {
 
 
 
-const badWords = []; // This will be populated from chatfilter.json
+const shortBadWordsList = []; // For words < 4 chars, whole word match
+const normalizedLongBadWordsList = []; // For words >= 4 chars, aggressive match
+
+function normalizeTextForFilter(text) {
+  // Convert to lowercase
+  let normalized = text.toLowerCase();
+  // Replace common leetspeak characters
+  normalized = normalized.replace(/@/g, 'a');
+  normalized = normalized.replace(/4/g, 'a');
+  normalized = normalized.replace(/3/g, 'e');
+  normalized = normalized.replace(/1/g, 'i');
+  normalized = normalized.replace(/!/g, 'i');
+  normalized = normalized.replace(/0/g, 'o');
+  normalized = normalized.replace(/5/g, 's');
+  normalized = normalized.replace(/\$/g, 's');
+  normalized = normalized.replace(/7/g, 't');
+  // Remove all non-alphanumeric characters (including spaces, punctuation)
+  // This will make "bad word" become "badword" for comparison
+  normalized = normalized.replace(/[^a-z0-9]/g, '');
+  return normalized;
+}
 
 async function loadBadWords() {
   try {
     const response = await fetch('chatfilter.json');
     const data = await response.json();
     if (data && Array.isArray(data.blacklist)) {
-      badWords.push(...data.blacklist.map(word => word.toLowerCase()));
+      data.blacklist.forEach(word => {
+        const lowerCaseWord = word.toLowerCase();
+        
+        // Always normalize first to get the "clean" form for length check
+        const normalizedForm = normalizeTextForFilter(lowerCaseWord);
+
+        // If the normalized form is short (<= 4 characters), treat it as a short bad word
+        if (normalizedForm.length <= 4) {
+          if (!shortBadWordsList.includes(normalizedForm)) { // Ensure uniqueness
+            shortBadWordsList.push(normalizedForm);
+          }
+        } else {
+          // Otherwise, it's a truly long normalized word for aggressive matching
+          normalizedLongBadWordsList.push(normalizedForm);
+        }
+      });
     }
   } catch (error) {
     console.error("Error loading chat filter:", error);
@@ -38,16 +73,49 @@ async function loadBadWords() {
 
 function filterMessage(message) {
   const lowerCaseMessage = message.toLowerCase();
-  for (const word of badWords) {
-    // Using a regex for whole word matching to prevent filtering "ass" in "embarrass"
-    // \b ensures word boundary
-    const regex = new RegExp(`\\b${word}\\b`, 'i');
+
+  // Check for short bad words (length < 4) with whole word boundary
+  for (const word of shortBadWordsList) {
+    const regex = new RegExp(`(?:^|\\W)${word}(?:\\W|$)`, 'i');
     if (regex.test(lowerCaseMessage)) {
+      return "[ Content Deleted ]";
+    }
+  }
+
+  // Check for longer bad words (length >= 4) with aggressive normalization
+  const normalizedMessage = normalizeTextForFilter(message);
+  for (const normalizedWord of normalizedLongBadWordsList) {
+    if (normalizedWord && normalizedMessage.includes(normalizedWord)) {
       return "[ Content Deleted ]";
     }
   }
   return message;
 }
+
+function filterUsername(username) {
+  // Allow alphanumeric characters and some common symbols like underscore, hyphen, and space
+  // Remove any other special characters
+  let cleanUsername = username.replace(/[^a-zA-Z0-9_\- ]/g, '').trim();
+  const lowerCaseCleanUsername = cleanUsername.toLowerCase(); // For short word matching
+
+  // Check for short bad words (length < 4) with whole word boundary
+  for (const word of shortBadWordsList) {
+    const regex = new RegExp(`(?:^|\\W)${word}(?:\\W|$)`, 'i');
+    if (regex.test(lowerCaseCleanUsername)) {
+      return "[ Filtered User ]";
+    }
+  }
+
+  // Check for longer bad words (length >= 4) with aggressive normalization
+  const normalizedCleanUsername = normalizeTextForFilter(cleanUsername);
+  for (const normalizedWord of normalizedLongBadWordsList) {
+    if (normalizedWord && normalizedCleanUsername.includes(normalizedWord)) {
+      return "[ Filtered User ]";
+    }
+  }
+  return cleanUsername;
+}
+
 
 
 
@@ -618,6 +686,8 @@ document.addEventListener("click", (e) => {
   }
 });
 
+
+
 // Centralized chat setup — only one implementation, attached per-root
 function attachChatBehavior(root = document) {
   if (!root) root = document;
@@ -637,6 +707,8 @@ function attachChatBehavior(root = document) {
   let intervalId = null;
   let welcomeAdded = false;
   let userHasSentMessage = false;
+  let isFirstFetch = true;
+
 
   function getNameValue(name) {
     let value = 0;
@@ -655,6 +727,8 @@ function attachChatBehavior(root = document) {
     return NAME_COLORS[index];
   }
 
+
+
   async function fetchMsgs() {
     try {
       // If this behavior was attached to a page element that has been removed
@@ -666,54 +740,106 @@ function attachChatBehavior(root = document) {
         return;
       }
 
-      const scrollThreshold = 50; // pixels from bottom
-      const shouldScroll = chatMessages.scrollHeight - chatMessages.clientHeight <= chatMessages.scrollTop + scrollThreshold;
+      // Store current scroll state before content updates
+      const oldScrollHeight = chatMessages.scrollHeight;
+      const oldScrollTop = chatMessages.scrollTop;
+      const scrollThreshold = 1; // 1px from bottom
+      const wasAtBottom = (oldScrollHeight - chatMessages.clientHeight - oldScrollTop) <= scrollThreshold;
 
       const response = await fetch(sheetUrl());
       const csvText = await response.text();
       const parsed = Papa.parse(csvText, { header: true });
 
-      // Save welcome message before clearing
-      const existingWelcome = chatMessages.querySelector('[data-welcome="true"]');
-      let savedWelcome = null;
-      if (existingWelcome && !userHasSentMessage) {
-        savedWelcome = existingWelcome.cloneNode(true);
-      }
-
-      chatMessages.innerHTML = ""; // Clear existing messages
-
-      parsed.data.forEach(row => {
-        const user = (row['Username']?.trim()) || row[Object.keys(row)[1]] || "Unknown";
-        let content = (row['Message']?.trim()) || row[Object.keys(row)[2]] || "";
-        content = filterMessage(content);
-        if (!user && !content) return;
-
-        const color = computeNameColor(user);
-        const div = document.createElement("div");
-        div.className = "chat-message";
-        div.innerHTML = `<p><span class="msg-author" style="color: ${color}">${user}:</span> ${content}</p>`;
-        chatMessages.appendChild(div);
+      // Filter out empty rows from parsed data early
+      const actualChatMessages = parsed.data.filter(row => {
+        const user = (row['Username']?.trim()) || row[Object.keys(row)[1]] || "";
+        const content = (row['Message']?.trim()) || row[Object.keys(row)[2]] || "";
+        return user || content;
       });
 
-      // Add welcome message only on first load (and keep it if not dismissed yet)
-      if (!welcomeAdded && !userHasSentMessage) {
-        welcomeAdded = true;
-        const welcomeMessageContent = "Welcome to ROLDMessenger! Chat with others who are online, share your thoughts, and offer feedback. Please be respectful, our chat filter is in place to keep conversations friendly and safe for everyone.";
-        const welcomeAuthor = "ROLDMessenger";
-        const welcomeColor = computeNameColor(welcomeAuthor);
-        const welcomeDiv = document.createElement("div");
-        welcomeDiv.className = "chat-message";
-        welcomeDiv.setAttribute("data-welcome", "true");
-        welcomeDiv.innerHTML = `<p><span class="msg-author" style="color: ${welcomeColor}">${welcomeAuthor}:</span> ${welcomeMessageContent}</p>`;
-        chatMessages.appendChild(welcomeDiv);
-      } else if (savedWelcome && !userHasSentMessage) {
-        // Restore saved welcome message if it wasn't dismissed
-        chatMessages.appendChild(savedWelcome);
+      // Find the currently displayed welcome message, if any
+      const existingWelcomeDiv = chatMessages.querySelector('[data-welcome="true"]');
+
+      // Count existing actual chat messages (excluding the welcome message)
+      let numExistingChatMessages = 0;
+      for (let i = 0; i < chatMessages.children.length; i++) {
+        if (!chatMessages.children[i].hasAttribute('data-welcome')) {
+          numExistingChatMessages++;
+        }
       }
 
-      if (shouldScroll) {
-        chatMessages.scrollTop = chatMessages.scrollHeight;
+      let newMessagesAppended = false;
+
+      // Append only new messages
+      if (actualChatMessages.length > numExistingChatMessages) {
+        for (let i = numExistingChatMessages; i < actualChatMessages.length; i++) {
+          const row = actualChatMessages[i];
+          const user = filterUsername((row['Username']?.trim()) || row[Object.keys(row)[1]] || "Unknown");
+          let content = (row['Message']?.trim()) || row[Object.keys(row)[2]] || "";
+          content = filterMessage(content);
+
+          const color = computeNameColor(user);
+          const div = document.createElement("div");
+          div.className = "chat-message";
+          div.innerHTML = `<p><span class="msg-author" style="color: ${color}">${user}</span> ${content}</p>`;
+          chatMessages.appendChild(div);
+          newMessagesAppended = true;
+        }
+      } else if (actualChatMessages.length < numExistingChatMessages) {
+        // This handles the case where messages might be deleted from the sheet.
+        // Clear and re-render all actual chat messages.
+        chatMessages.innerHTML = ''; // Clear everything including existing welcome message for a fresh start
+
+        // Re-populate all messages since the DOM was cleared
+        actualChatMessages.forEach(row => {
+          const user = filterUsername((row['Username']?.trim()) || row[Object.keys(row)[1]] || "Unknown");
+          let content = (row['Message']?.trim()) || row[Object.keys(row)[2]] || "";
+          content = filterMessage(content);
+          if (!user && !content) return; // Skip if no user and no content
+
+          const color = computeNameColor(user);
+          const div = document.createElement("div");
+          div.className = "chat-message";
+          div.innerHTML = `<p><span class="msg-author" style="color: ${color}">${user}</span> ${content}</p>`;
+          chatMessages.appendChild(div);
+        });
+        newMessagesAppended = true; // Consider it as new content rendering
       }
+
+
+      // --- REVISED WELCOME MESSAGE LOGIC (with new HTML structure) ---
+      // Ensure the welcome message is present if user hasn't sent any message
+      const currentWelcomeDiv = chatMessages.querySelector('[data-welcome="true"]'); // Re-check after potential clearing
+
+      if (!userHasSentMessage) { // Only consider welcome message if user hasn't sent anything yet
+        if (!currentWelcomeDiv) { // Add if no existing welcome div (and user hasn't sent a message yet)
+          const welcomeMessageContent = "Welcome to ROLDMessenger! Chat with others who are online, share your thoughts, and offer feedback. Please be respectful, our chat filter is in place to keep conversations friendly and safe for everyone.";
+          const welcomeAuthor = "ROLDMessenger";
+
+          const welcomeDiv = document.createElement("div");
+          welcomeDiv.className = "roldmessenger-welcome"; // Use new class name for container
+          welcomeDiv.setAttribute("data-welcome", "true");
+          welcomeDiv.innerHTML = `
+              <h2 class="roldmessenger-title">${welcomeAuthor}</h2>
+              <p class="roldmessenger-text">${welcomeMessageContent}</p>
+            `;
+          chatMessages.append(welcomeDiv); // Append to ensure it's at the bottom
+        }
+      } else if (currentWelcomeDiv) { // If user has sent a message, and welcome is still there, remove it
+        currentWelcomeDiv.remove();
+      }
+      // --- END REVISED WELCOME MESSAGE LOGIC ---
+
+
+      // --- SCROLLING LOGIC (RE-IMPLEMENTED) ---
+      if (isFirstFetch) {
+        chatMessages.scrollTo({ top: chatMessages.scrollHeight, behavior: 'smooth' });
+        isFirstFetch = false;
+      } else if (newMessagesAppended && wasAtBottom) {
+        chatMessages.scrollTo({ top: chatMessages.scrollHeight, behavior: 'smooth' });
+      }
+      // --- END SCROLLING LOGIC ---
+
     } catch (err) {
       console.error("chat fetch error:", err);
     }
@@ -722,39 +848,88 @@ function attachChatBehavior(root = document) {
   async function sendMessage() {
     const usernameInput = root.querySelector("#username");
     const messageInput = root.querySelector("#message");
+    const privateFeedbackCheckbox = root.querySelector("#private-feedback-checkbox");
+
     if (!usernameInput || !messageInput) return;
 
     const username = usernameInput.value.trim();
     let message = messageInput.value.trim();
+    const isPrivateFeedback = privateFeedbackCheckbox ? privateFeedbackCheckbox.checked : false;
+
     if (!username || !message) return;
+
+    // Clear and focus immediately
+    messageInput.value = "";
+    messageInput.focus();
 
     message = filterMessage(message);
 
-    const googleFormData = new FormData();
-    googleFormData.append("entry.1389186785", username);
-    googleFormData.append("entry.1991433863", message);
+    if (isPrivateFeedback) {
+      const webhookUrl = 'https://discord.com/api/webhooks/1443589753730629765/DAH-h4yceVrZEwvqiQ70kcsENaC86vJYq5KvMPx7v5LLqiOtQBkzJzEknkt4YZqOesBU';
 
-    try {
-      await fetch(GOOGLE_FORM_URL, {
-        method: "POST",
-        body: googleFormData,
-        mode: "no-cors"
-      });
-      messageInput.value = "";
-      messageInput.focus();
-
-      // Remove the welcome message on first user message
-      const welcomeMsg = chatMessages.querySelector('[data-welcome="true"]');
-      if (welcomeMsg) {
-        welcomeMsg.remove();
-        userHasSentMessage = true;
+      if (!username) {
+        alert('Please enter a username.');
+        return;
+      }
+      if (!message) {
+        alert('Please enter a message.');
+        return;
       }
 
-      // refetch right away
-      fetchMsgs();
-    } catch (error) {
-      console.error("send message error:", error);
+      const payload = {
+        username: filterUsername(username),
+        content: `**Private Feedback from ${filterUsername(username)}:**\n${message}`
+      };
+
+      try {
+        const response = await fetch(webhookUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(payload)
+        });
+
+        if (response.ok) {
+          alert('Private feedback sent successfully to NotRoblox!');
+
+          // Uncheck the private feedback checkbox
+          privateFeedbackCheckbox.checked = false;
+        } else {
+          const errorText = await response.text();
+          alert('Failed to send private feedback to NotRoblox: ' + response.status + ' ' + errorText);
+        }
+      } catch (error) {
+        alert('Error sending private feedback to NotRoblox: ' + error.message);
+      }
+    } else {
+      const googleFormData = new FormData();
+      googleFormData.append("entry.1389186785", username);
+      googleFormData.append("entry.1991433863", message);
+
+      try {
+        await fetch(GOOGLE_FORM_URL, {
+          method: "POST",
+          body: googleFormData,
+          mode: "no-cors"
+        });
+        console.log("Public message sent to Google Form.");
+      } catch (googleFormError) {
+        console.error("Error sending public message to Google Form:", googleFormError);
+      }
     }
+
+
+
+    // Remove the welcome message on first user message
+    const welcomeMsg = chatMessages.querySelector('[data-welcome="true"]');
+    if (welcomeMsg) {
+      welcomeMsg.remove();
+      userHasSentMessage = true;
+    }
+
+    // refetch right away
+    fetchMsgs();
   }
 
   // attach controls safely (check elements exist)
@@ -764,13 +939,13 @@ function attachChatBehavior(root = document) {
   if (sendButton) sendButton.addEventListener("click", sendMessage);
   if (messageInput) {
     messageInput.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") {
+      if (e.key === "Enter" && !e.shiftKey) { // Allow Shift+Enter for new line
         e.preventDefault();
         sendMessage();
       }
     });
-  }
 
+  }
   // run immediately and start interval (store interval id to avoid duplicates)
   fetchMsgs();
   intervalId = setInterval(fetchMsgs, 1000);
