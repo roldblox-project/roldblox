@@ -1,0 +1,262 @@
+/* Mods Page Styles (Matching About Page Aesthetic) */
+
+.mods-page {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    position: relative;
+    color: white;
+}
+
+.mods-page::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at center, rgba(15, 20, 35, 0.5) 0%, rgba(10, 15, 30, 0.95) 100%);
+    z-index: 0;
+    pointer-events: none;
+}
+
+.mods-page-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 6rem 2rem;
+    position: relative;
+    z-index: 1;
+}
+
+/* Intro Section */
+.mods-page-intro {
+    text-align: center;
+    margin-bottom: 5rem;
+}
+
+.mods-page-logo-block {
+    margin-bottom: 2.5rem;
+}
+
+.mods-page-logo-block img {
+    width: 250px;
+    height: auto;
+    filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.5));
+}
+
+.mods-page-subtitle {
+    font-size: 1.5rem;
+    color: rgba(255, 255, 255, 0.8);
+    font-weight: 300;
+    margin-top: 0.5rem;
+}
+
+.mods-page-intro h1 {
+    font-size: 3.5rem;
+    font-weight: 800;
+    margin-bottom: 1.5rem;
+    letter-spacing: -1px;
+    color: #ffffff;
+}
+
+.mods-page-intro-text {
+    font-size: 1.3rem;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.9);
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+/* Mod Grid */
+.mods-page-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 5rem;
+    align-items: stretch;
+}
+
+.mods-page-card {
+    background: rgb(20, 20, 30);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    padding: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+/* Remove any inherited gradients that go to black */
+.mods-page-card::before {
+    display: none;
+}
+
+.mods-page-card:hover {
+    border-color: rgba(0, 162, 255, 0.4);
+}
+
+.mods-page-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.mods-page-icon {
+    height: 40px;
+    width: auto;
+    object-fit: contain;
+}
+
+.mods-page-tag {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: #00a2ff;
+    padding: 4px 10px;
+    border-radius: 2px;
+}
+
+.mods-page-tag.unavailable {
+    color: #ff4444;
+    background: rgba(255, 68, 68, 0.1);
+}
+
+.mods-page-card.unavailable {
+    opacity: 0.9;
+    position: relative;
+}
+
+
+
+.mods-page-card h3 {
+    font-size: 1.8rem;
+    color: #ffffff;
+    margin-bottom: 1rem;
+    font-weight: 700;
+}
+
+.mods-page-card p {
+    font-size: 1.05rem;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 2rem;
+    flex-grow: 1;
+}
+
+.mods-page-card-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.8rem;
+    margin-top: auto;
+}
+
+.mods-page-card-actions .btn,
+.status-badge {
+    width: 100%;
+    height: 38px;
+    padding: 0 12px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    box-sizing: border-box;
+    margin: 0;
+    white-space: nowrap;
+}
+
+.status-badge {
+    background: rgba(255, 255, 255, 0.05);
+    color: rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.btn.disabled {
+    background: rgba(255, 255, 255, 0.05) !important;
+    color: rgba(255, 255, 255, 0.3) !important;
+    border: 1px solid rgba(255, 255, 255, 0.05) !important;
+    cursor: not-allowed;
+    pointer-events: none;
+    filter: grayscale(1);
+}
+
+/* Archival Style */
+.mods-page-card.archive {
+    opacity: 0.85;
+    border-style: dashed;
+}
+
+.mods-page-card.archive .mods-page-tag {
+    color: #ffcc00;
+}
+
+/* Bottom CTA */
+.mods-page-cta {
+    text-align: center;
+    background: rgb(20, 20, 30);
+    padding: 4rem 2rem;
+    border-radius: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.mods-page-cta h2 {
+    font-size: 2.2rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+    color: #ffffff;
+}
+
+.mods-page-cta p {
+    font-size: 1.2rem;
+    margin-bottom: 2.5rem;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.mods-page-cta-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+}
+
+/* Responsive */
+@media (max-width: 850px) {
+    .mods-page-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .mods-page-intro h1 {
+        font-size: 2.8rem;
+    }
+    
+    .mods-page-container {
+        padding: 4rem 1.5rem;
+    }
+    
+    .mods-page-cta-buttons {
+        flex-direction: column;
+        align-items: stretch;
+        max-width: 300px;
+        margin: 0 auto;
+    }
+}
+
+@media (max-width: 480px) {
+    .mods-page-card-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    
+    .mods-page-card h3 {
+        font-size: 1.5rem;
+    }
+}

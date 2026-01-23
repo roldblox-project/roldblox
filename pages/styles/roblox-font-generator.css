@@ -1,0 +1,305 @@
+.font-generator-page {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    min-height: calc(100vh - 56px) !important;
+    background: rgb(15, 15, 20) !important;
+    position: relative !important;
+    color: white !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    font-family: "Source Sans Pro", sans-serif !important;
+    overflow: hidden !important;
+}
+
+.font-generator-page .fg-app {
+    display: flex !important;
+    height: calc(100vh - 56px) !important;
+    width: 100% !important;
+    position: relative !important;
+    z-index: 1 !important;
+    overflow: hidden !important;
+}
+
+/* Sidebar Styles - Matching Pattern Generator */
+.font-generator-page .fg-sidebar {
+    width: 350px !important;
+    min-width: 350px !important;
+    padding: 1.5rem !important;
+    background: rgb(20, 20, 30) !important;
+    border-right: 1px solid rgba(255, 255, 255, 0.05) !important;
+    box-shadow: 5px 0 15px rgba(0, 0, 0, 0.3) !important;
+    overflow-y: auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 1.25rem !important;
+    position: relative !important;
+    z-index: 10 !important;
+}
+
+/* Custom Scrollbar for Sidebar */
+.font-generator-page .fg-sidebar::-webkit-scrollbar {
+    width: 6px !important;
+}
+
+.font-generator-page .fg-sidebar::-webkit-scrollbar-track {
+    background: transparent !important;
+}
+
+.font-generator-page .fg-sidebar::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border-radius: 10px !important;
+}
+
+.font-generator-page .fg-sidebar::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.2) !important;
+}
+
+.font-generator-page .title {
+    margin-bottom: 0.5rem !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+    padding-bottom: 1rem !important;
+}
+
+.font-generator-page .title h1 {
+    font-size: 1.25rem !important;
+    font-weight: 700 !important;
+    margin: 0 !important;
+    color: white !important;
+    letter-spacing: 0.5px !important;
+}
+
+.font-generator-page .subtitle {
+    font-size: 0.8rem !important;
+    color: rgba(255, 255, 255, 0.4) !important;
+    margin-top: 0.2rem !important;
+}
+
+/* Panel Styles */
+.font-generator-page .panel {
+    background: rgba(255, 255, 255, 0.02) !important;
+    border: 1px solid rgba(255, 255, 255, 0.05) !important;
+    border-radius: 6px !important;
+    padding: 1.25rem !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 1rem !important;
+}
+
+.font-generator-page .panel h2 {
+    font-size: 0.7rem !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.1em !important;
+    margin: 0 0 0.25rem 0 !important;
+    color: rgba(255, 255, 255, 0.25) !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.5rem !important;
+}
+
+/* Control Groups */
+.font-generator-page .control-group {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0.5rem !important;
+}
+
+.font-generator-page .control-group label {
+    font-size: 0.8rem !important;
+    font-weight: 600 !important;
+    color: rgba(255, 255, 255, 0.6) !important;
+}
+
+/* Input Styles */
+.font-generator-page textarea,
+.font-generator-page select {
+    background: rgba(255, 255, 255, 0.03) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 4px !important;
+    color: white !important;
+    padding: 0.6rem 0.75rem !important;
+    font-size: 0.9rem !important;
+    font-family: inherit !important;
+    width: 100% !important;
+    outline: none !important;
+}
+
+.font-generator-page textarea:focus,
+.font-generator-page select:focus {
+    border-color: rgba(255, 255, 255, 0.2) !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+}
+
+/* Checkbox Style */
+.font-generator-page .fg-inline-label {
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.5rem !important;
+    cursor: pointer !important;
+    font-size: 0.9rem !important;
+    color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.font-generator-page input[type="checkbox"] {
+    width: 16px !important;
+    height: 16px !important;
+    accent-color: #007bff !important;
+}
+
+/* Number Input Component - Matching Pattern Generator */
+.font-generator-page .number-input {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    background: rgba(0, 0, 0, 0.4) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 4px !important;
+    overflow: hidden !important;
+    width: 100% !important;
+    height: 36px !important;
+}
+
+.font-generator-page .number-input button {
+    width: 32px !important;
+    height: 100% !important;
+    border-radius: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: rgba(255, 255, 255, 0.03) !important;
+    color: rgba(255, 255, 255, 0.6) !important;
+    font-size: 1.1rem !important;
+    font-weight: 400 !important;
+    flex-shrink: 0 !important;
+    border: none !important;
+}
+
+.font-generator-page .number-input button:hover {
+    background: rgba(255, 255, 255, 0.08) !important;
+    color: white !important;
+}
+
+.font-generator-page .number-input input {
+    flex: 1 !important;
+    width: 100% !important;
+    background: transparent !important;
+    border: none !important;
+    text-align: center !important;
+    color: white !important;
+    font-size: 0.9rem !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    outline: none !important;
+}
+
+.font-generator-page .number-input input:focus {
+    background: transparent !important;
+}
+
+/* Font Pill */
+.font-generator-page .fg-font-pill {
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.75rem !important;
+    padding: 0.75rem !important;
+    background: rgba(255, 255, 255, 0.03) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    border-radius: 6px !important;
+}
+
+.font-generator-page .fg-font-pill-indicator {
+    width: 8px !important;
+    height: 8px !important;
+    background: #00ff88 !important;
+    border-radius: 50% !important;
+    box-shadow: 0 0 10px rgba(0, 255, 136, 0.5) !important;
+}
+
+.font-generator-page .fg-font-pill-text {
+    font-size: 0.9rem !important;
+    font-weight: 600 !important;
+}
+
+.font-generator-page .fg-font-pill-sub {
+    font-size: 0.75rem !important;
+    color: rgba(255, 255, 255, 0.4) !important;
+    margin-left: 0.25rem !important;
+}
+
+/* Main Preview Area */
+.font-generator-page .fg-main {
+    flex: 1 !important;
+    background: rgb(10, 10, 15) !important;
+    position: relative !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0 !important;
+}
+
+.font-generator-page .fg-preview {
+    width: 100% !important;
+    height: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    position: relative !important;
+    z-index: 1 !important;
+}
+
+.font-generator-page #fontPreviewInner {
+    max-width: 90% !important;
+    max-height: 90% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transform-origin: center !important;
+}
+
+.font-generator-page .fg-caption {
+    position: absolute !important;
+    bottom: 1.5rem !important;
+    left: 1.5rem !important;
+    font-size: 0.7rem !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.15em !important;
+    color: rgba(255, 255, 255, 0.2) !important;
+    pointer-events: none !important;
+}
+
+/* Primary Button Styling */
+.font-generator-page .primary {
+    background: white !important;
+    color: black !important;
+    border: none !important;
+    padding: 0.75rem 1rem !important;
+    border-radius: 4px !important;
+    font-size: 0.85rem !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    cursor: pointer !important;
+    width: 100% !important;
+}
+
+.font-generator-page .primary:hover {
+    background: #e0e0e0 !important;
+}
+
+/* Ghost Button Styling */
+.font-generator-page .ghost {
+    background: rgba(255, 255, 255, 0.05) !important;
+    color: white !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    padding: 0.75rem 1rem !important;
+    border-radius: 4px !important;
+    font-size: 0.85rem !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+    width: 100% !important;
+}
+
+.font-generator-page .ghost:hover {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border-color: rgba(255, 255, 255, 0.2) !important;
+}

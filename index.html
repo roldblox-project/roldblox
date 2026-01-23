@@ -9,11 +9,38 @@
   <meta http-equiv="Expires" content="0" />
   <title>ROLDBLOX</title>
   <link rel="icon" href="favicon.png" type="image/png" />
-  <link rel="stylesheet" href="style.css" />
-  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <link rel="stylesheet" href="styles/intro.css" />
+    <link rel="stylesheet" href="styles/navbar.css" />
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="globalstyles/footer.css" />
+    <link rel="stylesheet" href="pages/styles/home.css" />
+    <link rel="stylesheet" href="pages/styles/about.css" />
+    <link rel="stylesheet" href="pages/styles/mods.css" />
+    <link rel="stylesheet" href="pages/styles/faqs.css" />
+    <link rel="stylesheet" href="pages/styles/community.css" />
+    <link rel="stylesheet" href="pages/styles/pattern-generator.css" />
+    <link rel="stylesheet" href="pages/styles/roblox-font-generator.css" />
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
 </head>
 
-<body>
+<body class="is-loading">
+  <!-- Initial Site Intro -->
+  <div id="site-intro" class="site-intro">
+    <div class="intro-background"></div>
+    <div class="intro-content" id="intro-main-content">
+      <img src="images/logo.png" alt="ROLDBLOX" class="intro-logo" />
+      <div class="intro-subtitle">Experience Roblox as it once was</div>
+    </div>
+    
+    <div class="intro-warning" id="intro-warning-content">
+      <div class="warning-box">
+        <h2>Important Notice</h2>
+        <p>This project is currently a work in progress and serves as a concept. Some features may not function properly or are still being implemented.</p>
+        <button id="intro-understand-btn" class="btn">I Understand</button>
+      </div>
+    </div>
+  </div>
+
   <nav class="top-nav">
     <a href="#/home" class="nav-logo">
       <img src="images/logo.png" alt="Logo" />
@@ -31,40 +58,16 @@
       <li class="top-nav-item">
         <a href="#/community" class="top-nav-link">Community</a>
       </li>
-      <li class="top-nav-item">
-        <a href="#/patterngenerator" class="top-nav-link">Pattern Generator (Beta)</a>
-      </li>
     </ul>
-    <button id="sidebar-toggle" class="sidebar-toggle-btn"><img src="images/misc/hamburger.png" alt="Menu" /></button>
+    <button id="sidebar-toggle" class="sidebar-toggle-btn">
+      <span class="hamburger-line"></span>
+      <span class="hamburger-line"></span>
+      <span class="hamburger-line"></span>
+    </button>
   </nav>
 
-  <div class="site-version" onclick="toggleUpdateDescription()">
-    <span id="version-number">Site Version: </span>
-    <div class="update-description" id="update-description"></div>
-  </div>
-
   <div id="content" class="main-content"></div>
-  <footer id="footer">
-    <div class="footer-links">
-      <!-- <a href="#/blog">Blog</a> -->
-      <!-- <a href="#/help">Contact & Support</a> -->
-      <a href="#/faqs">FAQ</a>
-      <!-- <a href="#/gallery">Gallery</a> -->
-      <a href="#/assets">Assets</a>
-      <a href="#/archive">Archive</a>
-    </div>
-    <div class="footer-info">
-      <p>
-        ROLDBLOX is a fan-made project, not an official part of Roblox. It was
-        created by the community to recreate the nostalgic, old-school
-        experience of Roblox's early days. We don't claim to be Roblox and
-        aren't trying to copy them.
-      </p>
-    </div>
-  </footer>
-  <button id="footer-toggle" class="footer-toggle-btn">
-    <img src="images/misc/uparrow.png" alt="Toggle Footer" />
-  </button>
+
   <div id="sidebar-overlay" class="sidebar-overlay"></div>
   <div id="sidebar" class="sidebar">
     <div class="sidebar-content">
@@ -74,7 +77,6 @@
         <li><a href="#/about">About</a></li>
         <li><a href="#/mods">Mods</a></li>
         <li><a href="#/community">Community</a></li>
-        <li><a href="#/patterngenerator">Pattern Generator</a></li>
       </ul>
       <h2>Other</h2>
       <ul class="sidebar-links">
@@ -82,21 +84,28 @@
         <li><a href="#/assets">Assets</a></li>
         <li><a href="#/archive">Archive</a></li>
       </ul>
-
+      <h2>Experimental</h2>
+      <ul class="sidebar-links">
+        <li><a href="#/patterngenerator">Pattern Generator</a></li>
+        <li><a href="#/robloxfontgenerator">Roblox Font Generator</a></li>
+      </ul>
     </div>
 
     <div class="button-grid">
       <button class="grid-button mute-toggle" id="mute-toggle">
         <img src="images/misc/muted.png" alt="Muted" class="mute-icon">
       </button>
-
     </div>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script src="intro.js"></script>
   <script src="script.js"></script>
   <script src="archive-init.js"></script>
   <script src="js/pattern-generator.js"></script>
   <script src="js/pattern-generator-init.js"></script>
+  <script src="js/roblox-font-generator.js"></script>
+  <script src="js/roblox-font-generator-init.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
 
   <script src="config.js"></script>

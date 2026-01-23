@@ -1,5 +1,21 @@
 const contentDiv = document.getElementById("content");
-const links = document.querySelectorAll(".top-nav-link");
+const links = document.querySelectorAll(".top-nav-link, .sidebar-links a");
+
+// --- Navbar Scroll Logic ---
+(function() {
+    const nav = document.querySelector('.top-nav');
+    if (!nav) return;
+
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 50) {
+            nav.classList.add('scrolled');
+            document.body.classList.add('nav-scrolled');
+        } else {
+            nav.classList.remove('scrolled');
+            document.body.classList.remove('nav-scrolled');
+        }
+    });
+})();
 
 let navLinkCooldown = false;
 
@@ -17,8 +33,46 @@ const routes = {
   "/archive": "pages/archive.html",
   "/products": "pages/products.html",
   "/patterngenerator": "pages/pattern-generator.html",
+  "/robloxfontgenerator": "pages/roblox-font-generator.html",
   "/chat": "pages/chat.html",
 };
+
+const FOOTER_HTML = `
+<footer class="site-footer">
+    <div class="footer-container">
+        <div class="footer-section">
+            <div class="footer-logo">
+                <img src="images/logo.png" alt="ROLDBLOX">
+            </div>
+            <p class="footer-disclaimer">
+                ROLDBLOX is a fan-made project and is not affiliated with Roblox Corporation. 
+                This project is created by the community for nostalgic purposes.
+            </p>
+        </div>
+        <div class="footer-section">
+            <h4>Navigation</h4>
+            <ul class="footer-links-list">
+                <li><a href="#/home">Home</a></li>
+                <li><a href="#/about">About</a></li>
+                <li><a href="#/mods">Mods</a></li>
+                <li><a href="#/community">Community</a></li>
+            </ul>
+        </div>
+        <div class="footer-section">
+            <h4>Resources</h4>
+            <ul class="footer-links-list">
+                <li><a href="#/faqs">FAQ</a></li>
+                <li><a href="#/assets">Assets</a></li>
+                <li><a href="#/archive">Archive</a></li>
+                <li><a href="#/patterngenerator">Pattern Generator</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>2026 ROLDBLOX — A fan-made nostalgic project.</p>
+    </div>
+</footer>
+`;
 
 
 
@@ -268,53 +322,40 @@ function initFaqToggles(root = document) {
 
 async function loadPage(path) {
   const file = routes[path];
+  const oldPage = contentDiv.querySelector(".page.active");
   const newDiv = document.createElement("div");
   newDiv.className = "page";
 
   try {
     if (!file) throw new Error("Page not found");
-    const res = await fetch(file);
+    const res = await fetch(file + "?t=" + Date.now());
     if (!res.ok) throw new Error("HTTP " + res.status);
-    newDiv.innerHTML = await res.text();
+    newDiv.innerHTML = (await res.text()) + FOOTER_HTML;
   } catch {
     try {
       const e404 = await fetch("pages/404.html");
-      newDiv.innerHTML = e404.ok
+      newDiv.innerHTML = (e404.ok
         ? await e404.text()
-        : "<h2>404 - Page Not Found</h2>";
+        : "<h2>404 - Page Not Found</h2>") + FOOTER_HTML;
     } catch {
-      newDiv.innerHTML = "<h2>404 - Page Not Found</h2>";
+      newDiv.innerHTML = "<h2>404 - Page Not Found</h2>" + FOOTER_HTML;
     }
   }
 
-  contentDiv.appendChild(newDiv);
-
-  if (path === "/faqs") {
-    initFaqToggles(newDiv);
-
-    // Add event listeners to sidebar buttons
-    const sidebarButtons = newDiv.querySelectorAll('.faq-sidebar-list button');
-    sidebarButtons.forEach(button => {
-      button.addEventListener('click', () => {
-        const term = button.getAttribute('data-term');
-        setSearch(term);
-      });
-    });
+  if (oldPage) {
+    contentDiv.removeChild(oldPage);
   }
 
-  requestAnimationFrame(() => {
-    Array.from(contentDiv.children).forEach((child) => {
-      if (child !== newDiv) {
-        child.style.opacity = 0;
-        child.style.transform = "translateX(-20px)";
-        setTimeout(() => contentDiv.removeChild(child), 300);
-      }
-    });
+  contentDiv.appendChild(newDiv);
+  newDiv.classList.add("active");
 
-    void newDiv.offsetWidth;
-    newDiv.classList.add("active");
-  });
-
+  // Reset scroll immediately
+  window.scrollTo(0, 0);
+  
+  if (path === "/faqs") {
+    initFaqToggles(newDiv);
+  }
+  
   attachButtonNavigation(newDiv);
   attachDropdowns(newDiv);
 }
@@ -425,27 +466,15 @@ window.addEventListener("keydown", (e) => {
     idx = (idx + 1) % arr.length;
     window.location.hash = arr[idx].getAttribute("href");
   }
-});
-
-// Footer toggle functionality
-const footerToggle = document.getElementById('footer-toggle');
-const footer = document.getElementById('footer');
-
-if (footerToggle && footer) {
-  footerToggle.addEventListener('click', (e) => {
-    e.stopPropagation();
-    footer.classList.toggle('toggled');
-    footerToggle.classList.toggle('toggled');
-  });
-
-  document.addEventListener('click', (e) => {
-    const isClickInside = footer.contains(e.target) || footerToggle.contains(e.target);
-    if (footer.classList.contains('toggled') && !isClickInside) {
-      footer.classList.remove('toggled');
-      footerToggle.classList.remove('toggled');
+  
+  // F11 Fullscreen Toggle for pywebview
+  if (e.key === "F11") {
+    e.preventDefault();
+    if (window.pywebview && window.pywebview.api) {
+      window.pywebview.api.toggle_fullscreen();
     }
-  });
-}
+  }
+});
 
 const imageBackdrop = document.createElement("div");
 imageBackdrop.className = "image-backdrop";
@@ -640,30 +669,6 @@ function filterFAQs(searchTerm) {
     }, 0);
     item.style.display = count > 0 ? '' : 'none';
   });
-}
-
-document.addEventListener("DOMContentLoaded", function () {
-  loadBadWords(); // Ensure bad words are loaded even if another DOMContentLoaded handler runs
-  document.getElementById("version-number").innerText =
-    "Version " + SITE_VERSION;
-});
-
-document.addEventListener("DOMContentLoaded", function () {
-  document.getElementById("version-number").innerText = "v" + SITE_VERSION;
-  document.getElementById("update-description").innerHTML =
-    SITE_UPDATE_DESCRIPTION;
-});
-
-function toggleUpdateDescription() {
-  var updateDescription = document.getElementById("update-description");
-  if (
-    updateDescription.style.display === "none" ||
-    updateDescription.style.display === ""
-  ) {
-    updateDescription.style.display = "block";
-  } else {
-    updateDescription.style.display = "none";
-  }
 }
 
 document.addEventListener("click", (e) => {
@@ -976,6 +981,15 @@ if (sidebarToggle) {
 if (sidebarOverlay) {
   sidebarOverlay.addEventListener('click', toggleSidebar);
 }
+
+// Close sidebar when a link is clicked
+document.querySelectorAll('.sidebar-links a').forEach(link => {
+  link.addEventListener('click', () => {
+    if (sidebar.classList.contains('active')) {
+      toggleSidebar();
+    }
+  });
+});
 
 window.addEventListener('keydown', (e) => {
   if (e.key === 'Escape' && sidebar && sidebar.classList.contains('active')) {

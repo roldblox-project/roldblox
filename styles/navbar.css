@@ -1,0 +1,176 @@
+/* styles/navbar.css */
+
+.top-nav {
+    --nav-height: 70px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: var(--nav-height);
+    background: rgba(20, 20, 30, 0.7);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 40px;
+    z-index: 1100;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.top-nav.scrolled {
+    --nav-height: 60px;
+    background: rgba(20, 20, 30, 0.75);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.nav-logo {
+    display: flex;
+    align-items: center;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    text-decoration: none;
+}
+
+.nav-logo img {
+    height: 40px;
+    width: auto;
+    filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3));
+}
+
+.nav-logo:hover {
+    transform: scale(1.08);
+}
+
+.top-nav-list {
+    display: flex;
+    list-style: none;
+    gap: 12px;
+    margin: 0 20px 0 auto; /* Move to right and add gap before hamburger */
+    padding: 0;
+    align-items: center;
+}
+
+.top-nav-item {
+    position: relative;
+}
+
+.top-nav-link {
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 500;
+    padding: 10px 18px;
+    border-radius: 4px;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    letter-spacing: 0.2px;
+    display: block;
+    position: relative;
+}
+
+.top-nav-link:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.top-nav-link.active {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.1);
+    font-weight: 600;
+}
+
+/* Underline indicator base */
+.top-nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 4px;
+    left: 18px;
+    right: 18px;
+    height: 2px;
+    background: rgb(0, 162, 255);
+    border-radius: 2px;
+    transform: scaleX(0);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-origin: center;
+}
+
+/* Animate underline on active and hover */
+.top-nav-link.active::after {
+    transform: scaleX(1);
+}
+
+.top-nav-link:hover::after {
+    transform: scaleX(1);
+    opacity: 0.6;
+}
+
+.top-nav-link.active:hover::after {
+    opacity: 1;
+}
+
+.sidebar-toggle-btn {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    width: 42px;
+    height: 42px;
+    cursor: pointer;
+    display: flex; /* Always visible */
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 5px;
+    padding: 0;
+}
+
+.sidebar-toggle-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(0, 162, 255, 0.4);
+}
+
+.sidebar-toggle-btn:active {
+    transform: scale(0.92);
+}
+
+.hamburger-line {
+    width: 22px;
+    height: 2px;
+    background-color: white;
+    border-radius: 2px;
+    transition: all 0.3s ease;
+}
+
+/* Sharp lines for the hamburger */
+.sidebar-toggle-btn .hamburger-line {
+    display: block;
+}
+
+.sidebar-toggle-btn:hover .hamburger-line {
+    background-color: rgb(0, 162, 255);
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+    .top-nav {
+        padding: 0 24px;
+    }
+    
+    .top-nav-list {
+        display: none; /* Hide on mobile/tablet, use sidebar instead */
+    }
+    
+    /* .sidebar-toggle-btn is now always display: flex */
+}
+
+@media (max-width: 480px) {
+    .top-nav {
+        padding: 0 16px;
+    }
+    
+    .nav-logo img {
+        height: 30px;
+    }
+}

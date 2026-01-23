@@ -2,139 +2,152 @@
     <div class="app">
         <aside class="pg-sidebar" id="controls">
             <div class="title">
-                <div>
-                    <h1>Pattern Generator (Beta)</h1>
-                    <div class="subtitle">Quick controls and palette editor</div>
+                <h1>Pattern Generator</h1>
+                <div class="subtitle">Design unique backgrounds & textures</div>
+            </div>
+
+            <!-- Primary Actions -->
+            <div class="panel">
+                <h2>Generation Core</h2>
+                <div class="controls-row">
+                    <div class="control-group">
+                        <label for="seed">Random Seed</label>
+                        <input id="seed" placeholder="Type anything..." type="text" />
+                    </div>
+                    <button id="regen" class="primary">Regenerate Pattern</button>
                 </div>
             </div>
 
+            <!-- Visual Parameters -->
             <div class="panel">
-                <h2>Quick</h2>
-                <div class="controls-row">
-                    <label for="seed" class="muted">Seed</label>
-                    <input id="seed" placeholder="random" type="text" class="fill" />
-                    <button id="regen">Regenerate</button>
-                </div>
+                <h2>Visual Parameters</h2>
+                <div class="controls-grid">
+                    <div class="control-group">
+                        <label for="scale">Zoom / Scale</label>
+                        <div class="number-input" data-min="16" data-max="128" data-step="1">
+                            <button class="down">-</button>
+                            <input id="scale" type="number" value="64" />
+                            <button class="up">+</button>
+                        </div>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label>Detail / Noise</label>
+                        <div class="number-input" data-min="0" data-max="32" data-step="1">
+                            <button class="down">-</button>
+                            <input id="noiseSoftness" type="number" value="8" />
+                            <button class="up">+</button>
+                        </div>
+                    </div>
 
-                <div class="controls-row">
-                    <label for="scale" class="muted">Scale</label>
-                    <div class="number-input" data-min="16" data-max="128" data-step="1">
-                        <button class="down">-</button>
-                        <input id="scale" type="number" value="64" />
-                        <button class="up">+</button>
+                    <div class="control-group" style="grid-column: span 2;">
+                        <label>Smoothness</label>
+                        <div class="number-input" data-min="4" data-max="400" data-step="1">
+                            <button class="down">-</button>
+                            <input id="randomnessSoftness" type="number" value="64" />
+                            <button class="up">+</button>
+                        </div>
                     </div>
                 </div>
-                <div class="controls-row">
-                    <div class="end">
-                        <button id="setDefaults" class="ghost">Set Defaults</button>
-                    </div>
+                
+                <div class="controls-row" style="margin-top: 0.5rem;">
+                    <button id="setDefaults" class="ghost" style="width: 100%;">Reset to Defaults</button>
                 </div>
-
-                <small class="note">Tip: lower scale makes smaller tiles.</small>
             </div>
 
+            <!-- Palette Editor -->
             <div class="panel">
-                <h2>Palette</h2>
+                <h2>Color Palette</h2>
                 <div id="palette" aria-label="palette"></div>
+                
                 <div class="controls-row">
-                    <input id="newcolor" type="color" value="#2d2d2d" />
-                    <button id="addcolor">Add color</button>
-                </div>
-                <div class="controls-row">
-                    <label for="seed" class="muted">Color Presets</label>
-
-                    <div class="end preset-buttons">
-                        <button id="presetDark">Dark</button>
-                        <button id="presetLight">Light</button>
-                        <button id="presetBlue">Blue</button>
-                        <button id="presetRed">Red</button>
-                        <button id="presetGreen">Green</button>
-                        <button id="presetYellow">Yellow</button>
-                        <button id="presetRoldblue">Roldblue</button>
+                    <div class="color-picker-container">
+                        <input id="newcolor" type="color" value="#2d2d2d" />
+                        <button id="addcolor" class="green" style="flex: 1;">Add Color</button>
                     </div>
                 </div>
-                <div class="controls-row">
-                    <div class="end">
 
+                <div class="controls-row" style="margin-top: 1rem;">
+                    <label>Presets</label>
+                    <div class="preset-buttons">
+                        <button id="presetDark" class="ghost">Dark</button>
+                        <button id="presetLight" class="ghost">Light</button>
+                        <button id="presetBlue" class="ghost">Blue</button>
+                        <button id="presetRed" class="ghost">Red</button>
+                        <button id="presetGreen" class="ghost">Green</button>
+                        <button id="presetYellow" class="ghost">Yellow</button>
+                        <button id="presetRoldblue" class="ghost">Roldblue</button>
+                    </div>
+                </div>
+
+                <div class="controls-row palette-actions" style="margin-top: 1rem; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 1rem;">
+                    <div class="palette-save-load">
                         <button id="savePalette" class="ghost">Save</button>
-                        <input id="loadPaletteFile" type="file" accept="application/json" style="display:none" />
                         <button id="loadPalette" class="ghost">Load</button>
-                        <button id="newPalette" class="ghost">New</button>
+                        <button id="newPalette" class="ghost" style="grid-column: span 2;">Clear All Colors</button>
+                        <input id="loadPaletteFile" type="file" accept="application/json" style="display:none" />
                     </div>
                 </div>
-                <small class="note">Click a color swatch to remove it.</small>
             </div>
 
-
+            <!-- Export Options -->
             <div class="panel">
-                <h2>Noise & randomness</h2>
+                <h2>Export Settings</h2>
                 <div class="controls-row">
-                    <label class="muted">Noise softness</label>
-                    <div class="number-input" data-min="0" data-max="32" data-step="1">
-                        <button class="down">-</button>
-                        <input id="noiseSoftness" type="number" value="8" />
-                        <button class="up">+</button>
+                    <div class="control-group">
+                        <label>Dimensions (W × H)</label>
+                        <div style="display: flex; gap: 8px; align-items: center;">
+                            <div class="number-input" data-min="16" data-max="8192" data-step="64">
+                                <button class="down">-</button>
+                                <input id="exportWidth" type="number" value="512" />
+                                <button class="up">+</button>
+                            </div>
+                            <span style="opacity: 0.3">×</span>
+                            <div class="number-input" data-min="16" data-max="8192" data-step="64">
+                                <button class="down">-</button>
+                                <input id="exportHeight" type="number" value="512" />
+                                <button class="up">+</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
+                
                 <div class="controls-row">
-                    <label class="muted">Randomness softness</label>
-                    <div class="number-input" data-min="4" data-max="400" data-step="1">
-                        <button class="down">-</button>
-                        <input id="randomnessSoftness" type="number" value="64" />
-                        <button class="up">+</button>
+                    <div class="control-group">
+                        <label>Quick Rescale</label>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                            <button id="exportSizeHalf" class="ghost">0.5x Size</button>
+                            <button id="exportSizeDouble" class="ghost">2.0x Size</button>
+                        </div>
                     </div>
                 </div>
-                <small class="note">Higher randomness softness makes it have a more smoother pattern.</small>
-            </div>
 
-
-            <div class="panel">
-                <h2>Export</h2>
                 <div class="controls-row">
-                    <label class="muted">Size</label>
-                    <div class="number-input" data-min="16" data-max="8192" data-step="64">
-                        <button class="down">-</button>
-                        <input id="exportWidth" type="number" value="512" />
-                        <button class="up">+</button>
-                    </div>
-                    <label class="muted">×</label>
-                    <div class="number-input" data-min="16" data-max="8192" data-step="64">
-                        <button class="down">-</button>
-                        <input id="exportHeight" type="number" value="512" />
-                        <button class="up">+</button>
-                    </div>
-
-                </div>
-                <div class="controls-row">
-                    <label class="muted">Size Multiply</label>
-
-                    <div class="end">
-                        <button id="exportSizeHalf" class="ghost">x0.5</button>
-                        <button id="exportSizeDouble" class="ghost">x2</button>
+                    <div class="control-group">
+                        <label>Tile Size</label>
+                        <div class="number-input" data-min="4" data-max="256" data-step="4">
+                            <button class="down">-</button>
+                            <input id="exportTile" type="number" value="64" />
+                            <button class="up">+</button>
+                        </div>
                     </div>
                 </div>
-                <div class="controls-row">
-                    <label class="muted">Tile</label>
-                    <div class="number-input" data-min="4" data-max="256" data-step="4">
-                        <button class="down">-</button>
-                        <input id="exportTile" type="number" value="64" />
-                        <button class="up">+</button>
-                    </div>
 
-                </div>
-                <div class="controls-row">
-                    <div class="end">
-                        <button id="downloadPNG" class="end">Download PNG</button>
-                        <button id="downloadConfigPreset" class="end">Download Config</button>
+                <div class="controls-row" style="margin-top: 1rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1rem;">
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <button id="downloadPNG" class="primary">Download Pattern (.png)</button>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                            <button id="downloadConfigPreset" class="ghost">Save Config</button>
+                            <button id="loadConfigPreset" class="ghost">Load Config</button>
+                        </div>
                         <input id="loadConfigFile" type="file" accept="application/json" style="display:none" />
-                        <button id="loadConfigPreset" class="ghost">Load Config</button>
                     </div>
                 </div>
             </div>
 
-            <div class="note" style="text-align: center; margin-top: 30px;">Made for quick exploration. Use export
-                for
-                final images.</div>
+            <div class="note" style="text-align: center; margin-top: 1rem; opacity: 0.3; font-size: 0.75rem; padding-bottom: 2rem;">
+                Higher dimensions may take longer to process.
+            </div>
         </aside>
 
         <main class="main">
@@ -142,5 +155,3 @@
         </main>
     </div>
 </div>
-
-</html>
