@@ -50,19 +50,9 @@ PREVIOUS INTRO LOGIC (Auto-hide on load)
     // Transition from Logo to Warning
     const warningTimeout = setTimeout(() => {
         if (mainContent && warningContent) {
-            // Fade out logo content
             mainContent.classList.add('fade-out');
-            
-            // Wait for logo fade-out animation to finish (0.5s)
             setTimeout(() => {
-                // Show warning container (display: flex)
                 warningContent.classList.add('show');
-                
-                // Force a reflow to ensure the display change is processed
-                void warningContent.offsetWidth;
-                
-                // Fade in warning content
-                warningContent.classList.add('fade-in');
             }, 500);
         }
     }, logoDuration);
