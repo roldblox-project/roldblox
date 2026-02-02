@@ -1,0 +1,200 @@
+/* Community Page Styles (Matching About/Mods aesthetic) */
+
+.community-page {
+    display: flex !important;
+    flex-direction: column !important;
+    min-height: 100% !important;
+    background-size: cover !important;
+    background-position: center !important;
+    background-attachment: fixed !important;
+    position: relative !important;
+    color: white !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+.community-page::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at center, rgba(15, 20, 35, 0.5) 0%, rgba(10, 15, 30, 0.95) 100%);
+    z-index: 0;
+    pointer-events: none;
+}
+
+.community-container {
+    max-width: 1000px !important;
+    margin: 0 auto !important;
+    padding: 6rem 2rem !important;
+    position: relative !important;
+    z-index: 1 !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+/* Intro Section */
+.community-intro {
+    text-align: center !important;
+    margin-bottom: 5rem !important;
+}
+
+.community-logo-block {
+    margin-bottom: 2.5rem !important;
+}
+
+.community-logo-block img {
+    width: 250px !important;
+    height: auto !important;
+    filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.5)) !important;
+}
+
+.community-subtitle {
+    font-size: 1.5rem !important;
+    color: rgba(255, 255, 255, 0.8) !important;
+    font-weight: 300 !important;
+    margin-top: 0.5rem !important;
+}
+
+.community-intro h1 {
+    font-size: 3.5rem !important;
+    font-weight: 800 !important;
+    margin-bottom: 1.5rem !important;
+    letter-spacing: -1px !important;
+    color: #ffffff !important;
+}
+
+.community-intro-text {
+    font-size: 1.3rem !important;
+    line-height: 1.6 !important;
+    color: rgba(255, 255, 255, 0.9) !important;
+    max-width: 800px !important;
+    margin: 0 auto !important;
+    text-align: center !important;
+}
+
+/* Platform Grid */
+.community-grid {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 1.5rem !important;
+    margin-bottom: 5rem !important;
+    align-items: stretch !important;
+}
+
+.community-card {
+    background: rgb(20, 20, 30) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 4px !important;
+    padding: 2.5rem !important;
+    display: flex !important;
+    flex-direction: column !important;
+    text-align: left !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4) !important;
+}
+
+.community-card:hover {
+    border-color: rgba(0, 162, 255, 0.4) !important;
+}
+
+.community-card-header {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    margin-bottom: 1.5rem !important;
+}
+
+.community-icon {
+    height: 40px !important;
+    width: auto !important;
+    object-fit: contain !important;
+}
+
+.community-tag {
+    font-size: 0.75rem !important;
+    font-weight: 700 !important;
+    letter-spacing: 1px !important;
+    color: #00a2ff !important;
+    padding: 4px 10px !important;
+    border-radius: 2px !important;
+}
+
+.community-card h3 {
+    font-size: 1.8rem !important;
+    color: #ffffff !important;
+    margin-bottom: 1rem !important;
+    font-weight: 700 !important;
+}
+
+.community-card p {
+    font-size: 1.05rem !important;
+    line-height: 1.6 !important;
+    color: rgba(255, 255, 255, 0.8) !important;
+    margin-bottom: 2rem !important;
+    flex-grow: 1 !important;
+}
+
+.community-card-actions {
+    display: flex !important;
+    gap: 1rem !important;
+}
+
+.community-card-actions .btn {
+    flex: 1 !important;
+    padding: 12px !important;
+    font-size: 0.9rem !important;
+    font-weight: 600 !important;
+}
+
+/* Bottom CTA */
+.community-cta {
+    text-align: center !important;
+    background: rgb(20, 20, 30) !important;
+    padding: 4rem 2rem !important;
+    border-radius: 4px !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4) !important;
+}
+
+.community-cta h2 {
+    font-size: 2.2rem !important;
+    font-weight: 800 !important;
+    margin-bottom: 1rem !important;
+    color: #ffffff !important;
+}
+
+.community-cta p {
+    font-size: 1.2rem !important;
+    margin-bottom: 2.5rem !important;
+    color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.community-cta-buttons {
+    display: flex !important;
+    justify-content: center !important;
+    gap: 1.5rem !important;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .community-grid {
+        grid-template-columns: 1fr !important;
+    }
+    
+    .community-intro h1 {
+        font-size: 2.8rem !important;
+    }
+    
+    .community-container {
+        padding: 6rem 1.5rem !important;
+    }
+    
+    .community-cta-buttons {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        max-width: 300px !important;
+        margin: 0 auto !important;
+    }
+}
